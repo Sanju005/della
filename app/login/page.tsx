@@ -1,8 +1,71 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+
+import { getSupabaseClient } from "@/lib/supabase/client";
 
 const roles = ["IT / Super Admin", "Admin", "Manager", "Customer Care"];
 
 export default function LoginPage() {
+  const router = useRouter();
+  const supabase = useMemo(() => getSupabaseClient(), []);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nextPath, setNextPath] = useState("/dashboard");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    if (typeof window !== "undefined") {
+      const next = new URLSearchParams(window.location.search).get("next");
+      if (next) {
+        setNextPath(next);
+      }
+    }
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (isMounted && data.session) {
+        router.replace(nextPath);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (isMounted && session) {
+        router.replace(nextPath);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [nextPath, router, supabase]);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErrorMessage("");
+    setIsSubmitting(true);
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErrorMessage(error.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    router.replace(nextPath);
+  }
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-10">
       <div className="absolute inset-0 bg-admin-grid bg-admin-grid opacity-60" />
@@ -58,12 +121,12 @@ export default function LoginPage() {
                 Welcome back
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate">
-                Authentication is still placeholder-only for now. Use this page
-                as the entry point for future Supabase Auth wiring.
+                Sign in with your Supabase email and password credentials to
+                access the DELLA admin workspace.
               </p>
             </div>
 
-            <form className="mt-8 space-y-5">
+            <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
               <div>
                 <label
                   className="mb-2 block text-sm font-medium text-ink"
@@ -74,6 +137,8 @@ export default function LoginPage() {
                 <input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@della.app"
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/10"
                 />
@@ -89,6 +154,8 @@ export default function LoginPage() {
                 <input
                   id="password"
                   type="password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
                   placeholder="Enter your password"
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/10"
                 />
@@ -114,12 +181,19 @@ export default function LoginPage() {
                 </select>
               </div>
 
-              <Link
-                href="/dashboard"
-                className="block rounded-2xl bg-accent px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-accent-dark"
+              {errorMessage ? (
+                <div className="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+                  {errorMessage}
+                </div>
+              ) : null}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="block w-full rounded-2xl bg-accent px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-70"
               >
-                Sign in to dashboard
-              </Link>
+                {isSubmitting ? "Signing in..." : "Sign in to dashboard"}
+              </button>
             </form>
 
             <p className="mt-6 text-sm leading-6 text-slate">
@@ -127,6 +201,11 @@ export default function LoginPage() {
               <span className="font-medium text-ink"> `.env.local`</span> using
               the included example file when you are ready to connect auth and
               data.
+            </p>
+            <p className="mt-4 text-sm leading-6 text-slate">
+              <Link href="/" className="font-medium text-accent hover:text-accent-dark">
+                Back to the entry screen
+              </Link>
             </p>
           </div>
         </section>

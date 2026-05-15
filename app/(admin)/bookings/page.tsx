@@ -1,6 +1,56 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { PlaceholderTable } from "@/components/placeholder-table";
+import { pickValue } from "@/lib/supabase/format";
+import { fetchBookings, type SupabaseRow } from "@/lib/supabase/queries";
 
 export default function BookingsPage() {
+  const [bookings, setBookings] = useState<SupabaseRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    fetchBookings()
+      .then((data) => {
+        if (!active) {
+          return;
+        }
+
+        setBookings(data);
+        setErrorMessage(null);
+      })
+      .catch((error) => {
+        if (!active) {
+          return;
+        }
+
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to load booking data."
+        );
+      })
+      .finally(() => {
+        if (active) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const rows = bookings.map((booking) => [
+    pickValue(booking, ["booking_id", "code", "id"]),
+    pickValue(booking, ["service_name", "service", "service_id"]),
+    pickValue(booking, ["customer_name", "customer", "customer_id"]),
+    pickValue(booking, ["provider_name", "provider", "provider_id"]),
+    pickValue(booking, ["status"]),
+  ]);
+
   return (
     <div className="space-y-6">
       <div>
@@ -11,21 +61,19 @@ export default function BookingsPage() {
           Booking operations
         </h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate">
-          A placeholder command view for scheduling, reassignment, and exception
-          handling.
+          Schedule, monitor, and review booking records from the live Supabase
+          dataset.
         </p>
       </div>
 
       <PlaceholderTable
         title="Recent bookings"
-        description="Static sample data for the initial admin shell."
+        description="Live booking data from the Supabase bookings table."
         columns={["Booking ID", "Service", "Customer", "Provider", "Status"]}
-        rows={[
-          ["BK-24018", "Home Cleaning", "Aina Rahman", "CleanCare", "Scheduled"],
-          ["BK-24017", "Aircond Repair", "Nur Amal", "FixPro", "Pending"],
-          ["BK-24016", "Pet Grooming", "M. Karim", "PetEase", "Completed"],
-          ["BK-24015", "Massage", "Sara Lee", "Glow Spa", "Cancelled"],
-        ]}
+        rows={rows}
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        emptyMessage="No booking records were returned from Supabase."
       />
     </div>
   );

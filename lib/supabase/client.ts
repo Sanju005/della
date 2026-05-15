@@ -5,9 +5,17 @@ const supabaseUrl =
 const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "placeholder-anon-key";
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: false,
-  },
-});
+let browserClient: ReturnType<typeof createClient> | undefined;
+
+export function getSupabaseClient() {
+  if (!browserClient) {
+    browserClient = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+      },
+    });
+  }
+
+  return browserClient;
+}

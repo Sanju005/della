@@ -1,34 +1,105 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { KpiCard } from "@/components/kpi-card";
 import { PlaceholderTable } from "@/components/placeholder-table";
-
-const metrics = [
-  {
-    label: "Active users",
-    value: "2,184",
-    delta: "+8.4%",
-    detail: "vs. last 30 days",
-  },
-  {
-    label: "Verified providers",
-    value: "316",
-    delta: "+12",
-    detail: "pending review: 19",
-  },
-  {
-    label: "Open bookings",
-    value: "128",
-    delta: "-3.1%",
-    detail: "today across all regions",
-  },
-  {
-    label: "Service categories",
-    value: "24",
-    delta: "+2",
-    detail: "new launches this quarter",
-  },
-];
+import { formatCount, pickValue } from "@/lib/supabase/format";
+import {
+  fetchBookings,
+  fetchCustomers,
+  fetchProviders,
+  fetchServices,
+  type SupabaseRow,
+} from "@/lib/supabase/queries";
 
 export default function DashboardPage() {
+  const [bookings, setBookings] = useState<SupabaseRow[]>([]);
+  const [providers, setProviders] = useState<SupabaseRow[]>([]);
+  const [customers, setCustomers] = useState<SupabaseRow[]>([]);
+  const [services, setServices] = useState<SupabaseRow[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadDashboardData() {
+      try {
+        const [bookingsData, providersData, customersData, servicesData] =
+          await Promise.all([
+            fetchBookings(),
+            fetchProviders(),
+            fetchCustomers(),
+            fetchServices(),
+          ]);
+
+        if (!active) {
+          return;
+        }
+
+        setBookings(bookingsData);
+        setProviders(providersData);
+        setCustomers(customersData);
+        setServices(servicesData);
+        setErrorMessage(null);
+      } catch (error) {
+        if (!active) {
+          return;
+        }
+
+        setErrorMessage(
+          error instanceof Error ? error.message : "Failed to load dashboard data."
+        );
+      } finally {
+        if (active) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadDashboardData();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const metrics = [
+    {
+      label: "Customers",
+      value: formatCount(customers.length),
+      delta: errorMessage ? "Sync issue" : "Live",
+      detail: "customer records in Supabase",
+    },
+    {
+      label: "Providers",
+      value: formatCount(providers.length),
+      delta: errorMessage ? "Sync issue" : "Live",
+      detail: "provider records in Supabase",
+    },
+    {
+      label: "Bookings",
+      value: formatCount(bookings.length),
+      delta: errorMessage ? "Sync issue" : "Live",
+      detail: "booking records in Supabase",
+    },
+    {
+      label: "Services",
+      value: formatCount(services.length),
+      delta: errorMessage ? "Sync issue" : "Live",
+      detail: "service records in Supabase",
+    },
+  ];
+
+  const bookingRows = bookings.slice(0, 6).map((booking) => [
+    pickValue(booking, ["booking_id", "code", "id"]),
+    pickValue(booking, ["customer_name", "customer", "customer_id"]),
+    pickValue(booking, ["provider_name", "provider", "provider_id"]),
+    pickValue(booking, ["status"]),
+    pickValue(booking, ["booking_date", "scheduled_at", "date", "created_at"]),
+  ]);
+
   return (
     <div className="space-y-8">
       <section className="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-card">
@@ -41,14 +112,13 @@ export default function DashboardPage() {
               DELLA Admin Dashboard
             </h1>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-slate">
-              A starter overview for internal operations. The cards and tables
-              below are static placeholders for now, ready to be connected to
-              Supabase data and role-aware permissions in a later iteration.
+              A live operations overview powered by Supabase Auth and database
+              queries while preserving the existing admin panel layout.
             </p>
           </div>
 
           <div className="rounded-2xl border border-accent/15 bg-accent-soft px-4 py-3 text-sm text-accent-dark">
-            Snapshot refreshed just now
+            {isLoading ? "Refreshing snapshot..." : "Snapshot refreshed just now"}
           </div>
         </div>
       </section>
@@ -62,23 +132,21 @@ export default function DashboardPage() {
       <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <PlaceholderTable
           title="Recent bookings"
-          description="Latest booking activity will appear here once booking queries are connected."
+          description="Latest booking activity from the Supabase bookings table."
           columns={["Booking ID", "Customer", "Provider", "Status", "Date"]}
-          rows={[
-            ["BK-24018", "Aina Rahman", "Glow Spa", "Scheduled", "15 May"],
-            ["BK-24017", "Nur Amal", "FixPro", "Pending", "15 May"],
-            ["BK-24016", "M. Karim", "CleanCare", "Completed", "14 May"],
-            ["BK-24015", "Sara Lee", "PetEase", "Cancelled", "14 May"],
-          ]}
+          rows={bookingRows}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          emptyMessage="No bookings were returned from Supabase."
         />
 
         <div className="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-card">
           <h2 className="text-lg font-semibold text-ink">Team notes</h2>
           <div className="mt-5 space-y-4">
             {[
-              "Provider onboarding workflow still pending database integration.",
-              "Customer Care role should eventually have read-heavy access.",
-              "Settings page is prepared for environment and policy controls.",
+              "Supabase Auth now protects the admin workspace before route access.",
+              "Providers, services, customers, and bookings load from live tables.",
+              "Settings remains focused on configuration without extra product modules.",
             ].map((note) => (
               <div
                 key={note}

@@ -1,9 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
 import clsx from "clsx";
+import type { Session } from "@supabase/supabase-js";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+
+import { getSupabaseClient } from "@/lib/supabase/client";
 
 const navigation = [
   { href: "/dashboard", label: "Dashboard" },
@@ -16,7 +19,57 @@ const navigation = [
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const supabase = useMemo(() => getSupabaseClient(), []);
   const [isOpen, setIsOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!isMounted) {
+        return;
+      }
+
+      setSession(data.session ?? null);
+      setIsAuthLoading(false);
+
+      if (!data.session) {
+        router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      if (!isMounted) {
+        return;
+      }
+
+      setSession(nextSession);
+      setIsAuthLoading(false);
+
+      if (!nextSession) {
+        router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, [pathname, router, supabase]);
+
+  async function handleLogout() {
+    setIsSigningOut(true);
+    await supabase.auth.signOut();
+    setSession(null);
+    router.replace("/login");
+    setIsSigningOut(false);
+  }
 
   const sidebar = (
     <div className="flex h-full flex-col">
@@ -54,12 +107,32 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       <div className="border-t border-white/10 px-6 py-6">
         <div className="rounded-2xl bg-white/10 p-4 text-sm text-white/75">
-          <p className="font-medium text-white">Role preview</p>
-          <p className="mt-2">IT / Super Admin</p>
+          <p className="font-medium text-white">Signed in</p>
+          <p className="mt-2 break-all text-xs text-white/70">
+            {session?.user.email ?? "Authenticated admin"}
+          </p>
         </div>
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={isSigningOut}
+          className="mt-4 w-full rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-sm font-medium text-white transition hover:bg-white/15 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isSigningOut ? "Signing out..." : "Log out"}
+        </button>
       </div>
     </div>
   );
+
+  if (isAuthLoading || !session) {
+    return (
+      <div className="flex min-h-screen items-center justify-center px-6 py-10">
+        <div className="rounded-3xl border border-white/70 bg-white/90 px-6 py-5 text-sm text-slate shadow-card">
+          Checking your session...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-transparent">
@@ -100,12 +173,14 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 >
                   Menu
                 </button>
-                <Link
-                  href="/login"
-                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-ink shadow-sm"
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  disabled={isSigningOut}
+                  className="rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-ink shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  Log out
-                </Link>
+                  {isSigningOut ? "Signing out..." : "Log out"}
+                </button>
               </div>
             </div>
           </header>
