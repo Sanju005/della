@@ -109,7 +109,8 @@ export default function LoginPage() {
                 Welcome back
               </h1>
               <p className="mt-3 text-sm leading-6 text-slate">
-                Sign in to access the DELLA admin workspace.
+                Sign in to access the DELLA admin workspace for Admin,
+                Customer Care, and Manager roles.
               </p>
             </div>
 
@@ -122,7 +123,9 @@ export default function LoginPage() {
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate">
                 Sign in with your Supabase email and password credentials to
-                access the DELLA admin workspace.
+                access the DELLA admin workspace. Customers and service
+                providers should register through the DELLA mobile app instead
+                of this portal.
               </p>
             </div>
 
@@ -203,8 +206,12 @@ export default function LoginPage() {
               data.
             </p>
             <p className="mt-4 text-sm leading-6 text-slate">
+              This sign-in is for internal teams only: Admin, Customer Care,
+              and Manager.
+            </p>
+            <p className="mt-4 text-sm leading-6 text-slate">
               <Link href="/" className="font-medium text-accent hover:text-accent-dark">
-                Back to the entry screen
+                Back to the DELLA home page
               </Link>
             </p>
           </div>

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "DELLA Admin Panel",
-  description: "Operational admin panel starter for the DELLA App team.",
+  title: "DELLA App",
+  description:
+    "DELLA services platform for customers, providers, and internal operations teams.",
 };
 
 export default function RootLayout({
