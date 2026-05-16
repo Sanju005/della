@@ -87,8 +87,9 @@ export default function HomePage() {
             <div
               className="relative min-h-[680px] overflow-hidden rounded-[36px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
               style={{
+                backgroundColor: "#0b7a31",
                 background:
-                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.94) 28%, rgba(2,45,22,0.65) 45%, rgba(2,45,22,0.22) 62%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
+                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.95) 26%, rgba(2,45,22,0.72) 43%, rgba(2,45,22,0.34) 58%, rgba(2,45,22,0.08) 74%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
                 backgroundSize: "auto 84%",
                 backgroundPosition: "right 70px center",
                 backgroundRepeat: "no-repeat",
