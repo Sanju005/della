@@ -128,6 +128,49 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="w-full bg-white px-0 py-8 sm:py-10">
+        <div
+          className="relative min-h-[560px] overflow-hidden bg-[#063113] sm:min-h-[620px] lg:min-h-[680px]"
+          style={{
+            backgroundImage:
+              'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.94) 26%, rgba(2,45,22,0.72) 42%, rgba(2,45,22,0.26) 58%, rgba(2,45,22,0.06) 72%, rgba(2,45,22,0) 100%), url("/images/della-hero-secondary.png")',
+            backgroundSize: "cover",
+            backgroundPosition: "68% center",
+            backgroundRepeat: "no-repeat",
+          }}
+        >
+          <div className="mx-auto flex min-h-[560px] max-w-7xl items-center px-6 py-12 sm:min-h-[620px] sm:px-8 sm:py-14 lg:min-h-[680px] lg:px-10 lg:py-16">
+            <div className="max-w-2xl text-white">
+              <p className="text-sm font-semibold uppercase tracking-[0.32em] text-[#72FF58]">
+                DELLA Mobile Experience
+              </p>
+              <h2 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+                One app for home services, care, learning, and lifestyle support
+              </h2>
+              <p className="mt-6 max-w-xl text-base leading-8 text-white/84 sm:text-lg">
+                From cleaning and repairs to babysitting, tuition, beauty, and
+                home chef bookings, DELLA helps people discover trusted
+                services from one modern mobile platform.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#download"
+                  className="rounded-2xl bg-[#72FF58] px-7 py-4 text-sm font-semibold text-[#042C12] transition hover:bg-white sm:text-base"
+                >
+                  Download DELLA
+                </a>
+                <Link
+                  href="/our-services"
+                  className="rounded-2xl border border-white/25 px-7 py-4 text-sm font-semibold text-white transition hover:bg-white/10 sm:text-base"
+                >
+                  Browse Categories
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
