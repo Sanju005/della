@@ -1,108 +1,136 @@
 import Link from "next/link";
 
-import { companyPillars } from "@/lib/marketing-content";
+import { adminRoles, companyPillars } from "@/lib/marketing-content";
 
 export default function AboutPage() {
   return (
-    <main className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-admin-grid bg-admin-grid opacity-45" />
-
-      <section className="relative">
-        <div className="mx-auto w-full max-w-6xl px-6 py-10 sm:px-8 lg:px-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
+    <main className="bg-white text-black">
+      <section className="bg-black text-white">
+        <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
+          <div className="flex flex-col gap-5 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-accent">
-                About DELLA
+              <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#26FF40]">
+                DELLA
               </p>
-              <h1 className="mt-4 text-4xl font-semibold text-ink">
-                A service platform built around trust, convenience, and growth
-              </h1>
+              <p className="mt-2 text-sm text-white/65">
+                About the company behind the platform
+              </p>
             </div>
 
-            <div className="flex flex-wrap gap-3">
+            <nav className="flex flex-wrap gap-3 text-sm font-semibold">
               <Link
                 href="/"
-                className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-accent/30 hover:text-accent"
+                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
               >
                 Home
               </Link>
               <Link
                 href="/our-services"
-                className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:border-accent/30 hover:text-accent"
+                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
               >
                 Services
               </Link>
               <Link
                 href="/login"
-                className="rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition hover:bg-accent-dark"
+                className="rounded-full bg-[#26FF40] px-5 py-3 text-black transition hover:bg-white"
               >
                 Staff Login
               </Link>
-            </div>
+            </nav>
           </div>
 
-          <div className="mt-12 grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-[32px] border border-white/80 bg-white/90 p-8 shadow-card">
-              <p className="text-sm uppercase tracking-[0.3em] text-accent">
-                Company Story
+          <div className="grid gap-10 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+                About Company
               </p>
-              <p className="mt-5 text-base leading-8 text-slate">
-                DELLA is designed to make everyday services easier to discover,
-                easier to trust, and easier to manage. The company vision is to
-                connect customers with quality providers through a mobile-first
-                experience while giving internal teams the tools to keep the
-                platform efficient and reliable.
-              </p>
-              <p className="mt-5 text-base leading-8 text-slate">
-                On the public side, DELLA should feel simple, useful, and
-                install-worthy. On the operational side, DELLA gives admins,
-                customer care teams, and managers a separate workspace to manage
-                providers, services, bookings, and support needs.
+              <h1 className="mt-4 max-w-4xl text-5xl font-semibold leading-tight">
+                DELLA is building a more useful everyday service ecosystem
+              </h1>
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
+                The company vision is simple: help customers find trusted
+                services faster, help providers grow through better visibility,
+                and help internal teams run the platform with more confidence.
               </p>
             </div>
 
-            <div className="rounded-[32px] bg-ink p-8 text-white shadow-card">
-              <p className="text-sm uppercase tracking-[0.3em] text-white/55">
-                Mission
+            <div className="rounded-[34px] bg-[linear-gradient(135deg,#26FF40_0%,#16401d_58%,#000000_100%)] p-8 text-black">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/65">
+                DELLA Mission
               </p>
               <h2 className="mt-4 text-3xl font-semibold leading-tight">
-                Build one dependable ecosystem for users, providers, and
-                operations.
+                Turn service discovery into a smoother mobile-first journey.
               </h2>
-              <p className="mt-5 text-base leading-8 text-white/72">
-                DELLA creates a clear digital path: discover services, download
-                the app, register, and take action. That same ecosystem supports
-                provider growth and internal operational control behind the
-                scenes.
+              <p className="mt-4 text-base leading-7 text-black/80">
+                The website supports marketing and lead generation. The app
+                handles customer and provider registration. The admin portal
+                supports staff operations.
               </p>
             </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {companyPillars.map((pillar) => (
-              <article
-                key={pillar.title}
-                className="rounded-[28px] border border-white/80 bg-white/90 p-7 shadow-card"
-              >
-                <p className="text-sm uppercase tracking-[0.24em] text-accent">
-                  {pillar.title}
-                </p>
-                <p className="mt-4 text-sm leading-7 text-slate">
-                  {pillar.description}
-                </p>
-              </article>
-            ))}
+      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+        <div className="grid gap-6 md:grid-cols-3">
+          {companyPillars.map((pillar) => (
+            <article
+              key={pillar.title}
+              className="rounded-[28px] border border-black/10 bg-white p-7 shadow-[0_16px_40px_rgba(0,0,0,0.06)]"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#0f7a22]">
+                {pillar.title}
+              </p>
+              <p className="mt-4 text-sm leading-7 text-black/65">
+                {pillar.description}
+              </p>
+            </article>
+          ))}
+        </div>
+
+        <div className="mt-10 grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+          <div className="rounded-[30px] bg-[#f4f7f4] p-8">
+            <h2 className="text-3xl font-semibold text-black">
+              How the DELLA ecosystem works
+            </h2>
+            <div className="mt-6 grid gap-4">
+              <div className="rounded-[22px] border border-black/8 bg-white px-5 py-4 text-sm leading-7 text-black/70">
+                Public website: attracts visitors, explains the brand, and
+                pushes app downloads.
+              </div>
+              <div className="rounded-[22px] border border-black/8 bg-white px-5 py-4 text-sm leading-7 text-black/70">
+                Customer and provider apps: handle onboarding, registration, and
+                everyday service activity.
+              </div>
+              <div className="rounded-[22px] border border-black/8 bg-white px-5 py-4 text-sm leading-7 text-black/70">
+                Staff portal: supports Admin, Customer Care, and Manager roles.
+              </div>
+            </div>
           </div>
 
-          <div className="mt-12 rounded-[32px] border border-accent/15 bg-accent-soft px-8 py-7">
-            <h2 className="text-2xl font-semibold text-ink">
-              The main public goal
-            </h2>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-slate">
-              The marketing pages should encourage customers and service
-              providers to download the DELLA app, while keeping the staff login
-              visible but secondary.
+          <div className="rounded-[30px] bg-black p-8 text-white">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+              Staff Access
             </p>
+            <h2 className="mt-4 text-3xl font-semibold">
+              Internal access remains visible, but secondary
+            </h2>
+            <div className="mt-6 flex flex-wrap gap-3">
+              {adminRoles.map((role) => (
+                <span
+                  key={role}
+                  className="rounded-full border border-white/12 bg-white/5 px-4 py-2 text-sm font-semibold text-white"
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+            <Link
+              href="/login"
+              className="mt-8 inline-flex rounded-full bg-[#26FF40] px-6 py-3 text-sm font-semibold text-black transition hover:bg-white"
+            >
+              Go to Staff Login
+            </Link>
           </div>
         </div>
       </section>
