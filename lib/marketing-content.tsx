@@ -4,6 +4,7 @@ export type MarketingService = {
   title: string;
   description: string;
   icon: ReactNode;
+  image?: string;
 };
 
 export const services: MarketingService[] = [
@@ -11,6 +12,7 @@ export const services: MarketingService[] = [
     title: "Home Services",
     description:
       "Book trusted cleaning, repairs, maintenance, and everyday home support in one place.",
+    image: "/images/service-home.jpg",
     icon: (
       <path
         d="M4 10.75 12 4l8 6.75V20a1 1 0 0 1-1 1h-4.5v-6h-5v6H5a1 1 0 0 1-1-1z"
@@ -26,6 +28,7 @@ export const services: MarketingService[] = [
     title: "Beauty and Wellness",
     description:
       "Connect customers with self-care, salon, and wellness experiences that fit their schedule.",
+    image: "/images/service-beauty.jpg",
     icon: (
       <>
         <path
@@ -50,6 +53,7 @@ export const services: MarketingService[] = [
     title: "Provider Opportunities",
     description:
       "Help service professionals reach more customers, manage jobs, and grow with better visibility.",
+    image: "/images/service-provider.jpg",
     icon: (
       <>
         <path
@@ -81,6 +85,7 @@ export const services: MarketingService[] = [
     title: "Babysitting",
     description:
       "Find dependable childcare support for busy parents who need trusted help at home.",
+    image: "/images/service-babysitting.jpg",
     icon: (
       <>
         <circle
@@ -106,6 +111,7 @@ export const services: MarketingService[] = [
     title: "Tuition Classes",
     description:
       "Connect learners with academic support, coaching, and extra classes that fit their goals.",
+    image: "/images/service-tuition.jpg",
     icon: (
       <>
         <path
@@ -130,6 +136,7 @@ export const services: MarketingService[] = [
     title: "House Repair Works",
     description:
       "Arrange skilled technicians for plumbing, electrical fixes, carpentry, and urgent home repairs.",
+    image: "/images/service-repair.jpg",
     icon: (
       <>
         <path

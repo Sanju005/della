@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { adminRoles, services } from "@/lib/marketing-content";
@@ -29,16 +30,6 @@ const stories = [
       "DELLA gives service providers a digital storefront that leads to more demand.",
   },
 ];
-
-function ServiceIcon({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="inline-flex h-14 w-14 items-center justify-center rounded-[18px] bg-[#0DFF40] text-black shadow-[0_10px_24px_rgba(13,255,64,0.18)]">
-      <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7">
-        {children}
-      </svg>
-    </div>
-  );
-}
 
 export default function HomePage() {
   return (
@@ -158,15 +149,32 @@ export default function HomePage() {
           {services.map((service) => (
             <article
               key={service.title}
-              className="rounded-[28px] border border-black/10 bg-white p-7 shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(0,0,0,0.1)]"
+              className="overflow-hidden rounded-[28px] border border-black/10 bg-white shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-[0_22px_50px_rgba(0,0,0,0.1)]"
             >
-              <ServiceIcon>{service.icon}</ServiceIcon>
-              <h3 className="mt-5 text-2xl font-semibold text-black">
-                {service.title}
-              </h3>
-              <p className="mt-4 text-sm leading-7 text-black/65">
-                {service.description}
-              </p>
+              <div className="relative h-56 w-full overflow-hidden bg-[#eaf8ee]">
+                {service.image ? (
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center text-[#0DFF40]">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-16 w-16">
+                      {service.icon}
+                    </svg>
+                  </div>
+                )}
+              </div>
+              <div className="p-7">
+                <h3 className="text-2xl font-semibold text-black">
+                  {service.title}
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-black/65">
+                  {service.description}
+                </p>
+              </div>
             </article>
           ))}
         </div>
