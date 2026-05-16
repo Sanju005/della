@@ -85,7 +85,7 @@ export default function HomePage() {
           </header>
 
           <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_48%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
+            <div className="relative min-h-[680px] overflow-hidden rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_48%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
               <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
               <div className="grid min-h-[680px] gap-8 px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-16">
                 <div className="z-10 text-white">
@@ -217,12 +217,12 @@ export default function HomePage() {
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
                   <div className="absolute inset-y-10 right-4 w-[86%] rounded-full bg-[radial-gradient(circle_at_center,rgba(34,255,90,0.35)_0%,rgba(34,255,90,0.16)_42%,transparent_65%)] blur-[70px]" />
                   <div
-                    className="absolute -right-8 -top-2 h-[118%] w-[132%] lg:-right-18 lg:-top-5 lg:w-[136%]"
+                    className="absolute -right-10 -top-4 h-[122%] w-[136%] lg:-right-20 lg:-top-8 lg:w-[140%]"
                     style={{
                       WebkitMaskImage:
-                        "radial-gradient(circle at center, black 55%, rgba(0,0,0,0.88) 68%, transparent 78%)",
+                        "radial-gradient(circle at center, rgba(0,0,0,1) 52%, rgba(0,0,0,0.92) 65%, rgba(0,0,0,0.4) 78%, transparent 100%)",
                       maskImage:
-                        "radial-gradient(circle at center, black 55%, rgba(0,0,0,0.88) 68%, transparent 78%)",
+                        "radial-gradient(circle at center, rgba(0,0,0,1) 52%, rgba(0,0,0,0.92) 65%, rgba(0,0,0,0.4) 78%, transparent 100%)",
                     }}
                   >
                     <Image
