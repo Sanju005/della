@@ -12,10 +12,193 @@ const appCards = [
 ];
 
 const reasons = [
-  "Fast service discovery with a clearer path from interest to booking.",
-  "A stronger digital experience for customers and service providers.",
-  "One connected system for operations, providers, and customer care.",
-  "Designed to push app downloads while keeping staff access available.",
+  {
+    title: "Fast Discovery",
+    description: "Help customers move from search to booking with less friction.",
+    icon: (
+      <>
+        <circle
+          cx="11"
+          cy="11"
+          r="5.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="m15.25 15.25 3.25 3.25"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Easy Booking",
+    description: "A simpler digital flow for appointments, requests, and support.",
+    icon: (
+      <>
+        <rect
+          x="4.5"
+          y="6"
+          width="15"
+          height="13.5"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M8 4.5v3M16 4.5v3M4.5 10h15"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Provider Growth",
+    description: "Give service providers better visibility and more job opportunities.",
+    icon: (
+      <>
+        <path
+          d="M12 19.5V9"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="m8.5 12.5 3.5-3.5 3.5 3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M5 5.5h14"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Trusted Network",
+    description: "Build confidence with a cleaner, more reliable service marketplace.",
+    icon: (
+      <path
+        d="M12 3.75 19 6.5v4.75c0 3.96-2.7 7.58-7 8.75-4.3-1.17-7-4.79-7-8.75V6.5z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    ),
+  },
+  {
+    title: "Live Operations",
+    description: "Keep bookings, providers, and customer care connected in one place.",
+    icon: (
+      <>
+        <path
+          d="M6 17.5h3.5V10H6zM10.25 17.5h3.5V6.5h-3.5zM14.5 17.5H18V12h-3.5z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Mobile First",
+    description: "Push app downloads while keeping internal staff access available.",
+    icon: (
+      <>
+        <rect
+          x="8"
+          y="3.5"
+          width="8"
+          height="17"
+          rx="2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <circle cx="12" cy="17.25" r="0.8" fill="currentColor" />
+      </>
+    ),
+  },
+  {
+    title: "Better Support",
+    description: "Create a smoother service experience for customers and service teams.",
+    icon: (
+      <>
+        <path
+          d="M6.5 10.75a5.5 5.5 0 1 1 11 0v4.5a1.25 1.25 0 0 1-1.25 1.25H15l-2.1 2.1a1 1 0 0 1-1.4 0L9.4 16.5H7.75A1.25 1.25 0 0 1 6.5 15.25z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Smart Visibility",
+    description: "Showcase the right services clearly across the public website.",
+    icon: (
+      <>
+        <path
+          d="M3.75 12s3-5 8.25-5 8.25 5 8.25 5-3 5-8.25 5S3.75 12 3.75 12Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="2.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
+  {
+    title: "Scalable Platform",
+    description: "Lay the foundation for growth across services, providers, and regions.",
+    icon: (
+      <>
+        <path
+          d="M12 4.5 5.5 8v8L12 19.5 18.5 16V8z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M5.5 8 12 11.5 18.5 8"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
+  },
 ];
 
 const stories = [
@@ -197,13 +380,21 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {reasons.map((reason) => (
                 <div
-                  key={reason}
-                  className="rounded-[24px] border border-black/8 bg-white px-6 py-5 text-sm leading-7 text-black shadow-[0_14px_35px_rgba(0,0,0,0.05)]"
+                  key={reason.title}
+                  className="rounded-[24px] border border-black/8 bg-white p-6 text-black shadow-[0_14px_35px_rgba(0,0,0,0.05)]"
                 >
-                  {reason}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0DFF40] text-black shadow-[0_10px_24px_rgba(13,255,64,0.18)]">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                      {reason.icon}
+                    </svg>
+                  </div>
+                  <h3 className="mt-5 text-xl font-semibold">{reason.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-black/68">
+                    {reason.description}
+                  </p>
                 </div>
               ))}
             </div>
