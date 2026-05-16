@@ -85,10 +85,10 @@ export default function HomePage() {
 
           <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
             <div
-              className="relative min-h-[680px] overflow-hidden rounded-[38px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
+              className="relative min-h-[680px] overflow-hidden rounded-[36px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
               style={{
                 background:
-                  'linear-gradient(90deg, rgba(2,45,22,0.96) 0%, rgba(2,45,22,0.92) 20%, rgba(2,45,22,0.72) 38%, rgba(2,45,22,0.35) 52%, rgba(2,45,22,0.08) 68%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
+                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.94) 28%, rgba(2,45,22,0.65) 45%, rgba(2,45,22,0.22) 62%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
                 backgroundSize: "auto 84%",
                 backgroundPosition: "right 70px center",
                 backgroundRepeat: "no-repeat",
