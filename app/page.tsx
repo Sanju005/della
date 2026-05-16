@@ -145,7 +145,8 @@ export default function HomePage() {
                 DELLA Mobile Experience
               </p>
               <h2 className="mt-5 text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-                One app for home services, care, learning, and lifestyle support
+                One app for home services, care, learning, and{" "}
+                <span className="text-[#72FF58]">lifestyle support</span>
               </h2>
               <p className="mt-6 max-w-xl text-base leading-8 text-white/84 sm:text-lg">
                 From cleaning and repairs to babysitting, tuition, beauty, and
