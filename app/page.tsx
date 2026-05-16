@@ -179,15 +179,15 @@ export default function HomePage() {
           </header>
 
           <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-visible rounded-b-[40px] rounded-t-[36px] bg-[linear-gradient(90deg,#083D1A_0%,#0C6C2E_38%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_24%,rgba(255,255,255,0.24),transparent_18%),radial-gradient(circle_at_15%_84%,rgba(255,255,255,0.08),transparent_22%)]" />
+            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(90deg,#083D1A_0%,#0C6C2E_38%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_24%,rgba(255,255,255,0.22),transparent_18%),radial-gradient(circle_at_14%_84%,rgba(255,255,255,0.08),transparent_24%)]" />
 
               <div className="relative grid gap-10 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:px-12 lg:pb-32">
                 <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
                     Download-first service platform for DELLA
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-[5.3rem]">
+                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-[5.2rem]">
                     Find the right service faster
                   </h1>
                   <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84">
