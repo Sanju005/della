@@ -304,15 +304,16 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative min-h-[380px] lg:min-h-[560px]">
-                  <div className="absolute inset-0 rounded-[36px] bg-[radial-gradient(circle_at_58%_48%,rgba(114,255,88,0.36),transparent_36%),radial-gradient(circle_at_86%_26%,rgba(255,255,255,0.18),transparent_18%)]" />
-                  <div className="absolute left-6 top-20 h-28 w-28 rounded-full border border-[#72FF58]/45" />
-                  <div className="absolute right-12 top-10 h-24 w-24 rounded-full border border-[#72FF58]/45" />
-                  <div className="absolute right-0 top-0 h-full w-full">
+                  <div className="absolute inset-y-8 right-0 w-[82%] rounded-full bg-[radial-gradient(circle,rgba(114,255,88,0.34)_0%,rgba(114,255,88,0.16)_34%,rgba(114,255,88,0.04)_58%,transparent_74%)] blur-3xl lg:right-2" />
+                  <div className="absolute inset-y-12 right-10 w-[62%] rounded-full bg-[radial-gradient(circle,rgba(8,255,89,0.26)_0%,rgba(8,255,89,0.12)_38%,transparent_72%)] blur-[90px]" />
+                  <div className="absolute left-10 top-24 h-28 w-28 rounded-full border border-[#72FF58]/35" />
+                  <div className="absolute right-16 top-12 h-24 w-24 rounded-full border border-[#72FF58]/35" />
+                  <div className="absolute -right-6 top-0 h-full w-[115%] lg:-right-10">
                     <Image
                       src="/images/della-hero-reference.png"
                       alt="DELLA app hero visual"
                       fill
-                      className="object-contain object-right"
+                      className="object-contain object-right drop-shadow-[0_28px_60px_rgba(0,0,0,0.22)]"
                       priority
                     />
                   </div>
