@@ -6,26 +6,94 @@ const heroCards = [
   {
     title: "Home Services",
     description:
-      "Cleaning, maintenance, and trusted support for everyday home needs.",
-    tone: "from-[#0DFF40]/30 to-white",
+      "Cleaning, aircond service, handyman, plumbing, and daily home support.",
+    link: "Explore home services",
+    icon: (
+      <path
+        d="M4.5 10.5 12 4l7.5 6.5v8.25A1.25 1.25 0 0 1 18.25 20H14v-5h-4v5H5.75A1.25 1.25 0 0 1 4.5 18.75Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.8"
+      />
+    ),
   },
   {
-    title: "Beauty and Wellness",
+    title: "Family Care",
     description:
-      "Self-care and wellness services customers can discover and book faster.",
-    tone: "from-[#067a2b]/25 to-white",
+      "Babysitting, elderly care, confinement help, and trusted support for families.",
+    link: "Find care services",
+    icon: (
+      <>
+        <circle
+          cx="12"
+          cy="8"
+          r="3"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M7.5 19c.55-2.75 2.27-4.5 4.5-4.5s3.95 1.75 4.5 4.5M8 6.5l-1.5-2M16 6.5l1.5-2"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
   },
   {
-    title: "Babysitting and Tuition",
+    title: "Tuition & Classes",
     description:
-      "Family-focused support for childcare, learning, and flexible daily help.",
-    tone: "from-[#0DFF40]/24 to-white",
+      "Home tuition, online lessons, exam coaching, music, language, and skills classes.",
+    link: "View classes",
+    icon: (
+      <>
+        <path
+          d="M3.5 8 12 4l8.5 4-8.5 4Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M6.5 9.75v4.5c0 1.52 2.46 2.75 5.5 2.75s5.5-1.23 5.5-2.75v-4.5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
   },
   {
-    title: "Repairs and Providers",
+    title: "Beauty & Wellness",
     description:
-      "Repair works and provider opportunities powered by one DELLA app.",
-    tone: "from-[#067a2b]/22 to-white",
+      "Massage, nails, makeup, salon, grooming, and wellness services at your convenience.",
+    link: "Discover wellness",
+    icon: (
+      <>
+        <path
+          d="M12 5.25c1.85-2.12 5.2-2.36 7.14-.45 1.96 1.93 2 5.13.12 7.15L12 19.5l-7.26-7.55C2.86 9.93 2.9 6.73 4.86 4.8c1.95-1.91 5.29-1.67 7.14.45Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M12 8.5v4M10 10.5h4"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+      </>
+    ),
   },
 ];
 
@@ -71,7 +139,6 @@ export default function HomePage() {
   return (
     <main className="bg-white text-black">
       <section className="relative overflow-hidden bg-white text-black">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(13,255,64,0.12),transparent_22%),radial-gradient(circle_at_bottom_left,rgba(6,122,43,0.08),transparent_30%)]" />
         <div className="relative mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
           <header className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -111,83 +178,150 @@ export default function HomePage() {
             </nav>
           </header>
 
-          <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
-            <div className="overflow-hidden rounded-[38px] bg-[linear-gradient(120deg,#063f1d_0%,#0a6a2d_28%,#0DFF40_100%)] shadow-[0_22px_70px_rgba(13,255,64,0.16)]">
-              <div className="grid gap-10 px-7 py-8 md:px-10 md:py-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center lg:px-12">
-                <div className="text-white">
+          <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
+            <div className="relative min-h-[680px] overflow-visible rounded-b-[40px] rounded-t-[36px] bg-[linear-gradient(90deg,#083D1A_0%,#0C6C2E_38%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_24%,rgba(255,255,255,0.24),transparent_18%),radial-gradient(circle_at_15%_84%,rgba(255,255,255,0.08),transparent_22%)]" />
+
+              <div className="relative grid gap-10 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:px-12 lg:pb-32">
+                <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
-                Download-first marketing page for DELLA
+                    Download-first service platform for DELLA
                   </div>
-                  <h1 className="mt-5 max-w-4xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-7xl">
-                    Find the right service faster and get people into the DELLA app.
+                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-[5.3rem]">
+                    Find the right service faster
                   </h1>
-                  <p className="mt-5 max-w-2xl text-lg leading-8 text-white/82">
-                    DELLA helps customers discover home support, babysitting,
-                    tuition classes, repair works, beauty, and more. The
-                    website should attract customers, build trust, and lead them
-                    straight to the app.
+                  <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84">
+                    Book trusted home services, babysitting, tuition, repairs,
+                    beauty, and more from one simple DELLA app.
                   </p>
 
-                  <div className="mt-8 flex flex-wrap gap-4">
+                  <div className="mt-9 flex flex-wrap gap-4">
                     <a
                       href="#download"
-                      className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#063f1d] transition hover:bg-[#F3FFF6]"
+                      className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#083D1A] transition hover:bg-[#F3FFF6]"
                     >
                       Download the App
                     </a>
                     <Link
                       href="/our-services"
-                      className="rounded-full border border-white/18 bg-white/8 px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/12"
+                      className="rounded-full border border-white/24 bg-transparent px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
                     >
                       Explore Services
                     </Link>
                   </div>
                 </div>
 
-                <div className="relative min-h-[280px] overflow-hidden rounded-[32px] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02))] p-6 lg:min-h-[340px]">
-                  <div className="absolute -right-10 top-6 h-40 w-40 rounded-full bg-white/18 blur-3xl" />
-                  <div className="absolute left-8 top-14 h-24 w-24 rounded-full bg-[#0DFF40]/35 blur-2xl" />
-                  <div className="absolute right-8 top-10 h-40 w-56 rounded-[32px] border border-white/18 bg-[linear-gradient(135deg,rgba(255,255,255,0.28),rgba(255,255,255,0.08))] shadow-[0_20px_40px_rgba(0,0,0,0.18)]" />
-                  <div className="absolute right-20 top-28 h-44 w-32 rounded-[30px] border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(233,255,238,0.94))] shadow-[0_20px_40px_rgba(0,0,0,0.18)]" />
-                  <div className="absolute bottom-10 left-6 h-32 w-28 rounded-[28px] border border-white/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(240,255,243,0.92))] shadow-[0_16px_34px_rgba(0,0,0,0.14)]" />
-                  <div className="absolute bottom-8 right-10 h-24 w-40 rounded-[28px] border border-white/16 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(240,255,243,0.92))] shadow-[0_16px_34px_rgba(0,0,0,0.14)]" />
+                <div className="relative min-h-[360px] lg:min-h-[500px]">
+                  <div className="absolute right-2 top-4 h-56 w-40 rounded-[34px] border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(232,255,237,0.94))] shadow-[0_26px_60px_rgba(0,0,0,0.22)] lg:right-14 lg:top-0 lg:h-72 lg:w-52">
+                    <div className="mx-auto mt-4 h-2 w-16 rounded-full bg-black/10" />
+                    <div className="px-5 pt-6">
+                      <div className="h-24 rounded-[22px] bg-[linear-gradient(135deg,#0DFF40,#0A5A25)]" />
+                      <div className="mt-4 h-3 w-24 rounded-full bg-black/10" />
+                      <div className="mt-2 h-3 w-16 rounded-full bg-black/8" />
+                      <div className="mt-6 space-y-3">
+                        <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 shadow-[0_10px_18px_rgba(0,0,0,0.06)]">
+                          <div className="h-10 w-10 rounded-2xl bg-[#0DFF40]/18" />
+                          <div className="space-y-2">
+                            <div className="h-2 w-16 rounded-full bg-black/12" />
+                            <div className="h-2 w-10 rounded-full bg-black/8" />
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 shadow-[0_10px_18px_rgba(0,0,0,0.06)]">
+                          <div className="h-10 w-10 rounded-2xl bg-[#0DFF40]/18" />
+                          <div className="space-y-2">
+                            <div className="h-2 w-14 rounded-full bg-black/12" />
+                            <div className="h-2 w-12 rounded-full bg-black/8" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
 
-                  <div className="relative z-10 ml-auto max-w-[220px] rounded-[26px] border border-white/16 bg-white/92 p-5 text-black shadow-[0_18px_36px_rgba(0,0,0,0.14)]">
-                    <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#067a2b]">
+                  <div className="absolute left-0 top-16 h-40 w-56 rounded-[34px] border border-white/16 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08))] p-5 shadow-[0_22px_40px_rgba(0,0,0,0.18)] lg:left-12 lg:top-20 lg:h-48 lg:w-64">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/88">
+                          Providers
+                        </p>
+                        <p className="mt-3 max-w-[170px] text-sm leading-6 text-white/84">
+                          Trusted professionals growing through one DELLA app.
+                        </p>
+                      </div>
+                      <div className="rounded-2xl bg-white/16 p-3 text-white">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                          <path
+                            d="M8 9V7.5A2.5 2.5 0 0 1 10.5 5h3A2.5 2.5 0 0 1 16 7.5V9"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.8"
+                          />
+                          <path
+                            d="M4.5 9.5h15v8.75A1.75 1.75 0 0 1 17.75 20H6.25A1.75 1.75 0 0 1 4.5 18.25Z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeLinejoin="round"
+                            strokeWidth="1.8"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-8 left-6 h-32 w-44 rounded-[30px] border border-white/16 bg-[linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,255,255,0.08))] p-5 shadow-[0_18px_34px_rgba(0,0,0,0.16)] lg:bottom-10 lg:left-20">
+                    <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/88">
+                      Services
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {["Home", "Care", "Classes", "Beauty"].map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-full bg-white/14 px-3 py-2 text-xs font-semibold text-white"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="absolute bottom-8 right-0 rounded-[28px] border border-white/16 bg-white/92 px-5 py-4 text-black shadow-[0_18px_34px_rgba(0,0,0,0.14)] lg:right-8">
+                    <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#067a2b]">
                       1 App
                     </p>
-                    <h2 className="mt-3 text-2xl font-semibold leading-tight">
-                      Users and providers register in the same DELLA app.
-                    </h2>
-                    <p className="mt-3 text-sm leading-6 text-black/72">
-                      One place for discovery, registration, and service activity.
+                    <p className="mt-2 max-w-[220px] text-sm leading-6 text-black/74">
+                      Users and service providers register through the same DELLA app.
                     </p>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="-mt-2 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {heroCards.map((card, index) => (
-                <article
-                  key={card.title}
-                  className={`relative overflow-hidden rounded-[28px] border border-[#0DFF40]/18 bg-[linear-gradient(135deg,var(--tw-gradient-stops))] ${card.tone} p-6 shadow-[0_18px_40px_rgba(0,0,0,0.06)]`}
-                >
-                  <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,rgba(13,255,64,0.18),transparent_55%)]" />
-                  <div className="absolute bottom-0 right-0 h-24 w-24 rounded-full bg-[#0DFF40]/10 blur-2xl" />
-                  <div className="relative z-10">
-                    <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#0DFF40] text-lg font-semibold text-black shadow-[0_10px_20px_rgba(13,255,64,0.18)]">
-                      {index + 1}
+              <div className="relative z-20 mx-auto -mt-16 grid max-w-6xl gap-5 px-6 md:grid-cols-2 xl:grid-cols-4 xl:px-10">
+                {heroCards.map((card) => (
+                  <article
+                    key={card.title}
+                    className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,#11E64A_0%,#0A8C31_100%)] p-6 text-white shadow-[0_24px_40px_rgba(0,0,0,0.16)]"
+                  >
+                    <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_55%)]" />
+                    <div className="relative z-10">
+                      <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/18 bg-white/12 text-white">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                          {card.icon}
+                        </svg>
+                      </div>
+                      <h3 className="mt-5 text-2xl font-semibold text-white">
+                        {card.title}
+                      </h3>
+                      <p className="mt-3 text-sm leading-7 text-white/90">
+                        {card.description}
+                      </p>
+                      <p className="mt-6 text-sm font-semibold text-white">
+                        {card.link} <span aria-hidden="true">→</span>
+                      </p>
                     </div>
-                    <h3 className="mt-5 text-2xl font-semibold text-black">
-                      {card.title}
-                    </h3>
-                    <p className="mt-3 text-sm leading-7 text-black/70">
-                      {card.description}
-                    </p>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
         </div>
