@@ -303,13 +303,11 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="relative min-h-[420px] lg:min-h-[600px]">
-                  <div className="absolute inset-y-4 right-0 w-[92%] rounded-full bg-[radial-gradient(circle,rgba(114,255,88,0.42)_0%,rgba(114,255,88,0.2)_34%,rgba(114,255,88,0.05)_60%,transparent_78%)] blur-3xl lg:right-0" />
-                  <div className="absolute inset-y-10 right-6 w-[72%] rounded-full bg-[radial-gradient(circle,rgba(8,255,89,0.32)_0%,rgba(8,255,89,0.16)_38%,transparent_74%)] blur-[110px]" />
+                <div className="relative min-h-[440px] lg:min-h-[620px]">
                   <div className="absolute left-10 top-24 h-28 w-28 rounded-full border border-[#72FF58]/35" />
                   <div className="absolute right-16 top-12 h-24 w-24 rounded-full border border-[#72FF58]/35" />
                   <div
-                    className="absolute -right-10 -top-4 h-[112%] w-[132%] lg:-right-20 lg:-top-8 lg:w-[138%]"
+                    className="absolute -right-16 -top-8 h-[122%] w-[146%] lg:-right-28 lg:-top-12 lg:w-[154%]"
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.9) 22%, black 42%, black 100%)",
@@ -321,7 +319,7 @@ export default function HomePage() {
                       src="/images/della-hero-reference-v2.png"
                       alt="DELLA app hero visual"
                       fill
-                      className="object-contain object-right opacity-95 drop-shadow-[0_34px_70px_rgba(0,0,0,0.2)]"
+                      className="object-contain object-right opacity-100 drop-shadow-[0_28px_54px_rgba(0,0,0,0.16)]"
                       priority
                     />
                   </div>
