@@ -180,18 +180,19 @@ export default function HomePage() {
           </header>
 
           <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(90deg,#042C12_0%,#0A5A25_34%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
-              <div className="grid min-h-[680px] gap-10 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-32">
+            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_44%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.1),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.2),transparent_28%)]" />
+              <div className="grid min-h-[680px] gap-8 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-32">
                 <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
                     Download-first service platform for DELLA
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.95] sm:text-6xl xl:text-[5.5rem]">
+                  <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-[0.92] sm:text-6xl xl:text-[5.35rem]">
                     Find the right
                     <br />
                     service <span className="text-[#7AFF72]">faster</span>
                   </h1>
-                  <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84">
+                  <p className="mt-7 max-w-xl text-lg leading-8 text-white/84">
                     Book trusted home services, babysitting, tuition, repairs,
                     beauty, and more from one simple DELLA app.
                   </p>
@@ -211,7 +212,7 @@ export default function HomePage() {
                     </Link>
                   </div>
 
-                  <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                  <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     {[
                       {
                         title: "Trusted Professionals",
@@ -289,35 +290,41 @@ export default function HomePage() {
                         ),
                       },
                     ].map((item) => (
-                      <div key={item.title} className="flex items-start gap-3 text-white">
-                        <div className="rounded-2xl border border-white/16 bg-white/8 p-3 text-[#72FF58]">
-                          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
-                            {item.icon}
-                          </svg>
+                      <div
+                        key={item.title}
+                        className="rounded-[22px] border border-white/12 bg-black/8 px-3 py-3 backdrop-blur-[2px]"
+                      >
+                        <div className="flex items-start gap-3 text-white">
+                          <div className="rounded-2xl border border-white/16 bg-white/8 p-3 text-[#72FF58]">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                              {item.icon}
+                            </svg>
+                          </div>
+                          <p className="text-sm font-medium leading-6 text-white/88">
+                            {item.title}
+                          </p>
                         </div>
-                        <p className="text-sm font-medium leading-6 text-white/88">
-                          {item.title}
-                        </p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
+                  <div className="absolute inset-y-10 right-4 w-[86%] rounded-full bg-[radial-gradient(circle,rgba(95,255,104,0.2)_0%,rgba(95,255,104,0.08)_42%,transparent_72%)] blur-[70px]" />
                   <div
-                    className="absolute -right-16 -top-8 h-[122%] w-[146%] lg:-right-28 lg:-top-12 lg:w-[154%]"
+                    className="absolute -right-8 -top-2 h-[118%] w-[132%] lg:-right-18 lg:-top-5 lg:w-[136%]"
                     style={{
                       WebkitMaskImage:
-                        "radial-gradient(circle at 62% 52%, black 0%, black 34%, rgba(0,0,0,0.92) 48%, rgba(0,0,0,0.78) 58%, rgba(0,0,0,0.42) 70%, transparent 84%)",
+                        "radial-gradient(circle at 62% 52%, black 0%, black 38%, rgba(0,0,0,0.94) 52%, rgba(0,0,0,0.66) 68%, transparent 86%)",
                       maskImage:
-                        "radial-gradient(circle at 62% 52%, black 0%, black 34%, rgba(0,0,0,0.92) 48%, rgba(0,0,0,0.78) 58%, rgba(0,0,0,0.42) 70%, transparent 84%)",
+                        "radial-gradient(circle at 62% 52%, black 0%, black 38%, rgba(0,0,0,0.94) 52%, rgba(0,0,0,0.66) 68%, transparent 86%)",
                     }}
                   >
                     <Image
                       src="/images/della-hero-blended.png"
                       alt="DELLA app hero visual"
                       fill
-                      className="object-contain object-right opacity-[0.98] mix-blend-screen"
+                      className="object-contain object-right opacity-[0.96]"
                       priority
                     />
                   </div>
