@@ -117,14 +117,16 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
-                  <div className="absolute inset-y-10 right-4 w-[86%] rounded-full bg-[radial-gradient(circle_at_center,rgba(34,255,90,0.35)_0%,rgba(34,255,90,0.16)_42%,transparent_65%)] blur-[70px]" />
+                  <div className="absolute inset-[5%] z-0 bg-[radial-gradient(circle,rgba(30,255,90,0.45),transparent_65%)] blur-[45px]" />
                   <div
-                    className="absolute -right-10 -top-4 h-[122%] w-[136%] lg:-right-20 lg:-top-8 lg:w-[140%]"
+                    className="absolute -right-10 -top-4 z-10 h-[122%] w-[136%] lg:-right-20 lg:-top-8 lg:w-[140%]"
                     style={{
                       WebkitMaskImage:
-                        "radial-gradient(circle at center, rgba(0,0,0,1) 52%, rgba(0,0,0,0.92) 65%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+                        "linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
+                      WebkitMaskComposite: "source-in",
                       maskImage:
-                        "radial-gradient(circle at center, rgba(0,0,0,1) 52%, rgba(0,0,0,0.92) 65%, rgba(0,0,0,0.4) 78%, transparent 100%)",
+                        "linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
+                      maskComposite: "intersect",
                     }}
                   >
                     <Image
