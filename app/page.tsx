@@ -42,9 +42,9 @@ function ServiceIcon({ children }: { children: React.ReactNode }) {
 
 export default function HomePage() {
   return (
-    <main className="bg-white text-black">
+    <main className="overflow-x-hidden bg-white text-black">
       <section className="relative overflow-hidden bg-white text-black">
-        <div className="relative mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
+        <div className="relative w-full px-6 py-8 sm:px-8 lg:px-10">
           <header className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#0DFF40]">
@@ -93,6 +93,7 @@ export default function HomePage() {
                 backgroundSize: "auto 80%",
                 backgroundPosition: "right 10% center",
                 backgroundRepeat: "no-repeat",
+                backgroundAttachment: "fixed",
               }}
             >
               <div className="relative z-10 min-h-[680px] px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:px-12 lg:pb-16">
@@ -128,7 +129,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+      <section className="w-full px-6 py-16 sm:px-8 lg:px-10">
         <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
@@ -171,7 +172,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+        <div className="w-full px-6 py-16 sm:px-8 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
@@ -201,7 +202,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+      <section className="w-full px-6 py-16 sm:px-8 lg:px-10">
         <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
           <div className="rounded-[32px] border border-[#0DFF40]/20 bg-[#F4FFF6] p-8 text-black shadow-[0_18px_45px_rgba(13,255,64,0.10)]">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0DFF40]">
@@ -253,7 +254,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-white text-black">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+        <div className="w-full px-6 py-16 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0DFF40]">
@@ -291,7 +292,7 @@ export default function HomePage() {
       </section>
 
       <section id="download" className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
+        <div className="w-full px-6 py-16 sm:px-8 lg:px-10">
           <div className="grid gap-10 rounded-[36px] border border-[#0DFF40]/20 bg-[#F4FFF6] px-7 py-10 shadow-[0_18px_45px_rgba(13,255,64,0.10)] sm:px-10 sm:py-12 lg:grid-cols-[1fr_auto] lg:items-center">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0DFF40]">
