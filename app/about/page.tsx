@@ -9,7 +9,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#26FF40]">
+              <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#0DFF40]">
                 DELLA
               </p>
               <p className="mt-2 text-sm text-black/60">
@@ -20,19 +20,19 @@ export default function AboutPage() {
             <nav className="flex flex-wrap gap-3 text-sm font-semibold">
               <Link
                 href="/"
-                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#0DFF40] hover:text-[#0DFF40]"
               >
                 Home
               </Link>
               <Link
                 href="/our-services"
-                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#0DFF40] hover:text-[#0DFF40]"
               >
                 Services
               </Link>
               <Link
                 href="/login"
-                className="rounded-full bg-[#26FF40] px-5 py-3 text-black transition hover:bg-white"
+                className="rounded-full bg-[#0DFF40] px-5 py-3 text-black transition hover:bg-white"
               >
                 Staff Login
               </Link>
@@ -41,7 +41,7 @@ export default function AboutPage() {
 
           <div className="grid gap-10 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0DFF40]">
                 About Company
               </p>
               <h1 className="mt-4 max-w-4xl text-5xl font-semibold leading-tight">
@@ -54,7 +54,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="rounded-[34px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_45%,#E8FFEC_100%)] p-8 text-black shadow-[0_18px_45px_rgba(38,255,64,0.14)]">
+            <div className="rounded-[34px] border border-[#0DFF40]/20 bg-[#F4FFF6] p-8 text-black shadow-[0_18px_45px_rgba(13,255,64,0.10)]">
               <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/70">
                 DELLA Mission
               </p>
@@ -108,8 +108,8 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_45%,#F1FFF4_100%)] p-8 text-black shadow-[0_16px_40px_rgba(38,255,64,0.12)]">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
+          <div className="rounded-[30px] border border-[#0DFF40]/20 bg-[#F4FFF6] p-8 text-black shadow-[0_16px_40px_rgba(13,255,64,0.10)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0DFF40]">
               Staff Access
             </p>
             <h2 className="mt-4 text-3xl font-semibold">
