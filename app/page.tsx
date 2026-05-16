@@ -215,14 +215,14 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
-                  <div className="absolute inset-y-10 right-4 w-[86%] rounded-full bg-[radial-gradient(circle,rgba(95,255,104,0.2)_0%,rgba(95,255,104,0.08)_42%,transparent_72%)] blur-[70px]" />
+                  <div className="absolute inset-y-10 right-4 w-[86%] rounded-full bg-[radial-gradient(circle_at_center,rgba(34,255,90,0.35)_0%,rgba(34,255,90,0.16)_42%,transparent_65%)] blur-[70px]" />
                   <div
                     className="absolute -right-8 -top-2 h-[118%] w-[132%] lg:-right-18 lg:-top-5 lg:w-[136%]"
                     style={{
                       WebkitMaskImage:
-                        "radial-gradient(circle at 62% 52%, black 0%, black 38%, rgba(0,0,0,0.94) 52%, rgba(0,0,0,0.66) 68%, transparent 86%)",
+                        "radial-gradient(circle at center, black 55%, rgba(0,0,0,0.88) 68%, transparent 78%)",
                       maskImage:
-                        "radial-gradient(circle at 62% 52%, black 0%, black 38%, rgba(0,0,0,0.94) 52%, rgba(0,0,0,0.66) 68%, transparent 86%)",
+                        "radial-gradient(circle at center, black 55%, rgba(0,0,0,0.88) 68%, transparent 78%)",
                     }}
                   >
                     <Image
