@@ -5,14 +5,14 @@ import { adminRoles, companyPillars } from "@/lib/marketing-content";
 export default function AboutPage() {
   return (
     <main className="bg-white text-black">
-      <section className="bg-black text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
-          <div className="flex flex-col gap-5 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#26FF40]">
                 DELLA
               </p>
-              <p className="mt-2 text-sm text-white/65">
+              <p className="mt-2 text-sm text-black/60">
                 About the company behind the platform
               </p>
             </div>
@@ -20,13 +20,13 @@ export default function AboutPage() {
             <nav className="flex flex-wrap gap-3 text-sm font-semibold">
               <Link
                 href="/"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 Home
               </Link>
               <Link
                 href="/our-services"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 Services
               </Link>
@@ -47,15 +47,15 @@ export default function AboutPage() {
               <h1 className="mt-4 max-w-4xl text-5xl font-semibold leading-tight">
                 DELLA is building a more useful everyday service ecosystem
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-black/68">
                 The company vision is simple: help customers find trusted
                 services faster, help providers grow through better visibility,
                 and help internal teams run the platform with more confidence.
               </p>
             </div>
 
-            <div className="rounded-[34px] bg-[linear-gradient(135deg,#26FF40_0%,#16401d_58%,#000000_100%)] p-8 text-black">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/65">
+            <div className="rounded-[34px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_45%,#E8FFEC_100%)] p-8 text-black shadow-[0_18px_45px_rgba(38,255,64,0.14)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/70">
                 DELLA Mission
               </p>
               <h2 className="mt-4 text-3xl font-semibold leading-tight">
@@ -108,8 +108,8 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="rounded-[30px] bg-black p-8 text-white">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+          <div className="rounded-[30px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_45%,#F1FFF4_100%)] p-8 text-black shadow-[0_16px_40px_rgba(38,255,64,0.12)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
               Staff Access
             </p>
             <h2 className="mt-4 text-3xl font-semibold">
@@ -119,7 +119,7 @@ export default function AboutPage() {
               {adminRoles.map((role) => (
                 <span
                   key={role}
-                  className="rounded-full border border-white/12 bg-white/5 px-4 py-2 text-sm font-semibold text-white"
+                  className="rounded-full border border-black/10 bg-white/75 px-4 py-2 text-sm font-semibold text-black"
                 >
                   {role}
                 </span>
@@ -127,7 +127,7 @@ export default function AboutPage() {
             </div>
             <Link
               href="/login"
-              className="mt-8 inline-flex rounded-full bg-[#26FF40] px-6 py-3 text-sm font-semibold text-black transition hover:bg-white"
+              className="mt-8 inline-flex rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
             >
               Go to Staff Login
             </Link>

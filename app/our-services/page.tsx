@@ -5,14 +5,14 @@ import { services } from "@/lib/marketing-content";
 export default function OurServicesPage() {
   return (
     <main className="bg-white text-black">
-      <section className="bg-black text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
-          <div className="flex flex-col gap-5 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#26FF40]">
                 DELLA
               </p>
-              <p className="mt-2 text-sm text-white/65">
+              <p className="mt-2 text-sm text-black/60">
                 Service categories that drive downloads
               </p>
             </div>
@@ -20,13 +20,13 @@ export default function OurServicesPage() {
             <nav className="flex flex-wrap gap-3 text-sm font-semibold">
               <Link
                 href="/"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 Home
               </Link>
               <Link
                 href="/about"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 About Company
               </Link>
@@ -47,21 +47,21 @@ export default function OurServicesPage() {
               <h1 className="mt-4 max-w-4xl text-5xl font-semibold leading-tight">
                 Show people what DELLA can do, then guide them into the app
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-black/68">
                 This page works like a marketing catalog. It explains the
                 service range clearly and keeps the next step simple: install
                 the DELLA app and start using it.
               </p>
             </div>
 
-            <div className="rounded-[34px] bg-[linear-gradient(135deg,#26FF40_0%,#123815_55%,#000000_100%)] p-8 text-black">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/65">
+            <div className="rounded-[34px] bg-[linear-gradient(135deg,#36ff58_0%,#7cf28f_45%,#dfffe5_100%)] p-8 text-black shadow-[0_18px_45px_rgba(38,255,64,0.14)]">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/70">
                 Download Path
               </p>
               <h2 className="mt-4 text-3xl font-semibold leading-tight">
                 Services on the website, onboarding in the app
               </h2>
-              <p className="mt-4 text-base leading-7 text-black/80">
+              <p className="mt-4 text-base leading-7 text-black/78">
                 Customers and providers should move from this page into the app.
                 Internal team access stays available separately through the web
                 login.

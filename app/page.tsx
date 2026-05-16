@@ -15,12 +15,6 @@ const audienceCards = [
       "Grow your visibility, receive requests, and manage work through DELLA.",
     cta: "Join Through App",
   },
-  {
-    title: "For Teams",
-    description:
-      "Admins, customer care, and managers stay in control from the web portal.",
-    cta: "Staff Login",
-  },
 ];
 
 const appCards = [
@@ -69,15 +63,15 @@ function ServiceIcon({ children }: { children: React.ReactNode }) {
 export default function HomePage() {
   return (
     <main className="bg-white text-black">
-      <section className="relative overflow-hidden bg-black text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(38,255,64,0.35),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(38,255,64,0.18),transparent_28%)]" />
+      <section className="relative overflow-hidden bg-white text-black">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(38,255,64,0.22),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(0,255,25,0.14),transparent_28%)]" />
         <div className="relative mx-auto max-w-7xl px-6 py-8 sm:px-8 lg:px-10">
-          <header className="flex flex-col gap-5 border-b border-white/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
+          <header className="flex flex-col gap-5 border-b border-black/10 pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.4em] text-[#26FF40]">
                 DELLA
               </p>
-              <p className="mt-2 text-sm text-white/65">
+              <p className="mt-2 text-sm text-black/60">
                 Everyday services in one powerful mobile platform
               </p>
             </div>
@@ -85,19 +79,19 @@ export default function HomePage() {
             <nav className="flex flex-wrap gap-3 text-sm font-semibold">
               <Link
                 href="/"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 Home
               </Link>
               <Link
                 href="/about"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 About Company
               </Link>
               <Link
                 href="/our-services"
-                className="rounded-full border border-white/15 bg-white/5 px-5 py-3 text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                className="rounded-full border border-black/10 bg-white px-5 py-3 text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
               >
                 Services
               </Link>
@@ -112,13 +106,13 @@ export default function HomePage() {
 
           <div className="grid gap-12 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-20">
             <div>
-              <div className="inline-flex rounded-full border border-[#26FF40]/40 bg-[#26FF40]/12 px-4 py-2 text-sm font-medium text-[#9DFFAB]">
+              <div className="inline-flex rounded-full border border-[#26FF40]/30 bg-[#26FF40]/10 px-4 py-2 text-sm font-medium text-[#0f7a22]">
                 Download-first marketing page for DELLA
               </div>
               <h1 className="mt-6 max-w-4xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-7xl">
                 Find the right service faster and get people into the DELLA app.
               </h1>
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-white/72">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-black/68">
                 DELLA helps customers discover useful services like home
                 support, babysitting, tuition classes, repair works, beauty,
                 and more. The website should attract attention, build trust, and
@@ -134,37 +128,47 @@ export default function HomePage() {
                 </a>
                 <Link
                   href="/our-services"
-                  className="rounded-full border border-white/15 bg-white/5 px-7 py-3 text-sm font-semibold text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+                  className="rounded-full border border-black/10 bg-white px-7 py-3 text-sm font-semibold text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
                 >
                   Explore Services
                 </Link>
               </div>
 
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-3xl font-semibold text-[#26FF40]">6+</p>
-                  <p className="mt-2 text-sm leading-6 text-white/70">
-                    Service categories highlighted on the public site
+              <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <div className="rounded-[24px] border border-[#26FF40]/15 bg-[linear-gradient(135deg,rgba(38,255,64,0.12),rgba(255,255,255,0.96))] p-5 shadow-[0_14px_35px_rgba(0,0,0,0.05)]">
+                  <p className="text-3xl font-semibold text-[#26FF40]">8+</p>
+                  <p className="mt-2 text-sm leading-6 text-black/65">
+                    Services available through the DELLA platform
                   </p>
                 </div>
-                <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-3xl font-semibold text-[#26FF40]">2 Apps</p>
-                  <p className="mt-2 text-sm leading-6 text-white/70">
-                    Customer and provider journeys designed for mobile
+                <div className="rounded-[24px] border border-[#26FF40]/15 bg-[linear-gradient(135deg,rgba(0,255,25,0.1),rgba(255,255,255,0.96))] p-5 shadow-[0_14px_35px_rgba(0,0,0,0.05)]">
+                  <p className="text-3xl font-semibold text-[#26FF40]">1 App</p>
+                  <p className="mt-2 text-sm leading-6 text-black/65">
+                    One mobile experience for discovery, booking, and growth
                   </p>
                 </div>
-                <div className="rounded-[24px] border border-white/10 bg-white/5 p-5">
-                  <p className="text-3xl font-semibold text-[#26FF40]">3 Roles</p>
-                  <p className="mt-2 text-sm leading-6 text-white/70">
-                    Staff access for Admin, Customer Care, and Manager
+                <div className="rounded-[24px] border border-[#26FF40]/15 bg-[linear-gradient(135deg,rgba(38,255,64,0.12),rgba(255,255,255,0.96))] p-5 shadow-[0_14px_35px_rgba(0,0,0,0.05)]">
+                  <p className="text-3xl font-semibold text-[#26FF40]">
+                    Malaysia
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-black/65">
+                    Built to serve customers and providers all over Malaysia
+                  </p>
+                </div>
+                <div className="rounded-[24px] border border-[#26FF40]/15 bg-[linear-gradient(135deg,rgba(0,255,25,0.1),rgba(255,255,255,0.96))] p-5 shadow-[0_14px_35px_rgba(0,0,0,0.05)]">
+                  <p className="text-3xl font-semibold text-[#26FF40]">
+                    Reliable
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-black/65">
+                    A dependable service platform focused on trust and quality
                   </p>
                 </div>
               </div>
             </div>
 
             <div className="relative">
-              <div className="rounded-[34px] border border-white/10 bg-white/5 p-6 backdrop-blur">
-                <div className="rounded-[28px] bg-[linear-gradient(135deg,#26FF40_0%,#0f3d16_55%,#000000_100%)] p-7 text-black shadow-[0_20px_60px_rgba(0,0,0,0.35)]">
+              <div className="rounded-[34px] border border-[#26FF40]/15 bg-white/90 p-6 shadow-[0_18px_50px_rgba(0,0,0,0.06)] backdrop-blur">
+                <div className="rounded-[28px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_48%,#E8FFEC_100%)] p-7 text-black shadow-[0_20px_60px_rgba(38,255,64,0.16)]">
                   <p className="text-sm font-semibold uppercase tracking-[0.3em] text-black/70">
                     Download DELLA
                   </p>
@@ -244,7 +248,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-[#f4f7f4]">
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
             <div>
@@ -277,14 +281,14 @@ export default function HomePage() {
 
       <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
         <div className="grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
-          <div className="rounded-[32px] bg-black p-8 text-white">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+          <div className="rounded-[32px] bg-[linear-gradient(135deg,#26FF40_0%,#00FF19_45%,#E8FFEC_100%)] p-8 text-black shadow-[0_18px_45px_rgba(38,255,64,0.14)]">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
               Our Apps
             </p>
             <h2 className="mt-4 text-4xl font-semibold leading-tight">
               Lead customers and providers into the right DELLA app experience
             </h2>
-            <p className="mt-4 text-base leading-7 text-white/72">
+            <p className="mt-4 text-base leading-7 text-black/70">
               Customers and service providers should register through the app.
               The website remains the marketing front door, while staff keep a
               separate login path.
@@ -326,11 +330,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-black text-white">
+      <section className="bg-white text-black">
         <div className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-10">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#26FF40]">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0f7a22]">
                 Stories From DELLA
               </p>
               <h2 className="mt-4 text-4xl font-semibold">
@@ -339,7 +343,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/about"
-              className="inline-flex rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:border-[#26FF40] hover:text-[#26FF40]"
+              className="inline-flex rounded-full border border-black/10 px-6 py-3 text-sm font-semibold text-black transition hover:border-[#26FF40] hover:text-[#0f7a22]"
             >
               About the Company
             </Link>
@@ -349,13 +353,13 @@ export default function HomePage() {
             {stories.map((story) => (
               <article
                 key={story.title}
-                className="rounded-[30px] border border-white/10 bg-white/5 p-7"
+                className="rounded-[30px] border border-[#26FF40]/15 bg-[linear-gradient(135deg,rgba(38,255,64,0.1),rgba(255,255,255,0.98))] p-7 shadow-[0_16px_40px_rgba(0,0,0,0.05)]"
               >
                 <div className="inline-flex rounded-full bg-[#26FF40] px-4 py-2 text-sm font-semibold text-black">
                   DELLA Insight
                 </div>
                 <h3 className="mt-5 text-3xl font-semibold">{story.title}</h3>
-                <p className="mt-4 text-sm leading-7 text-white/72">
+                <p className="mt-4 text-sm leading-7 text-black/68">
                   {story.description}
                 </p>
               </article>
