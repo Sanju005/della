@@ -180,8 +180,8 @@ export default function HomePage() {
           </header>
 
           <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_44%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.1),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.2),transparent_28%)]" />
+            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_48%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
+              <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
               <div className="grid min-h-[680px] gap-8 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-32">
                 <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
