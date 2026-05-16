@@ -89,9 +89,6 @@ export default function HomePage() {
               <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
               <div className="grid min-h-[680px] gap-8 px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-16">
                 <div className="z-10 text-white">
-                  <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
-                    Download-first service platform for DELLA
-                  </div>
                   <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-[0.92] sm:text-6xl xl:text-[5.35rem]">
                     Find the right
                     <br />
@@ -117,101 +114,6 @@ export default function HomePage() {
                     </Link>
                   </div>
 
-                  <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
-                    {[
-                      {
-                        title: "Trusted Professionals",
-                        icon: (
-                          <path
-                            d="M12 3.75 19 6.5v4.75c0 3.96-2.7 7.58-7 8.75-4.3-1.17-7-4.79-7-8.75V6.5z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="1.8"
-                          />
-                        ),
-                      },
-                      {
-                        title: "On-Demand Booking",
-                        icon: (
-                          <>
-                            <circle
-                              cx="12"
-                              cy="12"
-                              r="8.25"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                            />
-                            <path
-                              d="M12 7.5v5l3 1.75"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.8"
-                            />
-                          </>
-                        ),
-                      },
-                      {
-                        title: "Secure Payments",
-                        icon: (
-                          <>
-                            <rect
-                              x="5"
-                              y="8"
-                              width="14"
-                              height="11"
-                              rx="2"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.8"
-                            />
-                            <path
-                              d="M8.5 8V6.75A3.5 3.5 0 0 1 12 3.25a3.5 3.5 0 0 1 3.5 3.5V8"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeWidth="1.8"
-                            />
-                          </>
-                        ),
-                      },
-                      {
-                        title: "24/7 Support",
-                        icon: (
-                          <>
-                            <path
-                              d="M6.5 10.75a5.5 5.5 0 1 1 11 0v4.5a1.25 1.25 0 0 1-1.25 1.25H15l-2.1 2.1a1 1 0 0 1-1.4 0L9.4 16.5H7.75A1.25 1.25 0 0 1 6.5 15.25z"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="1.8"
-                            />
-                          </>
-                        ),
-                      },
-                    ].map((item) => (
-                      <div
-                        key={item.title}
-                        className="rounded-[22px] border border-white/14 bg-black/8 px-4 py-4 backdrop-blur-[2px]"
-                      >
-                        <div className="flex items-center gap-4 text-white">
-                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/16 bg-white/8 text-[#72FF58]">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7">
-                              {item.icon}
-                            </svg>
-                          </div>
-                          <p className="text-base font-semibold leading-7 text-white">
-                            {item.title}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
 
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
