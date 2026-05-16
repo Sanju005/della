@@ -314,7 +314,7 @@ export default function HomePage() {
                     }}
                   >
                     <Image
-                      src="/images/della-hero-reference-v2.png"
+                      src="/images/della-hero-blended.png"
                       alt="DELLA app hero visual"
                       fill
                       className="object-contain object-right opacity-[0.98] mix-blend-screen"
