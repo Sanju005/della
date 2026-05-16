@@ -89,9 +89,9 @@ export default function HomePage() {
               style={{
                 backgroundColor: "#0b7a31",
                 background:
-                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.95) 26%, rgba(2,45,22,0.72) 43%, rgba(2,45,22,0.34) 58%, rgba(2,45,22,0.08) 74%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
-                backgroundSize: "auto 84%",
-                backgroundPosition: "right 70px center",
+                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.96) 34%, rgba(2,45,22,0.86) 48%, rgba(2,45,22,0.52) 62%, rgba(2,45,22,0.16) 78%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
+                backgroundSize: "auto 80%",
+                backgroundPosition: "right 10% center",
                 backgroundRepeat: "no-repeat",
               }}
             >
