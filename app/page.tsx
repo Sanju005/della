@@ -84,10 +84,18 @@ export default function HomePage() {
           </header>
 
           <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-hidden rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_48%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
-              <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
-              <div className="grid min-h-[680px] gap-8 px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-16">
-                <div className="z-10 text-white">
+            <div
+              className="relative min-h-[680px] overflow-hidden rounded-[38px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
+              style={{
+                background:
+                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.90) 32%, rgba(2,45,22,0.35) 55%, rgba(2,45,22,0.05) 100%), url("/images/della-hero-blended.png")',
+                backgroundSize: "cover",
+                backgroundPosition: "center right",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              <div className="min-h-[680px] px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:px-12 lg:pb-16">
+                <div className="z-10 max-w-3xl text-white">
                   <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-[0.92] sm:text-6xl xl:text-[5.35rem]">
                     Find the right
                     <br />
@@ -112,22 +120,6 @@ export default function HomePage() {
                       Explore Services
                     </Link>
                   </div>
-
-                </div>
-
-                <div className="relative min-h-[440px] lg:min-h-[620px]">
-                  <div className="absolute inset-[5%] z-0 bg-[radial-gradient(circle,rgba(30,255,90,0.45),transparent_65%)] blur-[45px]" />
-                  <div
-                    className="absolute bottom-0 right-0 top-0 z-10 w-[68%] min-w-[420px] lg:w-[70%]"
-                    style={{
-                      backgroundImage:
-                        'linear-gradient(to right, #06451f 0%, rgba(6,69,31,0.75) 10%, rgba(6,69,31,0) 28%), linear-gradient(to bottom, #0bd843 0%, rgba(11,216,67,0) 12%, rgba(11,216,67,0) 85%, #0bd843 100%), url("/images/della-hero-blended.png")',
-                      backgroundSize: "cover",
-                      backgroundPosition: "right center",
-                      backgroundRepeat: "no-repeat",
-                      mixBlendMode: "normal",
-                    }}
-                  />
                 </div>
               </div>
             </div>
