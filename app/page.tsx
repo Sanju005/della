@@ -117,7 +117,7 @@ export default function HomePage() {
                     </Link>
                   </div>
 
-                  <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  <div className="mt-12 grid gap-4 sm:grid-cols-2 xl:grid-cols-4 xl:gap-5">
                     {[
                       {
                         title: "Trusted Professionals",
@@ -197,15 +197,15 @@ export default function HomePage() {
                     ].map((item) => (
                       <div
                         key={item.title}
-                        className="rounded-[22px] border border-white/12 bg-black/8 px-3 py-3 backdrop-blur-[2px]"
+                        className="rounded-[22px] border border-white/14 bg-black/8 px-4 py-4 backdrop-blur-[2px]"
                       >
-                        <div className="flex items-start gap-3 text-white">
-                          <div className="rounded-2xl border border-white/16 bg-white/8 p-3 text-[#72FF58]">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                        <div className="flex items-center gap-4 text-white">
+                          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-white/16 bg-white/8 text-[#72FF58]">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" className="h-7 w-7">
                               {item.icon}
                             </svg>
                           </div>
-                          <p className="text-sm font-medium leading-6 text-white/88">
+                          <p className="text-base font-semibold leading-7 text-white">
                             {item.title}
                           </p>
                         </div>
