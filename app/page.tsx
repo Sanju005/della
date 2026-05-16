@@ -304,22 +304,20 @@ export default function HomePage() {
                 </div>
 
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
-                  <div className="absolute left-10 top-24 h-28 w-28 rounded-full border border-[#72FF58]/35" />
-                  <div className="absolute right-16 top-12 h-24 w-24 rounded-full border border-[#72FF58]/35" />
                   <div
                     className="absolute -right-16 -top-8 h-[122%] w-[146%] lg:-right-28 lg:-top-12 lg:w-[154%]"
                     style={{
                       WebkitMaskImage:
-                        "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.9) 22%, black 42%, black 100%)",
+                        "radial-gradient(circle at 62% 52%, black 0%, black 34%, rgba(0,0,0,0.92) 48%, rgba(0,0,0,0.78) 58%, rgba(0,0,0,0.42) 70%, transparent 84%)",
                       maskImage:
-                        "linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.9) 22%, black 42%, black 100%)",
+                        "radial-gradient(circle at 62% 52%, black 0%, black 34%, rgba(0,0,0,0.92) 48%, rgba(0,0,0,0.78) 58%, rgba(0,0,0,0.42) 70%, transparent 84%)",
                     }}
                   >
                     <Image
                       src="/images/della-hero-reference-v2.png"
                       alt="DELLA app hero visual"
                       fill
-                      className="object-contain object-right opacity-100 drop-shadow-[0_28px_54px_rgba(0,0,0,0.16)]"
+                      className="object-contain object-right opacity-[0.98] mix-blend-screen"
                       priority
                     />
                   </div>
