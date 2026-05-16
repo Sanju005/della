@@ -3,101 +3,6 @@ import Link from "next/link";
 
 import { adminRoles, services } from "@/lib/marketing-content";
 
-const heroCards = [
-  {
-    title: "Home Services",
-    description:
-      "Cleaning, aircond service, handyman, plumbing, and daily home support.",
-    link: "Explore home services",
-    icon: (
-      <path
-        d="M4.5 10.5 12 4l7.5 6.5v8.25A1.25 1.25 0 0 1 18.25 20H14v-5h-4v5H5.75A1.25 1.25 0 0 1 4.5 18.75Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.8"
-      />
-    ),
-  },
-  {
-    title: "Family Care",
-    description:
-      "Babysitting, elderly care, confinement help, and trusted support for families.",
-    link: "Find care services",
-    icon: (
-      <>
-        <circle
-          cx="12"
-          cy="8"
-          r="3"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        />
-        <path
-          d="M7.5 19c.55-2.75 2.27-4.5 4.5-4.5s3.95 1.75 4.5 4.5M8 6.5l-1.5-2M16 6.5l1.5-2"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.8"
-        />
-      </>
-    ),
-  },
-  {
-    title: "Tuition & Classes",
-    description:
-      "Home tuition, online lessons, exam coaching, music, language, and skills classes.",
-    link: "View classes",
-    icon: (
-      <>
-        <path
-          d="M3.5 8 12 4l8.5 4-8.5 4Z"
-          fill="none"
-          stroke="currentColor"
-          strokeLinejoin="round"
-          strokeWidth="1.8"
-        />
-        <path
-          d="M6.5 9.75v4.5c0 1.52 2.46 2.75 5.5 2.75s5.5-1.23 5.5-2.75v-4.5"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.8"
-        />
-      </>
-    ),
-  },
-  {
-    title: "Beauty & Wellness",
-    description:
-      "Massage, nails, makeup, salon, grooming, and wellness services at your convenience.",
-    link: "Discover wellness",
-    icon: (
-      <>
-        <path
-          d="M12 5.25c1.85-2.12 5.2-2.36 7.14-.45 1.96 1.93 2 5.13.12 7.15L12 19.5l-7.26-7.55C2.86 9.93 2.9 6.73 4.86 4.8c1.95-1.91 5.29-1.67 7.14.45Z"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.8"
-        />
-        <path
-          d="M12 8.5v4M10 10.5h4"
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="1.8"
-        />
-      </>
-    ),
-  },
-];
-
 const appCards = [
   {
     title: "DELLA App",
@@ -179,10 +84,10 @@ export default function HomePage() {
             </nav>
           </header>
 
-          <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
+          <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
             <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(96deg,#063113_0%,#0A6A28_48%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.16)]">
               <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
-              <div className="grid min-h-[680px] gap-8 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-32">
+              <div className="grid min-h-[680px] gap-8 px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:grid-cols-[0.84fr_1.16fr] lg:items-center lg:px-12 lg:pb-16">
                 <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
                     Download-first service platform for DELLA
@@ -329,33 +234,6 @@ export default function HomePage() {
                     />
                   </div>
                 </div>
-              </div>
-
-              <div className="relative z-20 mx-auto -mt-16 grid max-w-6xl gap-5 px-6 md:grid-cols-2 xl:grid-cols-4 xl:px-10">
-                {heroCards.map((card) => (
-                  <article
-                    key={card.title}
-                    className="relative overflow-hidden rounded-[28px] bg-[linear-gradient(180deg,#11E64A_0%,#0A8C31_100%)] p-6 text-white shadow-[0_24px_40px_rgba(0,0,0,0.16)]"
-                  >
-                    <div className="absolute inset-x-0 top-0 h-24 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.2),transparent_55%)]" />
-                    <div className="relative z-10">
-                      <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/18 bg-white/12 text-white">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
-                          {card.icon}
-                        </svg>
-                      </div>
-                      <h3 className="mt-5 text-2xl font-semibold text-white">
-                        {card.title}
-                      </h3>
-                      <p className="mt-3 text-sm leading-7 text-white/90">
-                        {card.description}
-                      </p>
-                      <p className="mt-6 text-sm font-semibold text-white">
-                        {card.link} <span aria-hidden="true">→</span>
-                      </p>
-                    </div>
-                  </article>
-                ))}
               </div>
             </div>
           </div>
