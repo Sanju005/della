@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { adminRoles, services } from "@/lib/marketing-content";
@@ -119,24 +118,16 @@ export default function HomePage() {
                 <div className="relative min-h-[440px] lg:min-h-[620px]">
                   <div className="absolute inset-[5%] z-0 bg-[radial-gradient(circle,rgba(30,255,90,0.45),transparent_65%)] blur-[45px]" />
                   <div
-                    className="absolute -right-10 -top-4 z-10 h-[122%] w-[136%] lg:-right-20 lg:-top-8 lg:w-[140%]"
+                    className="absolute bottom-0 right-0 top-0 z-10 w-[68%] min-w-[420px] lg:w-[70%]"
                     style={{
-                      WebkitMaskImage:
-                        "linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
-                      WebkitMaskComposite: "source-in",
-                      maskImage:
-                        "linear-gradient(to right, transparent 0%, black 18%, black 82%, transparent 100%), linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
-                      maskComposite: "intersect",
+                      backgroundImage:
+                        'linear-gradient(to right, #06451f 0%, rgba(6,69,31,0.75) 10%, rgba(6,69,31,0) 28%), linear-gradient(to bottom, #0bd843 0%, rgba(11,216,67,0) 12%, rgba(11,216,67,0) 85%, #0bd843 100%), url("/images/della-hero-blended.png")',
+                      backgroundSize: "cover",
+                      backgroundPosition: "right center",
+                      backgroundRepeat: "no-repeat",
+                      mixBlendMode: "normal",
                     }}
-                  >
-                    <Image
-                      src="/images/della-hero-blended.png"
-                      alt="DELLA app hero visual"
-                      fill
-                      className="object-contain object-right opacity-[0.96]"
-                      priority
-                    />
-                  </div>
+                  />
                 </div>
               </div>
             </div>
