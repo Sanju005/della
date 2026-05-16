@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { adminRoles, services } from "@/lib/marketing-content";
@@ -179,16 +180,16 @@ export default function HomePage() {
           </header>
 
           <div className="pb-14 pt-10 lg:pb-24 lg:pt-14">
-            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(90deg,#083D1A_0%,#0C6C2E_38%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_24%,rgba(255,255,255,0.22),transparent_18%),radial-gradient(circle_at_14%_84%,rgba(255,255,255,0.08),transparent_24%)]" />
-
-              <div className="relative grid gap-10 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:px-12 lg:pb-32">
+            <div className="relative min-h-[680px] overflow-visible rounded-[38px] bg-[linear-gradient(90deg,#042C12_0%,#0A5A25_34%,#0DFF40_100%)] shadow-[0_26px_80px_rgba(13,255,64,0.18)]">
+              <div className="grid min-h-[680px] gap-10 px-7 pb-28 pt-8 md:px-10 md:pt-10 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:px-12 lg:pb-32">
                 <div className="z-10 text-white">
                   <div className="inline-flex rounded-full border border-white/18 bg-white/8 px-4 py-2 text-sm font-medium text-white">
                     Download-first service platform for DELLA
                   </div>
-                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.98] sm:text-6xl xl:text-[5.2rem]">
-                    Find the right service faster
+                  <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-[0.95] sm:text-6xl xl:text-[5.5rem]">
+                    Find the right
+                    <br />
+                    service <span className="text-[#7AFF72]">faster</span>
                   </h1>
                   <p className="mt-6 max-w-2xl text-lg leading-8 text-white/84">
                     Book trusted home services, babysitting, tuition, repairs,
@@ -198,100 +199,122 @@ export default function HomePage() {
                   <div className="mt-9 flex flex-wrap gap-4">
                     <a
                       href="#download"
-                      className="rounded-full bg-white px-7 py-3 text-sm font-semibold text-[#083D1A] transition hover:bg-[#F3FFF6]"
+                      className="rounded-2xl bg-[#72FF58] px-8 py-4 text-lg font-semibold text-[#042C12] shadow-[0_16px_30px_rgba(114,255,88,0.24)] transition hover:bg-white"
                     >
                       Download the App
                     </a>
                     <Link
                       href="/our-services"
-                      className="rounded-full border border-white/24 bg-transparent px-7 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                      className="rounded-2xl border border-[#72FF58]/70 bg-transparent px-8 py-4 text-lg font-semibold text-white transition hover:bg-white/10"
                     >
                       Explore Services
                     </Link>
                   </div>
-                </div>
 
-                <div className="relative min-h-[360px] lg:min-h-[500px]">
-                  <div className="absolute right-2 top-4 h-56 w-40 rounded-[34px] border border-white/18 bg-[linear-gradient(180deg,rgba(255,255,255,0.96),rgba(232,255,237,0.94))] shadow-[0_26px_60px_rgba(0,0,0,0.22)] lg:right-14 lg:top-0 lg:h-72 lg:w-52">
-                    <div className="mx-auto mt-4 h-2 w-16 rounded-full bg-black/10" />
-                    <div className="px-5 pt-6">
-                      <div className="h-24 rounded-[22px] bg-[linear-gradient(135deg,#0DFF40,#0A5A25)]" />
-                      <div className="mt-4 h-3 w-24 rounded-full bg-black/10" />
-                      <div className="mt-2 h-3 w-16 rounded-full bg-black/8" />
-                      <div className="mt-6 space-y-3">
-                        <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 shadow-[0_10px_18px_rgba(0,0,0,0.06)]">
-                          <div className="h-10 w-10 rounded-2xl bg-[#0DFF40]/18" />
-                          <div className="space-y-2">
-                            <div className="h-2 w-16 rounded-full bg-black/12" />
-                            <div className="h-2 w-10 rounded-full bg-black/8" />
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-3 rounded-2xl bg-white px-3 py-3 shadow-[0_10px_18px_rgba(0,0,0,0.06)]">
-                          <div className="h-10 w-10 rounded-2xl bg-[#0DFF40]/18" />
-                          <div className="space-y-2">
-                            <div className="h-2 w-14 rounded-full bg-black/12" />
-                            <div className="h-2 w-12 rounded-full bg-black/8" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="absolute left-0 top-16 h-40 w-56 rounded-[34px] border border-white/16 bg-[linear-gradient(135deg,rgba(255,255,255,0.22),rgba(255,255,255,0.08))] p-5 shadow-[0_22px_40px_rgba(0,0,0,0.18)] lg:left-12 lg:top-20 lg:h-48 lg:w-64">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/88">
-                          Providers
-                        </p>
-                        <p className="mt-3 max-w-[170px] text-sm leading-6 text-white/84">
-                          Trusted professionals growing through one DELLA app.
-                        </p>
-                      </div>
-                      <div className="rounded-2xl bg-white/16 p-3 text-white">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                  <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+                    {[
+                      {
+                        title: "Trusted Professionals",
+                        icon: (
                           <path
-                            d="M8 9V7.5A2.5 2.5 0 0 1 10.5 5h3A2.5 2.5 0 0 1 16 7.5V9"
+                            d="M12 3.75 19 6.5v4.75c0 3.96-2.7 7.58-7 8.75-4.3-1.17-7-4.79-7-8.75V6.5z"
                             fill="none"
                             stroke="currentColor"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth="1.8"
                           />
-                          <path
-                            d="M4.5 9.5h15v8.75A1.75 1.75 0 0 1 17.75 20H6.25A1.75 1.75 0 0 1 4.5 18.25Z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeLinejoin="round"
-                            strokeWidth="1.8"
-                          />
-                        </svg>
+                        ),
+                      },
+                      {
+                        title: "On-Demand Booking",
+                        icon: (
+                          <>
+                            <circle
+                              cx="12"
+                              cy="12"
+                              r="8.25"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                            />
+                            <path
+                              d="M12 7.5v5l3 1.75"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.8"
+                            />
+                          </>
+                        ),
+                      },
+                      {
+                        title: "Secure Payments",
+                        icon: (
+                          <>
+                            <rect
+                              x="5"
+                              y="8"
+                              width="14"
+                              height="11"
+                              rx="2"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                            />
+                            <path
+                              d="M8.5 8V6.75A3.5 3.5 0 0 1 12 3.25a3.5 3.5 0 0 1 3.5 3.5V8"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeWidth="1.8"
+                            />
+                          </>
+                        ),
+                      },
+                      {
+                        title: "24/7 Support",
+                        icon: (
+                          <>
+                            <path
+                              d="M6.5 10.75a5.5 5.5 0 1 1 11 0v4.5a1.25 1.25 0 0 1-1.25 1.25H15l-2.1 2.1a1 1 0 0 1-1.4 0L9.4 16.5H7.75A1.25 1.25 0 0 1 6.5 15.25z"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.8"
+                            />
+                          </>
+                        ),
+                      },
+                    ].map((item) => (
+                      <div key={item.title} className="flex items-start gap-3 text-white">
+                        <div className="rounded-2xl border border-white/16 bg-white/8 p-3 text-[#72FF58]">
+                          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6">
+                            {item.icon}
+                          </svg>
+                        </div>
+                        <p className="text-sm font-medium leading-6 text-white/88">
+                          {item.title}
+                        </p>
                       </div>
-                    </div>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="absolute bottom-8 left-6 h-32 w-44 rounded-[30px] border border-white/16 bg-[linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,255,255,0.08))] p-5 shadow-[0_18px_34px_rgba(0,0,0,0.16)] lg:bottom-10 lg:left-20">
-                    <p className="text-sm font-semibold uppercase tracking-[0.28em] text-white/88">
-                      Services
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {["Home", "Care", "Classes", "Beauty"].map((item) => (
-                        <span
-                          key={item}
-                          className="rounded-full bg-white/14 px-3 py-2 text-xs font-semibold text-white"
-                        >
-                          {item}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="absolute bottom-8 right-0 rounded-[28px] border border-white/16 bg-white/92 px-5 py-4 text-black shadow-[0_18px_34px_rgba(0,0,0,0.14)] lg:right-8">
-                    <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[#067a2b]">
-                      1 App
-                    </p>
-                    <p className="mt-2 max-w-[220px] text-sm leading-6 text-black/74">
-                      Users and service providers register through the same DELLA app.
-                    </p>
+                <div className="relative min-h-[380px] lg:min-h-[560px]">
+                  <div className="absolute inset-0 rounded-[36px] bg-[radial-gradient(circle_at_58%_48%,rgba(114,255,88,0.36),transparent_36%),radial-gradient(circle_at_86%_26%,rgba(255,255,255,0.18),transparent_18%)]" />
+                  <div className="absolute left-6 top-20 h-28 w-28 rounded-full border border-[#72FF58]/45" />
+                  <div className="absolute right-12 top-10 h-24 w-24 rounded-full border border-[#72FF58]/45" />
+                  <div className="absolute right-0 top-0 h-full w-full">
+                    <Image
+                      src="/images/della-hero-reference.png"
+                      alt="DELLA app hero visual"
+                      fill
+                      className="object-contain object-right"
+                      priority
+                    />
                   </div>
                 </div>
               </div>
