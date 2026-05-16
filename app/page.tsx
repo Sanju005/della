@@ -83,48 +83,6 @@ export default function HomePage() {
             </nav>
           </header>
 
-          <div className="pb-8 pt-10 lg:pb-12 lg:pt-14">
-            <div
-              className="relative min-h-[680px] overflow-hidden rounded-[36px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
-              style={{
-                backgroundColor: "#0b7a31",
-                background:
-                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.96) 34%, rgba(2,45,22,0.86) 48%, rgba(2,45,22,0.52) 62%, rgba(2,45,22,0.16) 78%, rgba(2,45,22,0) 100%), url("/images/della-hero-blended.png")',
-                backgroundSize: "auto 80%",
-                backgroundPosition: "right 10% center",
-                backgroundRepeat: "no-repeat",
-              }}
-            >
-              <div className="relative z-10 min-h-[680px] px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:px-12 lg:pb-16">
-                <div className="max-w-3xl text-white">
-                  <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-[0.92] sm:text-6xl xl:text-[5.35rem]">
-                    Find the right
-                    <br />
-                    service <span className="text-[#7AFF72]">faster</span>
-                  </h1>
-                  <p className="mt-7 max-w-xl text-lg leading-8 text-white/84">
-                    Book trusted home services, babysitting, tuition, repairs,
-                    beauty, and more from one simple DELLA app.
-                  </p>
-
-                  <div className="mt-9 flex flex-wrap gap-4">
-                    <a
-                      href="#download"
-                      className="rounded-2xl bg-[#72FF58] px-8 py-4 text-lg font-semibold text-[#042C12] shadow-[0_16px_30px_rgba(114,255,88,0.24)] transition hover:bg-white"
-                    >
-                      Download the App
-                    </a>
-                    <Link
-                      href="/our-services"
-                      className="rounded-2xl border border-[#72FF58]/70 bg-transparent px-8 py-4 text-lg font-semibold text-white transition hover:bg-white/10"
-                    >
-                      Explore Services
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
