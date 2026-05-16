@@ -88,14 +88,24 @@ export default function HomePage() {
               className="relative min-h-[680px] overflow-hidden rounded-[38px] shadow-[0_26px_80px_rgba(13,255,64,0.16)]"
               style={{
                 background:
-                  'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.90) 32%, rgba(2,45,22,0.35) 55%, rgba(2,45,22,0.05) 100%), url("/images/della-hero-blended.png")',
-                backgroundSize: "cover",
-                backgroundPosition: "center right",
-                backgroundRepeat: "no-repeat",
+                  "linear-gradient(96deg, #063113 0%, #0A6A28 48%, #0DFF40 100%)",
               }}
             >
-              <div className="min-h-[680px] px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:px-12 lg:pb-16">
-                <div className="z-10 max-w-3xl text-white">
+              <div className="absolute inset-0 rounded-[38px] bg-[radial-gradient(circle_at_72%_44%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_52%_70%,rgba(114,255,88,0.14),transparent_28%)]" />
+              <div
+                className="absolute bottom-8 right-8 top-8 z-0 w-[58%] md:bottom-10 md:right-10 md:top-10 lg:bottom-10 lg:right-10 lg:top-10"
+                style={{
+                  backgroundImage:
+                    'linear-gradient(90deg, rgba(2,45,22,0.88) 0%, rgba(2,45,22,0.56) 14%, rgba(2,45,22,0.12) 28%, rgba(2,45,22,0) 42%), linear-gradient(180deg, rgba(11,216,67,0.34) 0%, rgba(11,216,67,0.06) 12%, rgba(11,216,67,0.06) 84%, rgba(11,216,67,0.34) 100%), url("/images/della-hero-blended.png")',
+                  backgroundSize: "contain",
+                  backgroundPosition: "center right",
+                  backgroundRepeat: "no-repeat",
+                  transform: "scale(0.9)",
+                  transformOrigin: "center right",
+                }}
+              />
+              <div className="relative z-10 min-h-[680px] px-7 pb-12 pt-8 md:px-10 md:pb-14 md:pt-10 lg:px-12 lg:pb-16">
+                <div className="max-w-3xl text-white">
                   <h1 className="mt-8 max-w-3xl text-5xl font-semibold leading-[0.92] sm:text-6xl xl:text-[5.35rem]">
                     Find the right
                     <br />
