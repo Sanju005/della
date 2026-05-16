@@ -310,7 +310,7 @@ export default function HomePage() {
                   <div className="absolute right-16 top-12 h-24 w-24 rounded-full border border-[#72FF58]/35" />
                   <div className="absolute -right-6 top-0 h-full w-[115%] lg:-right-10">
                     <Image
-                      src="/images/della-hero-reference.png"
+                      src="/images/della-hero-reference-v2.png"
                       alt="DELLA app hero visual"
                       fill
                       className="object-contain object-right drop-shadow-[0_28px_60px_rgba(0,0,0,0.22)]"
