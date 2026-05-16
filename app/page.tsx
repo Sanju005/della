@@ -134,8 +134,8 @@ export default function HomePage() {
           style={{
             backgroundImage:
               'linear-gradient(90deg, rgba(2,45,22,0.98) 0%, rgba(2,45,22,0.94) 26%, rgba(2,45,22,0.72) 42%, rgba(2,45,22,0.26) 58%, rgba(2,45,22,0.06) 72%, rgba(2,45,22,0) 100%), url("/images/della-hero-secondary.png")',
-            backgroundSize: "cover",
-            backgroundPosition: "68% center",
+            backgroundSize: "contain",
+            backgroundPosition: "right center",
             backgroundRepeat: "no-repeat",
           }}
         >
