@@ -380,19 +380,21 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
               {reasons.map((reason) => (
                 <div
                   key={reason.title}
-                  className="rounded-[22px] border border-black/8 bg-white px-5 py-5 text-center text-black shadow-[0_14px_35px_rgba(0,0,0,0.05)]"
+                  className="rounded-[20px] border border-black/8 bg-white px-4 py-4 text-center text-black shadow-[0_12px_28px_rgba(0,0,0,0.05)]"
                 >
-                  <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-[#0DFF40] text-black shadow-[0_10px_20px_rgba(13,255,64,0.16)]">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-[16px] bg-[#0DFF40] text-black shadow-[0_8px_16px_rgba(13,255,64,0.14)]">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-4.5 w-4.5">
                       {reason.icon}
                     </svg>
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold">{reason.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-black/68">
+                  <h3 className="mt-3 text-base font-semibold leading-snug">
+                    {reason.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-6 text-black/68">
                     {reason.description}
                   </p>
                 </div>
