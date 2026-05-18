@@ -6,6 +6,12 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+import {
+  formatPortalRole,
+  normalizePortalRole,
+  resolvePortalAccess,
+  type PortalProfile,
+} from "@/lib/supabase/auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
 const navigation = [
@@ -24,37 +30,76 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
+  const [profile, setProfile] = useState<PortalProfile | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
 
-    supabase.auth.getSession().then(({ data }) => {
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!isMounted) {
         return;
       }
 
-      setSession(data.session ?? null);
-      setIsAuthLoading(false);
-
       if (!data.session) {
+        setSession(null);
+        setProfile(null);
+        setIsAuthLoading(false);
         router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+        return;
       }
+
+      const access = await resolvePortalAccess(supabase, data.session.user);
+      if (!isMounted) {
+        return;
+      }
+
+      if (!access.ok) {
+        setSession(null);
+        setProfile(null);
+        setIsAuthLoading(false);
+        void supabase.auth.signOut();
+        router.replace(`/login?denied=${access.reason}`);
+        return;
+      }
+
+      setSession(data.session);
+      setProfile(access.profile);
+      setIsAuthLoading(false);
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    } = supabase.auth.onAuthStateChange(async (_event, nextSession) => {
       if (!isMounted) {
         return;
       }
 
-      setSession(nextSession);
-      setIsAuthLoading(false);
-
       if (!nextSession) {
+        setSession(null);
+        setProfile(null);
+        setIsAuthLoading(false);
         router.replace(`/login?next=${encodeURIComponent(pathname)}`);
+        return;
       }
+
+      const access = await resolvePortalAccess(supabase, nextSession.user);
+      if (!isMounted) {
+        return;
+      }
+
+      if (!access.ok) {
+        setSession(null);
+        setProfile(null);
+        setIsAuthLoading(false);
+        void supabase.auth.signOut();
+        router.replace(`/login?denied=${access.reason}`);
+        return;
+      }
+
+      setSession(nextSession);
+      setProfile(access.profile);
+      setIsAuthLoading(false);
     });
 
     return () => {
@@ -67,6 +112,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     setIsSigningOut(true);
     await supabase.auth.signOut();
     setSession(null);
+    setProfile(null);
     router.replace("/login");
     setIsSigningOut(false);
   }
@@ -110,6 +156,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <p className="font-medium text-white">Signed in</p>
           <p className="mt-2 break-all text-xs text-white/70">
             {session?.user.email ?? "Authenticated admin"}
+          </p>
+          <p className="mt-3 text-xs uppercase tracking-[0.2em] text-white/60">
+            {formatPortalRole(normalizePortalRole(profile?.role)) ??
+              "Internal role"}
           </p>
         </div>
         <button

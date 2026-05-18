@@ -4,9 +4,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
+import {
+  formatPortalRole,
+  INTERNAL_PORTAL_ROLES,
+  resolvePortalAccess,
+} from "@/lib/supabase/auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
-const roles = ["IT / Super Admin", "Admin", "Manager", "Customer Care"];
+const roles = INTERNAL_PORTAL_ROLES.map((role) => formatPortalRole(role) ?? role);
 
 export default function LoginPage() {
   const router = useRouter();
@@ -15,44 +20,76 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [nextPath, setNextPath] = useState("/dashboard");
 
   useEffect(() => {
     let isMounted = true;
 
     if (typeof window !== "undefined") {
-      const next = new URLSearchParams(window.location.search).get("next");
-      if (next) {
-        setNextPath(next);
+      const searchParams = new URLSearchParams(window.location.search);
+      const denied = searchParams.get("denied");
+      if (denied === "role") {
+        setErrorMessage(
+          "Your account does not have permission to access this internal portal.",
+        );
+      } else if (denied === "inactive") {
+        setErrorMessage("Your account is inactive.");
+      } else if (denied === "unassigned") {
+        setErrorMessage("Account not assigned. Please contact admin.");
       }
     }
 
-    supabase.auth.getSession().then(({ data }) => {
-      if (isMounted && data.session) {
-        router.replace(nextPath);
+    supabase.auth.getSession().then(async ({ data }) => {
+      if (!isMounted || !data.session) {
+        return;
       }
+
+      const access = await resolvePortalAccess(supabase, data.session.user);
+      if (!isMounted) {
+        return;
+      }
+
+      if (!access.ok) {
+        setErrorMessage(access.message);
+        void supabase.auth.signOut();
+        return;
+      }
+
+      router.replace(access.redirectPath);
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (isMounted && session) {
-        router.replace(nextPath);
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (!isMounted || !session) {
+        return;
       }
+
+      const access = await resolvePortalAccess(supabase, session.user);
+      if (!isMounted) {
+        return;
+      }
+
+      if (!access.ok) {
+        setErrorMessage(access.message);
+        void supabase.auth.signOut();
+        return;
+      }
+
+      router.replace(access.redirectPath);
     });
 
     return () => {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, [nextPath, router, supabase]);
+  }, [router, supabase]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setErrorMessage("");
     setIsSubmitting(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -63,7 +100,16 @@ export default function LoginPage() {
       return;
     }
 
-    router.replace(nextPath);
+    const access = await resolvePortalAccess(supabase, data.user);
+
+    if (!access.ok) {
+      await supabase.auth.signOut();
+      setErrorMessage(access.message);
+      setIsSubmitting(false);
+      return;
+    }
+
+    router.replace(access.redirectPath);
   }
 
   return (
@@ -79,12 +125,12 @@ export default function LoginPage() {
               Admin operations, service visibility, and team coordination in one
               place.
             </h1>
-            <p className="mt-6 max-w-lg text-base leading-7 text-white/72">
-              This starter panel gives DELLA&apos;s internal team a clean place
-              to manage users, providers, bookings, services, and operational
-              settings without wiring in production data yet.
-            </p>
-          </div>
+              <p className="mt-6 max-w-lg text-base leading-7 text-white/72">
+                DELLA&apos;s internal web portal is reserved for Admin,
+                Manager, and Customer Care teams managing users, providers,
+                bookings, services, and platform operations.
+              </p>
+            </div>
 
           <div className="grid gap-4 md:grid-cols-2">
             {roles.map((role) => (
@@ -108,11 +154,11 @@ export default function LoginPage() {
               <h1 className="mt-4 text-3xl font-semibold text-ink">
                 Welcome back
               </h1>
-              <p className="mt-3 text-sm leading-6 text-slate">
-                Sign in to access the DELLA admin workspace for Admin,
-                Customer Care, and Manager roles.
-              </p>
-            </div>
+                <p className="mt-3 text-sm leading-6 text-slate">
+                  Sign in to access the DELLA admin workspace for Admin,
+                  Customer Care, and Manager roles.
+                </p>
+              </div>
 
             <div className="hidden xl:block">
               <p className="text-sm uppercase tracking-[0.3em] text-accent">
@@ -123,9 +169,11 @@ export default function LoginPage() {
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate">
                 Sign in with your Supabase email and password credentials to
-                access the DELLA admin workspace. Customers and service
-                providers should register through the DELLA mobile app instead
-                of this portal.
+                access the DELLA admin workspace. Access is assigned from the
+                `public.profiles` table, where your account must have an active
+                status and an internal role. Customers and service providers
+                should register through the DELLA mobile app instead of this
+                portal.
               </p>
             </div>
 
@@ -169,7 +217,7 @@ export default function LoginPage() {
                   className="mb-2 block text-sm font-medium text-ink"
                   htmlFor="role"
                 >
-                  Role preview
+                  Internal role
                 </label>
                 <select
                   id="role"
@@ -207,7 +255,8 @@ export default function LoginPage() {
             </p>
             <p className="mt-4 text-sm leading-6 text-slate">
               This sign-in is for internal teams only: Admin, Customer Care,
-              and Manager.
+              and Manager. Access is granted from `public.profiles.role` and
+              `public.profiles.status`.
             </p>
             <p className="mt-4 text-sm leading-6 text-slate">
               <Link href="/" className="font-medium text-accent hover:text-accent-dark">
