@@ -7,9 +7,12 @@ import { ProviderFlow } from "./screens/ProviderFlow";
 import { SplashScreen } from "./screens/SplashScreen";
 
 type RootStage = "splash" | "entry" | "customer" | "provider";
+type CustomerStartMode = "login" | "register";
 
 export function PrototypeApp() {
   const [stage, setStage] = useState<RootStage>("splash");
+  const [customerStartMode, setCustomerStartMode] =
+    useState<CustomerStartMode>("login");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,11 +28,23 @@ export function PrototypeApp() {
       {stage === "splash" ? <SplashScreen /> : null}
       {stage === "entry" ? (
         <EntryScreen
-          onCustomerPress={() => setStage("customer")}
+          onLoginPress={() => {
+            setCustomerStartMode("login");
+            setStage("customer");
+          }}
+          onSignupPress={() => {
+            setCustomerStartMode("register");
+            setStage("customer");
+          }}
           onProviderPress={() => setStage("provider")}
         />
       ) : null}
-      {stage === "customer" ? <CustomerFlow onExit={() => setStage("entry")} /> : null}
+      {stage === "customer" ? (
+        <CustomerFlow
+          initialRoute={customerStartMode}
+          onExit={() => setStage("entry")}
+        />
+      ) : null}
       {stage === "provider" ? <ProviderFlow onExit={() => setStage("entry")} /> : null}
     </>
   );

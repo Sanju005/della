@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { Image, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import React, { useEffect, useMemo, useState } from "react";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import {
   AppScreen,
@@ -42,17 +43,24 @@ const tabItems = [
 ] as const;
 
 export function CustomerFlow({
+  initialRoute = "login",
   onExit,
 }: {
+  initialRoute?: "login" | "register";
   onExit: () => void;
 }) {
-  const [route, setRoute] = useState<CustomerRoute>("login");
+  const [route, setRoute] = useState<CustomerRoute>(initialRoute);
   const [selectedServiceId, setSelectedServiceId] = useState(services[0].id);
   const [selectedProviderId, setSelectedProviderId] = useState(providers[0].id);
   const [bookingAddress, setBookingAddress] = useState("Mont Kiara, Kuala Lumpur");
   const [bookingNotes, setBookingNotes] = useState("");
 
-  const selectedService = services.find((service) => service.id === selectedServiceId) ?? services[0];
+  useEffect(() => {
+    setRoute(initialRoute);
+  }, [initialRoute]);
+
+  const selectedService =
+    services.find((service) => service.id === selectedServiceId) ?? services[0];
   const filteredProviders = useMemo(
     () => providers.filter((provider) => provider.serviceIds.includes(selectedService.id)),
     [selectedService.id],
@@ -81,13 +89,13 @@ export function CustomerFlow({
           <>
             <ScreenHeader
               eyebrow="Customer app"
-              title="Welcome back"
-              subtitle="Sign in to discover nearby services, trusted professionals, and fast bookings."
+              title="Log in to DELLA"
+              subtitle="Continue with your customer account to discover nearby providers and manage bookings."
               onBack={onExit}
             />
             <HeroCard
-              title="Book top-rated help from one app."
-              subtitle="Chefs, tutors, plumbers, electricians, drivers, maids, and babysitters, all with cleaner booking flow and live chat."
+              title="Everything you need, from one app."
+              subtitle="A cleaner, more premium booking flow for home, family, and lifestyle support."
               primaryLabel="Continue to home"
               secondaryLabel="Create account"
               onPrimaryPress={() => setRoute("home")}
@@ -95,8 +103,8 @@ export function CustomerFlow({
             />
             <OutlineField label="Email" placeholder="customer@della.app" value="sara@della.app" />
             <OutlineField label="Password" placeholder="Enter password" value="password123" />
-            <PrimaryButton label="Sign in" onPress={() => setRoute("home")} />
-            <SecondaryButton label="Register instead" onPress={() => setRoute("register")} />
+            <PrimaryButton label="Log in" onPress={() => setRoute("home")} />
+            <SecondaryButton label="Sign up instead" onPress={() => setRoute("register")} />
           </>
         ) : null}
 
@@ -104,63 +112,266 @@ export function CustomerFlow({
           <>
             <ScreenHeader
               eyebrow="Customer app"
-              title="Create your DELLA account"
-              subtitle="Set up your account to browse services, compare providers, and manage bookings."
+              title="Create your account"
+              subtitle="Set up your DELLA account to browse services, compare providers, and manage bookings."
               onBack={() => setRoute("login")}
             />
             <OutlineField label="Full name" placeholder="Your name" value="Sara Abdullah" />
             <OutlineField label="Email" placeholder="your@email.com" value="sara@della.app" />
             <OutlineField label="Phone number" placeholder="+60" value="+60 12-456 7890" />
             <OutlineField label="Password" placeholder="Create password" value="password123" />
-            <PrimaryButton label="Create account" onPress={() => setRoute("home")} />
+            <PrimaryButton label="Sign up" onPress={() => setRoute("home")} />
           </>
         ) : null}
 
         {route === "home" ? (
           <>
-            <ScreenHeader
-              eyebrow="Customer home"
-              title="Hello, Sara"
-              subtitle="Find the right service faster with premium discovery, transparent pricing, and nearby trusted providers."
-              onBack={onExit}
-              actionLabel="Switch flow"
-              onActionPress={onExit}
-            />
-            <HeroCard
-              title="Book nearby lifestyle support."
-              subtitle="Compare ratings, service radius, starting prices, and provider photos before you book."
-              primaryLabel="Browse services"
-              secondaryLabel="View bookings"
-              onPrimaryPress={() => setRoute("categories")}
-              onSecondaryPress={() => setRoute("bookings")}
-            />
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <MetricCard label="Active services" value="7" />
-              <MetricCard label="Nearby providers" value="42" />
-              <MetricCard label="Avg response" value="8m" />
+            <View
+              style={{
+                backgroundColor: colors.brandDeep,
+                borderRadius: 30,
+                padding: 20,
+                gap: 18,
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                  <Pressable
+                    onPress={() => setRoute("profile")}
+                    style={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 24,
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="person" size={22} color="white" />
+                  </Pressable>
+                  <View>
+                    <Text style={{ color: "#A4F8BF", fontSize: 12, fontWeight: "700", letterSpacing: 1.1 }}>
+                      GOOD AFTERNOON
+                    </Text>
+                    <Text style={{ color: "white", fontSize: 24, fontWeight: "800" }}>
+                      Sara
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={{ flexDirection: "row", gap: 10 }}>
+                  <Pressable
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 21,
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="notifications-outline" size={20} color="white" />
+                  </Pressable>
+                  <Pressable
+                    onPress={onExit}
+                    style={{
+                      width: 42,
+                      height: 42,
+                      borderRadius: 21,
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Ionicons name="swap-horizontal-outline" size={20} color="white" />
+                  </Pressable>
+                </View>
+              </View>
+
+              <Pressable
+                onPress={() => setRoute("categories")}
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                  borderRadius: 18,
+                  paddingHorizontal: 16,
+                  paddingVertical: 15,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 10,
+                }}
+              >
+                <Ionicons name="search" size={18} color="#D6E5DB" />
+                <Text style={{ color: "#D6E5DB", fontSize: 14 }}>
+                  Search for a service, provider, or job
+                </Text>
+              </Pressable>
+
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{ gap: 12 }}
+              >
+                {[
+                  {
+                    label: "Book now",
+                    icon: "flash-outline",
+                    color: "#0BCB4E",
+                  },
+                  {
+                    label: "My bookings",
+                    icon: "calendar-outline",
+                    color: "#7FFFB5",
+                  },
+                  {
+                    label: "Chats",
+                    icon: "chatbubbles-outline",
+                    color: "#9BFFB9",
+                  },
+                ].map((item) => (
+                  <Pressable
+                    key={item.label}
+                    onPress={() => {
+                      if (item.label === "Book now") {
+                        setRoute("categories");
+                      } else if (item.label === "My bookings") {
+                        setRoute("bookings");
+                      } else {
+                        setRoute("chat");
+                      }
+                    }}
+                    style={{
+                      width: 118,
+                      backgroundColor: "rgba(255,255,255,0.10)",
+                      borderRadius: 22,
+                      padding: 14,
+                      gap: 12,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 42,
+                        height: 42,
+                        borderRadius: 16,
+                        backgroundColor: item.color,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Ionicons name={item.icon as never} size={20} color={colors.ink} />
+                    </View>
+                    <Text style={{ color: "white", fontWeight: "700", fontSize: 14 }}>
+                      {item.label}
+                    </Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
             </View>
+
+            <View style={{ flexDirection: "row", gap: 12 }}>
+              <MetricCard label="Nearby providers" value="42" />
+              <MetricCard label="Live offers" value="12" />
+              <MetricCard label="Fast response" value="8m" />
+            </View>
+
             <SectionTitle
-              title="Popular services"
-              subtitle="Modern categories designed for quick discovery."
+              title="Services"
+              subtitle="Tap a category to start booking like Grab-style quick actions."
               actionLabel="See all"
               onActionPress={() => setRoute("categories")}
             />
-            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12 }}>
-              {services.slice(0, 4).map((service) => (
-                <View key={service.id} style={{ width: "48%" }}>
-                  <ServiceCard
-                    service={service}
+
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+                gap: 12,
+              }}
+            >
+              {services.slice(0, 6).map((service) => (
+                <View key={service.id} style={{ width: "31%" }}>
+                  <Pressable
                     onPress={() => {
                       setSelectedServiceId(service.id);
                       setRoute("nearby");
                     }}
-                  />
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 22,
+                      padding: 14,
+                      borderWidth: 1,
+                      borderColor: "#DDE7DF",
+                      alignItems: "center",
+                      gap: 10,
+                    }}
+                  >
+                    <View
+                      style={{
+                        width: 52,
+                        height: 52,
+                        borderRadius: 18,
+                        backgroundColor: service.accent,
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Ionicons
+                        name={service.icon as never}
+                        size={24}
+                        color={colors.brandDark}
+                      />
+                    </View>
+                    <Text
+                      style={{
+                        color: colors.ink,
+                        fontSize: 12,
+                        fontWeight: "700",
+                        textAlign: "center",
+                      }}
+                    >
+                      {service.name}
+                    </Text>
+                  </Pressable>
                 </View>
               ))}
             </View>
+
+            <View
+              style={{
+                backgroundColor: "#DDFBE6",
+                borderRadius: 28,
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                source={{
+                  uri: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
+                }}
+                style={{ width: "100%", height: 180 }}
+              />
+              <View style={{ padding: 18, gap: 8 }}>
+                <Text style={{ color: colors.brandDark, fontSize: 12, fontWeight: "800", letterSpacing: 1.2 }}>
+                  DELLA PROMO
+                </Text>
+                <Text style={{ fontSize: 24, lineHeight: 30, fontWeight: "800", color: colors.ink }}>
+                  Book trusted help faster with one app
+                </Text>
+                <Text style={{ color: "#4F6358", fontSize: 14, lineHeight: 22 }}>
+                  Cleaner discovery, quick booking, and nearby professionals with
+                  clear pricing and live chat.
+                </Text>
+              </View>
+            </View>
+
             <SectionTitle
               title="Nearby providers"
-              subtitle="High-trust professionals near your location."
+              subtitle="Top-rated help around your saved location."
               actionLabel="Open list"
               onActionPress={() => setRoute("nearby")}
             />
@@ -179,8 +390,8 @@ export function CustomerFlow({
           <>
             <ScreenHeader
               eyebrow="Services"
-              title="Service categories"
-              subtitle="Choose the kind of help you need and jump straight into nearby provider discovery."
+              title="All service categories"
+              subtitle="Choose the kind of support you need and jump into nearby provider discovery."
               onBack={() => setRoute("home")}
             />
             <View style={{ gap: 12 }}>
@@ -204,8 +415,8 @@ export function CustomerFlow({
             <ScreenHeader
               eyebrow={selectedService.name}
               title="Nearby providers"
-              subtitle="Filtered by service, distance, rating, and starting price."
-              onBack={() => setRoute("categories")}
+              subtitle="Compare provider cards with ratings, distance, starting price, and service radius."
+              onBack={() => setRoute("home")}
             />
             <View
               style={{
@@ -221,15 +432,15 @@ export function CustomerFlow({
                 {selectedService.name} around your area
               </Text>
               <Text style={{ fontSize: 14, lineHeight: 22, color: "#5A6A61" }}>
-                Showing providers within their service radius who offer transparent
-                pricing and live chat support.
+                Showing providers within service radius, with transparent pricing
+                and live chat support.
               </Text>
             </View>
             {filteredProviders.map((provider) => (
               <ProviderCard
                 key={provider.id}
                 provider={provider}
-                serviceLabel={`${provider.distanceKm} km • RM ${provider.startingPrice} start`}
+                serviceLabel={`${provider.distanceKm} km away • RM ${provider.startingPrice} start`}
                 onPress={() => openProvider(provider.id)}
               />
             ))}
@@ -241,7 +452,7 @@ export function CustomerFlow({
             <ScreenHeader
               eyebrow="Provider profile"
               title={selectedProvider.name}
-              subtitle="Check pricing, radius, photos, reviews, and service specialties before you book."
+              subtitle="Check price, rating, radius, photos, and trust badges before you book."
               onBack={() => setRoute("nearby")}
             />
             <Image
@@ -258,7 +469,13 @@ export function CustomerFlow({
                 borderColor: "#DDE7DF",
               }}
             >
-              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Text style={{ fontSize: 24, fontWeight: "800", color: "#0D1B12", flex: 1 }}>
                   {selectedProvider.name}
                 </Text>
@@ -335,12 +552,12 @@ export function CustomerFlow({
           <>
             <ScreenHeader
               eyebrow="Booking confirmed"
-              title="Your request is in."
-              subtitle="The provider has been notified. You can now chat directly and follow the booking from My Bookings."
+              title="Your request is in"
+              subtitle="The provider has been notified. You can now chat directly and track the booking from My Bookings."
               onBack={() => setRoute("home")}
             />
             <HeroCard
-              title="Booking sent successfully."
+              title="Booking sent successfully"
               subtitle={`${selectedService.name} with ${selectedProvider.name} has been submitted for review and confirmation.`}
               primaryLabel="Open my bookings"
               secondaryLabel="Chat with provider"
@@ -355,7 +572,7 @@ export function CustomerFlow({
             <ScreenHeader
               eyebrow="My bookings"
               title="Track every service"
-              subtitle="See approval status, schedules, addresses, and pricing all in one place."
+              subtitle="See approval status, schedules, addresses, and pricing in one place."
               onBack={onExit}
               actionLabel="Customer"
             />
@@ -370,7 +587,7 @@ export function CustomerFlow({
             <ScreenHeader
               eyebrow="Chat"
               title="Conversations"
-              subtitle="Chat with providers and keep every booking aligned."
+              subtitle="Keep every booking aligned with direct provider messaging."
               onBack={onExit}
             />
             {customerChats.map((thread) => (
@@ -384,7 +601,7 @@ export function CustomerFlow({
             <ScreenHeader
               eyebrow="Profile"
               title="Customer profile"
-              subtitle="Manage your DELLA account, saved addresses, and preferences."
+              subtitle="Manage your account, saved addresses, and service preferences."
               onBack={onExit}
             />
             <View
