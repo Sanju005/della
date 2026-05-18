@@ -29,6 +29,7 @@ export function AppScreen({
     <SafeAreaView style={styles.safeArea}>
       {scroll ? (
         <ScrollView
+          style={styles.scrollView}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[styles.screenScroll, contentContainerStyle]}
         >
@@ -389,15 +390,22 @@ export function BottomTabs({
 export const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    width: "100%",
     backgroundColor: colors.surfaceAlt,
   },
+  scrollView: {
+    flex: 1,
+    width: "100%",
+  },
   screenScroll: {
+    flexGrow: 1,
     padding: spacing.lg,
     paddingBottom: 120,
     gap: spacing.lg,
   },
   screenStatic: {
     flex: 1,
+    width: "100%",
     padding: spacing.lg,
   },
   headerWrap: {

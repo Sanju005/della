@@ -4,7 +4,7 @@ export const services: Service[] = [
   {
     id: "chef",
     name: "Chef",
-    icon: "chef-hat",
+    icon: "restaurant-outline",
     description: "Private dining, meal prep, event cooking, and home chefs.",
     accent: "#EAFBF0",
   },
