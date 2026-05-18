@@ -35,19 +35,54 @@ function normalizeValue(value: unknown): string {
   return String(value);
 }
 
+export function getRawValue(row: SupabaseRow, candidates: string[]) {
+  for (const candidate of candidates) {
+    const value = row[candidate];
+    if (value !== null && value !== undefined && value !== "") {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+export function getStringValue(row: SupabaseRow, candidates: string[]) {
+  const value = getRawValue(row, candidates);
+
+  if (typeof value === "string") {
+    return value;
+  }
+
+  if (typeof value === "number") {
+    return String(value);
+  }
+
+  return null;
+}
+
+export function getNumberValue(row: SupabaseRow, candidates: string[]) {
+  const value = getRawValue(row, candidates);
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+}
+
 export function pickValue(
   row: SupabaseRow,
   candidates: string[],
   fallback = "-"
 ) {
-  for (const candidate of candidates) {
-    const value = row[candidate];
-    if (value !== null && value !== undefined && value !== "") {
-      return normalizeValue(value);
-    }
-  }
+  const value = getRawValue(row, candidates);
 
-  return fallback;
+  return value === null ? fallback : normalizeValue(value);
 }
 
 export function formatTimestamp(
