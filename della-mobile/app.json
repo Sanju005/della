@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "DELLA Mobile",
+    "slug": "della-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0A6B2A"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0A6B2A"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

@@ -133,7 +133,7 @@ export async function createProvider(input: CreateProviderInput) {
 
   const { data: provider, error: providerError } = await supabase
     .from("providers")
-    .insert(providerPayload)
+    .insert([providerPayload] as never)
     .select("*")
     .single();
 
@@ -141,9 +141,16 @@ export async function createProvider(input: CreateProviderInput) {
     throw providerError;
   }
 
+  const createdProvider = provider as unknown as SupabaseRow;
+  const providerId = createdProvider.id;
+
+  if (!providerId) {
+    throw new Error("Provider record was created without an id.");
+  }
+
   if (input.services.length > 0) {
     const servicePayload = input.services.map((service) => ({
-      provider_id: provider.id,
+      provider_id: providerId,
       service_id: service.service_id,
       hourly_price: service.hourly_price,
       daily_price: service.daily_price,
@@ -153,12 +160,12 @@ export async function createProvider(input: CreateProviderInput) {
 
     const { error: servicesError } = await supabase
       .from("provider_services")
-      .insert(servicePayload);
+      .insert(servicePayload as never);
 
     if (servicesError) {
       throw servicesError;
     }
   }
 
-  return provider as SupabaseRow;
+  return createdProvider;
 }
