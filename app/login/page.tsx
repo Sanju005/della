@@ -11,13 +11,17 @@ import {
 } from "@/lib/supabase/auth";
 import { getSupabaseClient } from "@/lib/supabase/client";
 
-const roles = INTERNAL_PORTAL_ROLES.map((role) => formatPortalRole(role) ?? role);
+const roleOptions = INTERNAL_PORTAL_ROLES.map((role) => ({
+  value: role,
+  label: formatPortalRole(role) ?? role,
+}));
 
 export default function LoginPage() {
   const router = useRouter();
   const supabase = useMemo(() => getSupabaseClient(), []);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [selectedRole, setSelectedRole] = useState<(typeof INTERNAL_PORTAL_ROLES)[number]>("admin");
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,14 +31,15 @@ export default function LoginPage() {
     if (typeof window !== "undefined") {
       const searchParams = new URLSearchParams(window.location.search);
       const denied = searchParams.get("denied");
-      if (denied === "role") {
-        setErrorMessage(
-          "Your account does not have permission to access this internal portal.",
-        );
-      } else if (denied === "inactive") {
+
+      if (denied === "inactive") {
         setErrorMessage("Your account is inactive.");
       } else if (denied === "unassigned") {
         setErrorMessage("Account not assigned. Please contact admin.");
+      } else if (denied === "role") {
+        setErrorMessage(
+          "Your account does not have permission to access this internal portal.",
+        );
       }
     }
 
@@ -57,30 +62,8 @@ export default function LoginPage() {
       router.replace(access.redirectPath);
     });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (!isMounted || !session) {
-        return;
-      }
-
-      const access = await resolvePortalAccess(supabase, session.user);
-      if (!isMounted) {
-        return;
-      }
-
-      if (!access.ok) {
-        setErrorMessage(access.message);
-        void supabase.auth.signOut();
-        return;
-      }
-
-      router.replace(access.redirectPath);
-    });
-
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
     };
   }, [router, supabase]);
 
@@ -100,7 +83,11 @@ export default function LoginPage() {
       return;
     }
 
-    const access = await resolvePortalAccess(supabase, data.user);
+    const access = await resolvePortalAccess(
+      supabase,
+      data.user,
+      selectedRole,
+    );
 
     if (!access.ok) {
       await supabase.auth.signOut();
@@ -122,24 +109,23 @@ export default function LoginPage() {
               DELLA App
             </p>
             <h1 className="mt-6 max-w-md text-4xl font-semibold leading-tight">
-              Admin operations, service visibility, and team coordination in one
-              place.
+              Internal access for operations, service visibility, and support.
             </h1>
-              <p className="mt-6 max-w-lg text-base leading-7 text-white/72">
-                DELLA&apos;s internal web portal is reserved for Admin,
-                Manager, and Customer Care teams managing users, providers,
-                bookings, services, and platform operations.
-              </p>
-            </div>
+            <p className="mt-6 max-w-lg text-base leading-7 text-white/72">
+              DELLA&apos;s internal web portal is reserved for Admin,
+              Manager, and Customer Care teams managing users, providers,
+              bookings, services, and platform operations.
+            </p>
+          </div>
 
           <div className="grid gap-4 md:grid-cols-2">
-            {roles.map((role) => (
+            {roleOptions.map((role) => (
               <div
-                key={role}
+                key={role.value}
                 className="rounded-2xl border border-white/10 bg-white/5 p-4"
               >
                 <p className="text-sm text-white/60">Access role</p>
-                <p className="mt-2 text-lg font-medium">{role}</p>
+                <p className="mt-2 text-lg font-medium">{role.label}</p>
               </div>
             ))}
           </div>
@@ -154,11 +140,11 @@ export default function LoginPage() {
               <h1 className="mt-4 text-3xl font-semibold text-ink">
                 Welcome back
               </h1>
-                <p className="mt-3 text-sm leading-6 text-slate">
-                  Sign in to access the DELLA admin workspace for Admin,
-                  Customer Care, and Manager roles.
-                </p>
-              </div>
+              <p className="mt-3 text-sm leading-6 text-slate">
+                Sign in with your internal DELLA account to access the admin
+                workspace.
+              </p>
+            </div>
 
             <div className="hidden xl:block">
               <p className="text-sm uppercase tracking-[0.3em] text-accent">
@@ -168,12 +154,9 @@ export default function LoginPage() {
                 Welcome back
               </h2>
               <p className="mt-3 text-sm leading-6 text-slate">
-                Sign in with your Supabase email and password credentials to
-                access the DELLA admin workspace. Access is assigned from the
-                `public.profiles` table, where your account must have an active
-                status and an internal role. Customers and service providers
-                should register through the DELLA mobile app instead of this
-                portal.
+                Sign in with your Supabase email and password credentials.
+                Your account must already exist in Supabase Auth and also have
+                an active record in `public.profiles`.
               </p>
             </div>
 
@@ -196,12 +179,20 @@ export default function LoginPage() {
               </div>
 
               <div>
-                <label
-                  className="mb-2 block text-sm font-medium text-ink"
-                  htmlFor="password"
-                >
-                  Password
-                </label>
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <label
+                    className="block text-sm font-medium text-ink"
+                    htmlFor="password"
+                  >
+                    Password
+                  </label>
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs font-medium text-accent hover:text-accent-dark"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
                 <input
                   id="password"
                   type="password"
@@ -217,16 +208,21 @@ export default function LoginPage() {
                   className="mb-2 block text-sm font-medium text-ink"
                   htmlFor="role"
                 >
-                  Internal role
+                  Role
                 </label>
                 <select
                   id="role"
-                  defaultValue={roles[0]}
+                  value={selectedRole}
+                  onChange={(event) =>
+                    setSelectedRole(
+                      event.target.value as (typeof INTERNAL_PORTAL_ROLES)[number],
+                    )
+                  }
                   className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/10"
                 >
-                  {roles.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
+                  {roleOptions.map((role) => (
+                    <option key={role.value} value={role.value}>
+                      {role.label}
                     </option>
                   ))}
                 </select>
@@ -248,18 +244,14 @@ export default function LoginPage() {
             </form>
 
             <p className="mt-6 text-sm leading-6 text-slate">
-              Need environment setup first? Add your Supabase values to
-              <span className="font-medium text-ink"> `.env.local`</span> using
-              the included example file when you are ready to connect auth and
-              data.
-            </p>
-            <p className="mt-4 text-sm leading-6 text-slate">
               This sign-in is for internal teams only: Admin, Customer Care,
-              and Manager. Access is granted from `public.profiles.role` and
-              `public.profiles.status`.
+              and Manager. Your selected role must match `public.profiles.role`.
             </p>
             <p className="mt-4 text-sm leading-6 text-slate">
-              <Link href="/" className="font-medium text-accent hover:text-accent-dark">
+              <Link
+                href="/"
+                className="font-medium text-accent hover:text-accent-dark"
+              >
                 Back to the DELLA home page
               </Link>
             </p>

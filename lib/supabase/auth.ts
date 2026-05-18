@@ -24,7 +24,7 @@ export type PortalAccessResult =
     }
   | {
       ok: false;
-      reason: "unassigned" | "inactive" | "unauthorized";
+      reason: "unassigned" | "inactive" | "unauthorized" | "role_mismatch";
       message: string;
     };
 
@@ -81,6 +81,7 @@ export async function fetchPortalProfile(
 export async function resolvePortalAccess(
   supabase: SupabaseClient,
   user: User | null | undefined,
+  selectedRole?: string | null,
 ): Promise<PortalAccessResult> {
   if (!user) {
     return {
@@ -116,6 +117,16 @@ export async function resolvePortalAccess(
       reason: "unauthorized",
       message:
         "Your account does not have permission to access this internal portal.",
+    };
+  }
+
+  const expectedRole = normalizePortalRole(selectedRole);
+
+  if (expectedRole && expectedRole !== role) {
+    return {
+      ok: false,
+      reason: "role_mismatch",
+      message: "Selected role does not match your account.",
     };
   }
 
