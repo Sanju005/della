@@ -48,7 +48,6 @@ export async function fetchProviders() {
   const { data, error } = await supabase
     .from("providers")
     .select("*")
-    .order("created_at", { ascending: false })
     .limit(200);
 
   if (error) {
