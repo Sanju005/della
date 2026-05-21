@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
+    "scheme": "della",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#0A6B2A"
@@ -13,9 +14,12 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.della.mobile",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.della.mobile",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#0A6B2A"
       }

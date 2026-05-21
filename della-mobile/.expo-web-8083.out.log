@@ -11,3 +11,10 @@ Web node_modules\expo\AppEntry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓�
 Web node_modules\expo\AppEntry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (320/324)
 Web Bundled 8811ms node_modules\expo\AppEntry.js (330 modules)
  LOG  [web] Logs will appear in the browser console
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 114ms node_modules\expo\AppEntry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 98ms node_modules\expo\AppEntry.js (1 module)
+ LOG  [web] Logs will appear in the browser console
+› Detected a change in metro.config.js. Restart the server to see the new results.

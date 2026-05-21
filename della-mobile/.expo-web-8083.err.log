@@ -2,3 +2,24 @@ The following packages should be updated for best compatibility with the install
   expo@55.0.24 - expected version: ~55.0.25
   expo-font@55.0.7 - expected version: ~55.0.8
 Your project may not work correctly until you install the expected versions of the packages.
+D:\Della\admin\della-mobile\node_modules\expo\node_modules\@expo\cli\build\src\utils\errors.js:130
+    throw error;
+    ^
+
+Error: ENOENT: no such file or directory, watch 'D:\Della\admin\della-mobile\node_modules\.expo-H1FDbEcn\node_modules\semver\classes'
+    at FSWatcher.<computed> (node:internal/fs/watchers:316:19)
+    at Object.watch (node:fs:2538:36)
+    at FallbackWatcher.#watchdir (D:\Della\admin\della-mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:133:33)
+    at D:\Della\admin\della-mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:233:31
+    at Walker.<anonymous> (D:\Della\admin\della-mobile\node_modules\metro-file-map\src\watchers\FallbackWatcher.js:378:5)
+    at Walker.emit (node:events:509:28)
+    at D:\Della\admin\della-mobile\node_modules\walker\lib\walker.js:69:16
+    at FSReqCallback.oncomplete (node:fs:185:23) {
+  errno: -4058,
+  syscall: 'watch',
+  code: 'ENOENT',
+  path: 'D:\\Della\\admin\\della-mobile\\node_modules\\.expo-H1FDbEcn\\node_modules\\semver\\classes',
+  filename: 'D:\\Della\\admin\\della-mobile\\node_modules\\.expo-H1FDbEcn\\node_modules\\semver\\classes'
+}
+
+Node.js v24.15.0
