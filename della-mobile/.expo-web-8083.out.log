@@ -4,3 +4,10 @@ Starting project at D:\Della\admin\della-mobile
 Starting Metro Bundler
 
  WARN  Failed to download the latest version of React Native DevTools. Using a fallback version instead. Connect to the internet or check your network settings.
+Waiting on http://localhost:8083
+Logs for your project will appear below.
+Web node_modules\expo\AppEntry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web node_modules\expo\AppEntry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (293/300)
+Web node_modules\expo\AppEntry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (320/324)
+Web Bundled 8811ms node_modules\expo\AppEntry.js (330 modules)
+ LOG  [web] Logs will appear in the browser console
