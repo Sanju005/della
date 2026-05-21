@@ -1,0 +1,6 @@
+env: load .env.local
+env: export EXPO_PUBLIC_API_BASE_URL EXPO_PUBLIC_SUPABASE_ANON_KEY EXPO_PUBLIC_SUPABASE_URL
+Starting project at D:\Della\admin\della-mobile
+Starting Metro Bundler
+
+ WARN  Failed to download the latest version of React Native DevTools. Using a fallback version instead. Connect to the internet or check your network settings.

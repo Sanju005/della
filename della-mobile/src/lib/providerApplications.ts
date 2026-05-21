@@ -146,6 +146,58 @@ export async function submitProviderApplication(payload: ProviderApplicationPayl
   return data;
 }
 
+export async function sendPhoneOtp(phoneNumber: string) {
+  const response = await fetch(`${getApiBaseUrl()}/api/auth/phone-otp/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ phoneNumber }),
+  });
+
+  const data = (await response.json()) as {
+    ok?: boolean;
+    error?: string;
+    status?: string;
+  };
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error ?? "Failed to send phone OTP.");
+  }
+
+  return data;
+}
+
+export async function verifyPhoneOtp(phoneNumber: string, code: string) {
+  const response = await fetch(`${getApiBaseUrl()}/api/auth/phone-otp/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ phoneNumber, code }),
+  });
+
+  const data = (await response.json()) as {
+    ok?: boolean;
+    error?: string;
+    status?: string;
+  };
+
+  if (!response.ok) {
+    throw new Error(data.error ?? "Failed to verify phone OTP.");
+  }
+
+  if (!data.ok) {
+    throw new Error(
+      data.status === "pending"
+        ? "Invalid OTP code. Please try again."
+        : data.error ?? "Phone OTP verification failed.",
+    );
+  }
+
+  return data;
+}
+
 export function buildProviderAssetPath({
   firstName,
   lastName,

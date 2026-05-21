@@ -4,8 +4,10 @@ import { Image, Pressable, Text, View } from "react-native";
 
 import {
   buildProviderAssetPath,
+  sendPhoneOtp,
   submitProviderApplication,
   uploadRemoteAssetToStorage,
+  verifyPhoneOtp,
 } from "../lib/providerApplications";
 import {
   AppScreen,
@@ -73,6 +75,7 @@ type ServiceForm = {
 };
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
+type PhoneVerificationState = "idle" | "sending" | "code_sent" | "verifying" | "verified" | "error";
 
 const providerTabs = [
   { key: "provider-dashboard", label: "Dashboard", icon: "grid-outline" },
@@ -890,6 +893,10 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     providerId: string;
     notificationId: string | null;
   } | null>(null);
+  const [otpCode, setOtpCode] = useState("");
+  const [phoneVerificationState, setPhoneVerificationState] =
+    useState<PhoneVerificationState>("idle");
+  const [phoneVerificationMessage, setPhoneVerificationMessage] = useState<string | null>(null);
 
   const activeServices = useMemo(
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
@@ -990,6 +997,10 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
       return "Verified email and phone are required before submission.";
     }
 
+    if (phoneVerificationState !== "verified") {
+      return "Phone number must be verified with OTP before submission.";
+    }
+
     if (activeServices.length === 0) {
       return "Add at least one service before submitting.";
     }
@@ -1039,6 +1050,56 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     }
 
     return null;
+  }
+
+  async function handleSendPhoneOtp() {
+    if (!form.verificationPhone.trim()) {
+      setPhoneVerificationState("error");
+      setPhoneVerificationMessage("Enter a phone number before sending OTP.");
+      return;
+    }
+
+    setPhoneVerificationState("sending");
+    setPhoneVerificationMessage(null);
+
+    try {
+      await sendPhoneOtp(form.verificationPhone.trim());
+      setPhoneVerificationState("code_sent");
+      setPhoneVerificationMessage("OTP sent successfully. Enter the code to verify this phone number.");
+    } catch (error) {
+      setPhoneVerificationState("error");
+      setPhoneVerificationMessage(
+        error instanceof Error ? error.message : "Failed to send OTP.",
+      );
+    }
+  }
+
+  async function handleVerifyPhoneOtp() {
+    if (!form.verificationPhone.trim()) {
+      setPhoneVerificationState("error");
+      setPhoneVerificationMessage("Phone number is required for OTP verification.");
+      return;
+    }
+
+    if (!otpCode.trim()) {
+      setPhoneVerificationState("error");
+      setPhoneVerificationMessage("Enter the OTP code before verifying.");
+      return;
+    }
+
+    setPhoneVerificationState("verifying");
+    setPhoneVerificationMessage(null);
+
+    try {
+      await verifyPhoneOtp(form.verificationPhone.trim(), otpCode.trim());
+      setPhoneVerificationState("verified");
+      setPhoneVerificationMessage("Phone number verified successfully.");
+    } catch (error) {
+      setPhoneVerificationState("error");
+      setPhoneVerificationMessage(
+        error instanceof Error ? error.message : "Failed to verify OTP.",
+      );
+    }
   }
 
   async function handleSubmitApplication() {
@@ -1314,25 +1375,63 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               eyebrow="STEP 2"
               title="Now verify before creating services"
               subtitle="Once phone and email are confirmed, the provider receives a message saying they are verified and can upload services."
-              status="Ready to verify"
+              status={phoneVerificationState === "verified" ? "Phone verified" : "Ready to verify"}
             />
             <VerificationCard
               title="Phone verification"
-              subtitle="Phone number is marked verified before service creation."
+              subtitle="Send an OTP through Twilio Verify, then confirm the code before continuing."
               icon="call-outline"
-              status="Verified"
+              status={phoneVerificationState === "verified" ? "Verified" : "Pending"}
             />
             <OutlineField
               label="Verified Phone Number"
               placeholder="+60"
               value={form.verificationPhone}
-              onChangeText={(value) => updateField("verificationPhone", value)}
+              onChangeText={(value) => {
+                updateField("verificationPhone", value);
+                setOtpCode("");
+                setPhoneVerificationState("idle");
+                setPhoneVerificationMessage(null);
+              }}
             />
+            <PrimaryButton
+              label={
+                phoneVerificationState === "sending"
+                  ? "Sending OTP..."
+                  : phoneVerificationState === "code_sent" || phoneVerificationState === "verified"
+                    ? "Resend OTP"
+                    : "Send OTP"
+              }
+              onPress={() => {
+                void handleSendPhoneOtp();
+              }}
+              disabled={phoneVerificationState === "sending" || phoneVerificationState === "verifying"}
+            />
+            <OutlineField
+              label="OTP Code"
+              placeholder="Enter OTP code"
+              value={otpCode}
+              onChangeText={setOtpCode}
+            />
+            <PrimaryButton
+              label={phoneVerificationState === "verifying" ? "Verifying OTP..." : "Verify phone OTP"}
+              onPress={() => {
+                void handleVerifyPhoneOtp();
+              }}
+              disabled={phoneVerificationState === "sending" || phoneVerificationState === "verifying"}
+            />
+            {phoneVerificationMessage ? (
+              <MessageCard
+                tone={phoneVerificationState === "error" ? "error" : "info"}
+                title={phoneVerificationState === "verified" ? "Phone verified" : "Phone OTP status"}
+                text={phoneVerificationMessage}
+              />
+            ) : null}
             <VerificationCard
               title="Email verification"
-              subtitle="Email is marked verified before services and assets are submitted."
+              subtitle="Email stays on the verified registration contact and the provider receives confirmation messages through email."
               icon="mail-outline"
-              status="Verified"
+              status={form.verificationEmail.trim() ? "Ready" : "Pending"}
             />
             <OutlineField
               label="Verified Email"
@@ -1345,9 +1444,13 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
                 Email message: "Now you are verified, you can upload your services."
               </Text>
-              <StatusBadge label="Verified" />
+              <StatusBadge label={phoneVerificationState === "verified" ? "Ready" : "Pending"} />
             </View>
-            <PrimaryButton label="Continue to create services" onPress={() => setRoute("provider-service-details")} />
+            <PrimaryButton
+              label="Continue to create services"
+              onPress={() => setRoute("provider-service-details")}
+              disabled={phoneVerificationState !== "verified"}
+            />
           </>
         ) : null}
 
