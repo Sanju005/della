@@ -42,6 +42,7 @@ type RegistrationStep =
 type ServiceForm = {
   id: string;
   name: string;
+  icon: keyof typeof Ionicons.glyphMap;
   shortLabel: string;
   description: string;
   yearsExperience: string;
@@ -97,10 +98,11 @@ const providerProfile = {
   verificationPhone: "+60 12-778 4921",
 };
 
-const initialServices: ServiceForm[] = [
+const serviceTemplates: ServiceForm[] = [
   {
     id: "chef",
     name: "Chef",
+    icon: "restaurant-outline",
     shortLabel: "chef",
     description: "Private dining, meal prep, event cooking, and home chefs.",
     yearsExperience: "5",
@@ -141,6 +143,7 @@ const initialServices: ServiceForm[] = [
   {
     id: "maid",
     name: "Maid",
+    icon: "sparkles-outline",
     shortLabel: "maid",
     description: "Routine cleaning, deep cleaning, laundry, and home support.",
     yearsExperience: "4",
@@ -175,6 +178,47 @@ const initialServices: ServiceForm[] = [
         caption: "Countertop sanitation, sink treatment, and appliance wipe-down service.",
         image:
           "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
+  },
+  {
+    id: "tutor",
+    name: "Tutor",
+    icon: "school-outline",
+    shortLabel: "tutor",
+    description: "Home tuition, exam coaching, language, and skills classes.",
+    yearsExperience: "3",
+    specialties: "Maths, English, homework coaching",
+    availability: "Weekdays, 3 PM - 8 PM",
+    location: "Damansara Heights, Kuala Lumpur",
+    radiusKm: "8",
+    serviceDescription:
+      "Personalized home tuition and guided learning sessions for primary and secondary students.",
+    perDayRate: "180",
+    perHourRate: "60",
+    minimumBookingHours: "2",
+    payments: ["Transfer", "QR"],
+    portfolio: [
+      {
+        id: "tutor-1",
+        title: "Math coaching session",
+        caption: "One-to-one maths support with personalized worksheets and practice flow.",
+        image:
+          "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "tutor-2",
+        title: "Homework support desk",
+        caption: "Structured after-school study support focused on consistency and confidence.",
+        image:
+          "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "tutor-3",
+        title: "Reading and language guidance",
+        caption: "Calm guided language coaching for comprehension, grammar, and speaking practice.",
+        image:
+          "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
       },
     ],
   },
@@ -354,28 +398,28 @@ function VerificationCard({
   );
 }
 
-function ServiceChip({
-  label,
-  active,
+function ServiceAddButton({
   onPress,
+  open,
 }: {
-  label: string;
-  active: boolean;
   onPress: () => void;
+  open: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
       style={{
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-        borderRadius: 999,
-        backgroundColor: active ? colors.brand : colors.surface,
+        width: 52,
+        height: 52,
+        borderRadius: 18,
+        backgroundColor: colors.brandSoft,
         borderWidth: 1,
-        borderColor: active ? colors.brand : "#DDE7DF",
+        borderColor: "rgba(57,230,11,0.22)",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Text style={{ color: active ? colors.ink : colors.slate, fontSize: 13, fontWeight: "800" }}>{label}</Text>
+      <Ionicons name={open ? "close" : "add"} size={24} color={colors.brandDark} />
     </Pressable>
   );
 }
@@ -421,6 +465,29 @@ function PortfolioCard({
       <View style={{ gap: 4 }}>
         <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{title}</Text>
         <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{caption}</Text>
+      </View>
+    </View>
+  );
+}
+
+function SelectedServiceCard({ service }: { service: ServiceForm }) {
+  return (
+    <View style={{ ...premiumCard, flexDirection: "row", alignItems: "center", gap: 14 }}>
+      <View
+        style={{
+          width: 52,
+          height: 52,
+          borderRadius: 18,
+          backgroundColor: colors.brandSoft,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Ionicons name={service.icon} size={24} color={colors.brandDark} />
+      </View>
+      <View style={{ flex: 1, gap: 4 }}>
+        <Text style={{ fontSize: 18, fontWeight: "800", color: colors.ink }}>{service.name}</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{service.description}</Text>
       </View>
     </View>
   );
@@ -537,10 +604,15 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [route, setRoute] = useState<ProviderRoute>("provider-login");
   const [form, setForm] = useState(providerProfile);
   const [enabledServiceIds, setEnabledServiceIds] = useState<string[]>(["chef", "maid"]);
-  const [serviceForms, setServiceForms] = useState<ServiceForm[]>(initialServices);
+  const [serviceForms, setServiceForms] = useState<ServiceForm[]>(serviceTemplates);
+  const [serviceMenuOpen, setServiceMenuOpen] = useState(false);
 
   const activeServices = useMemo(
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
+    [enabledServiceIds, serviceForms],
+  );
+  const availableServices = useMemo(
+    () => serviceForms.filter((service) => !enabledServiceIds.includes(service.id)),
     [enabledServiceIds, serviceForms],
   );
 
@@ -559,6 +631,11 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     setEnabledServiceIds((current) =>
       current.includes(serviceId) ? current.filter((value) => value !== serviceId) : [...current, serviceId],
     );
+  }
+
+  function addService(serviceId: string) {
+    setEnabledServiceIds((current) => (current.includes(serviceId) ? current : [...current, serviceId]));
+    setServiceMenuOpen(false);
   }
 
   function updateService(serviceId: string, field: keyof ServiceForm, value: string) {
@@ -764,20 +841,59 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <RegistrationProgress route={route} />
             <View style={premiumCard}>
-              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Create services</Text>
-              <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                Start with chef, then add another service like maid. Each service must have its own full details.
-              </Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-                {initialServices.map((service) => (
-                  <ServiceChip
-                    key={service.id}
-                    label={service.name}
-                    active={enabledServiceIds.includes(service.id)}
-                    onPress={() => toggleService(service.id)}
-                  />
-                ))}
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                <View style={{ flex: 1, gap: 4 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Create services</Text>
+                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+                    Tap `+` to add another service from the dropdown menu.
+                  </Text>
+                </View>
+                <ServiceAddButton onPress={() => setServiceMenuOpen((current) => !current)} open={serviceMenuOpen} />
               </View>
+              {serviceMenuOpen ? (
+                <View style={{ gap: 10 }}>
+                  {availableServices.length > 0 ? (
+                    availableServices.map((service) => (
+                      <Pressable
+                        key={service.id}
+                        onPress={() => addService(service.id)}
+                        style={{
+                          padding: 14,
+                          borderRadius: 18,
+                          backgroundColor: "#F7FBF5",
+                          borderWidth: 1,
+                          borderColor: "#DDE7DF",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 12,
+                        }}
+                      >
+                        <Ionicons name={service.icon} size={20} color={colors.brandDark} />
+                        <View style={{ flex: 1 }}>
+                          <Text style={{ fontSize: 15, fontWeight: "800", color: colors.ink }}>{service.name}</Text>
+                          <Text style={{ fontSize: 13, lineHeight: 19, color: colors.slate }}>{service.description}</Text>
+                        </View>
+                      </Pressable>
+                    ))
+                  ) : (
+                    <Text style={{ fontSize: 13, color: colors.slate }}>
+                      All available services have already been added.
+                    </Text>
+                  )}
+                </View>
+              ) : null}
+            </View>
+            <View style={{ gap: 12 }}>
+              {activeServices.map((service) => (
+                <SelectedServiceCard key={service.id} service={service} />
+              ))}
+            </View>
+            <View style={premiumCard}>
+              <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+                Chef and maid are already added in this demo, so when you continue to pricing you will see:
+              </Text>
+              <Text style={{ fontSize: 14, fontWeight: "800", color: colors.ink }}>1. One price card for chef</Text>
+              <Text style={{ fontSize: 14, fontWeight: "800", color: colors.ink }}>2. One price card for maid</Text>
             </View>
             {activeServices.map((service) => (
               <ServiceSection
