@@ -4,6 +4,8 @@ import { Image, Pressable, Text, View } from "react-native";
 
 import {
   buildProviderAssetPath,
+  getEmailVerificationStatus,
+  sendEmailVerification,
   sendPhoneOtp,
   submitProviderApplication,
   uploadRemoteAssetToStorage,
@@ -76,6 +78,7 @@ type ServiceForm = {
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 type PhoneVerificationState = "idle" | "sending" | "code_sent" | "verifying" | "verified" | "error";
+type EmailVerificationState = "idle" | "sending" | "sent" | "checking" | "verified" | "error";
 
 const providerTabs = [
   { key: "provider-dashboard", label: "Dashboard", icon: "grid-outline" },
@@ -897,6 +900,9 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [phoneVerificationState, setPhoneVerificationState] =
     useState<PhoneVerificationState>("idle");
   const [phoneVerificationMessage, setPhoneVerificationMessage] = useState<string | null>(null);
+  const [emailVerificationState, setEmailVerificationState] =
+    useState<EmailVerificationState>("idle");
+  const [emailVerificationMessage, setEmailVerificationMessage] = useState<string | null>(null);
 
   const activeServices = useMemo(
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
@@ -1001,6 +1007,10 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
       return "Phone number must be verified with OTP before submission.";
     }
 
+    if (emailVerificationState !== "verified") {
+      return "Email address must be verified before submission.";
+    }
+
     if (activeServices.length === 0) {
       return "Add at least one service before submitting.";
     }
@@ -1098,6 +1108,58 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
       setPhoneVerificationState("error");
       setPhoneVerificationMessage(
         error instanceof Error ? error.message : "Failed to verify OTP.",
+      );
+    }
+  }
+
+  async function handleSendEmailVerification() {
+    if (!form.verificationEmail.trim()) {
+      setEmailVerificationState("error");
+      setEmailVerificationMessage("Enter an email address before sending verification.");
+      return;
+    }
+
+    setEmailVerificationState("sending");
+    setEmailVerificationMessage(null);
+
+    try {
+      await sendEmailVerification(form.verificationEmail.trim());
+      setEmailVerificationState("sent");
+      setEmailVerificationMessage(
+        "Verification email sent. Open the email link, then come back here and check verification status.",
+      );
+    } catch (error) {
+      setEmailVerificationState("error");
+      setEmailVerificationMessage(
+        error instanceof Error ? error.message : "Failed to send verification email.",
+      );
+    }
+  }
+
+  async function handleCheckEmailVerification() {
+    if (!form.verificationEmail.trim()) {
+      setEmailVerificationState("error");
+      setEmailVerificationMessage("Email address is required.");
+      return;
+    }
+
+    setEmailVerificationState("checking");
+    setEmailVerificationMessage(null);
+
+    try {
+      const result = await getEmailVerificationStatus(form.verificationEmail.trim());
+
+      if (result.status === "verified") {
+        setEmailVerificationState("verified");
+        setEmailVerificationMessage("Email address verified successfully.");
+      } else {
+        setEmailVerificationState("sent");
+        setEmailVerificationMessage("Email is still pending verification. Open the email link first, then check again.");
+      }
+    } catch (error) {
+      setEmailVerificationState("error");
+      setEmailVerificationMessage(
+        error instanceof Error ? error.message : "Failed to check email verification.",
       );
     }
   }
@@ -1429,27 +1491,64 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             ) : null}
             <VerificationCard
               title="Email verification"
-              subtitle="Email stays on the verified registration contact and the provider receives confirmation messages through email."
+              subtitle="Send a real verification email, open the link, then check the verification status here before continuing."
               icon="mail-outline"
-              status={form.verificationEmail.trim() ? "Ready" : "Pending"}
+              status={emailVerificationState === "verified" ? "Verified" : "Pending"}
             />
             <OutlineField
               label="Verified Email"
               placeholder="Email address"
               value={form.verificationEmail}
-              onChangeText={(value) => updateField("verificationEmail", value)}
+              onChangeText={(value) => {
+                updateField("verificationEmail", value);
+                setEmailVerificationState("idle");
+                setEmailVerificationMessage(null);
+              }}
             />
+            <PrimaryButton
+              label={
+                emailVerificationState === "sending"
+                  ? "Sending verification email..."
+                  : emailVerificationState === "sent" || emailVerificationState === "verified"
+                    ? "Resend verification email"
+                    : "Send verification email"
+              }
+              onPress={() => {
+                void handleSendEmailVerification();
+              }}
+              disabled={emailVerificationState === "sending" || emailVerificationState === "checking"}
+            />
+            <PrimaryButton
+              label={emailVerificationState === "checking" ? "Checking email verification..." : "Check email verification"}
+              onPress={() => {
+                void handleCheckEmailVerification();
+              }}
+              disabled={emailVerificationState === "sending" || emailVerificationState === "checking"}
+            />
+            {emailVerificationMessage ? (
+              <MessageCard
+                tone={emailVerificationState === "error" ? "error" : "info"}
+                title={emailVerificationState === "verified" ? "Email verified" : "Email verification status"}
+                text={emailVerificationMessage}
+              />
+            ) : null}
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Verification result email</Text>
               <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
                 Email message: "Now you are verified, you can upload your services."
               </Text>
-              <StatusBadge label={phoneVerificationState === "verified" ? "Ready" : "Pending"} />
+              <StatusBadge
+                label={
+                  phoneVerificationState === "verified" && emailVerificationState === "verified"
+                    ? "Ready"
+                    : "Pending"
+                }
+              />
             </View>
             <PrimaryButton
               label="Continue to create services"
               onPress={() => setRoute("provider-service-details")}
-              disabled={phoneVerificationState !== "verified"}
+              disabled={phoneVerificationState !== "verified" || emailVerificationState !== "verified"}
             />
           </>
         ) : null}

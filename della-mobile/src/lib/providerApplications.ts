@@ -198,6 +198,50 @@ export async function verifyPhoneOtp(phoneNumber: string, code: string) {
   return data;
 }
 
+export async function sendEmailVerification(email: string) {
+  const response = await fetch(`${getApiBaseUrl()}/api/auth/email-verify/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = (await response.json()) as {
+    ok?: boolean;
+    error?: string;
+  };
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error ?? "Failed to send verification email.");
+  }
+
+  return data;
+}
+
+export async function getEmailVerificationStatus(email: string) {
+  const response = await fetch(`${getApiBaseUrl()}/api/auth/email-verify/status`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  const data = (await response.json()) as {
+    ok?: boolean;
+    error?: string;
+    status?: string;
+    verifiedAt?: string | null;
+  };
+
+  if (!response.ok || !data.ok) {
+    throw new Error(data.error ?? "Failed to fetch email verification status.");
+  }
+
+  return data;
+}
+
 export function buildProviderAssetPath({
   firstName,
   lastName,

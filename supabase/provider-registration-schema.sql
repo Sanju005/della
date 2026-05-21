@@ -68,6 +68,15 @@ create table if not exists public.admin_notifications (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.email_verifications (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  token_hash text not null,
+  status text not null default 'pending',
+  created_at timestamptz not null default now(),
+  verified_at timestamptz
+);
+
 -- 3. Add foreign keys after all columns/tables exist.
 -- Guard each constraint so reruns stay safe.
 
@@ -136,5 +145,8 @@ create index if not exists idx_admin_notifications_status
 
 create index if not exists idx_admin_notifications_provider_id
   on public.admin_notifications(provider_id);
+
+create index if not exists idx_email_verifications_email
+  on public.email_verifications(email, created_at desc);
 
 commit;
