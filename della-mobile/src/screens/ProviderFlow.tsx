@@ -6,8 +6,10 @@ import { Image, Pressable, Text, View } from "react-native";
 
 import {
   buildProviderAssetPath,
+  fetchProviderApplicationStatus,
   getEmailVerificationStatus,
   type LocalUploadAsset,
+  type ProviderApplicationStatusPayload,
   sendEmailVerification,
   sendPhoneOtp,
   submitProviderApplication,
@@ -38,6 +40,7 @@ type ProviderRoute =
   | "provider-rates"
   | "provider-portfolio"
   | "pending-approval"
+  | "provider-application-status"
   | "provider-dashboard"
   | "provider-bookings"
   | "provider-chat"
@@ -85,6 +88,7 @@ type ServiceForm = {
 type SubmissionState = "idle" | "submitting" | "success" | "error";
 type PhoneVerificationState = "idle" | "sending" | "code_sent" | "verifying" | "verified" | "error";
 type EmailVerificationState = "idle" | "sending" | "sent" | "checking" | "verified" | "error";
+type StatusLoadState = "idle" | "loading" | "success" | "error";
 
 const providerTabs = [
   { key: "provider-dashboard", label: "Dashboard", icon: "grid-outline" },
@@ -428,6 +432,33 @@ function parseNullableNumber(value: string) {
 
   const parsed = Number(trimmed);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatProviderStatus(status: string | null | undefined) {
+  if (!status) {
+    return "Pending Review";
+  }
+
+  if (status === "additional_documents_required") {
+    return "Additional Documents Required";
+  }
+
+  return status
+    .split("_")
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
+function mapStatusTone(status: string | null | undefined): "info" | "success" | "error" {
+  if (status === "approved") {
+    return "success";
+  }
+
+  if (status === "rejected") {
+    return "error";
+  }
+
+  return "info";
 }
 
 function RegistrationProgress({ route }: { route: RegistrationStep }) {
@@ -1011,6 +1042,9 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [emailVerificationState, setEmailVerificationState] =
     useState<EmailVerificationState>("idle");
   const [emailVerificationMessage, setEmailVerificationMessage] = useState<string | null>(null);
+  const [applicationStatusState, setApplicationStatusState] = useState<StatusLoadState>("idle");
+  const [applicationStatusError, setApplicationStatusError] = useState<string | null>(null);
+  const [applicationStatus, setApplicationStatus] = useState<ProviderApplicationStatusPayload | null>(null);
 
   const activeServices = useMemo(
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
@@ -1586,12 +1620,37 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
         providerId: result.providerId ?? "",
         notificationId: result.notificationId ?? null,
       });
+      setApplicationStatusState("idle");
+      setApplicationStatusError(null);
+      setApplicationStatus(null);
       setSubmissionState("success");
       setRoute("pending-approval");
     } catch (error) {
       setSubmissionState("error");
       setSubmissionError(
         error instanceof Error ? error.message : "Failed to submit provider application.",
+      );
+    }
+  }
+
+  async function handleRefreshApplicationStatus() {
+    if (!submissionSummary?.providerId) {
+      setApplicationStatusState("error");
+      setApplicationStatusError("Submit the provider application first before checking status.");
+      return;
+    }
+
+    setApplicationStatusState("loading");
+    setApplicationStatusError(null);
+
+    try {
+      const result = await fetchProviderApplicationStatus(submissionSummary.providerId);
+      setApplicationStatus(result);
+      setApplicationStatusState("success");
+    } catch (error) {
+      setApplicationStatusState("error");
+      setApplicationStatusError(
+        error instanceof Error ? error.message : "Failed to fetch provider application status.",
       );
     }
   }
@@ -2074,8 +2133,110 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               title="Approval updates come next"
               text="Admin can approve the application or request extra documents through email and in-app notifications."
             />
+            <PrimaryButton
+              label="Check application status"
+              onPress={() => {
+                setRoute("provider-application-status");
+                void handleRefreshApplicationStatus();
+              }}
+            />
             <PrimaryButton label="Open provider dashboard preview" onPress={() => setRoute("provider-dashboard")} />
             <SecondaryButton label="Back to provider login" onPress={() => setRoute("provider-login")} />
+          </>
+        ) : null}
+
+        {route === "provider-application-status" ? (
+          <>
+            <ScreenHeader
+              eyebrow="Application status"
+              title="Track your provider review"
+              subtitle="See the latest admin decision, review note, and the submitted services tied to this provider application."
+              onBack={() => setRoute("pending-approval")}
+            />
+            <PremiumHero
+              eyebrow="REVIEW STATUS"
+              title={
+                applicationStatus?.provider.status
+                  ? formatProviderStatus(applicationStatus.provider.status)
+                  : "Pending Review"
+              }
+              subtitle="Refresh this page any time to check whether the DELLA admin team has approved the application, requested more documents, or rejected it."
+              status={
+                applicationStatus?.provider.status
+                  ? formatProviderStatus(applicationStatus.provider.status)
+                  : "Pending Review"
+              }
+            />
+            {applicationStatusError ? (
+              <MessageCard tone="error" title="Unable to load status" text={applicationStatusError} />
+            ) : null}
+            {applicationStatus ? (
+              <MessageCard
+                tone={mapStatusTone(applicationStatus.provider.status)}
+                title={`Current status: ${formatProviderStatus(applicationStatus.provider.status)}`}
+                text={
+                  applicationStatus.latest_review?.note?.trim()
+                    ? applicationStatus.latest_review.note
+                    : "No extra admin note has been added yet. You will also receive email updates when the status changes."
+                }
+              />
+            ) : (
+              <MessageCard
+                tone="info"
+                title="Status not loaded yet"
+                text="Use the refresh button below to load the latest provider review state from the backend."
+              />
+            )}
+            {applicationStatus ? (
+              <View style={premiumCard}>
+                <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Submitted services</Text>
+                <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+                  {applicationStatus.services.map((service) => service.service_name).filter(Boolean).join(", ") || "No services found."}
+                </Text>
+              </View>
+            ) : null}
+            {applicationStatus?.documents?.length ? (
+              <View style={premiumCard}>
+                <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Submitted documents</Text>
+                <View style={{ gap: 10 }}>
+                  {applicationStatus.documents.map((document) => (
+                    <View
+                      key={document.id}
+                      style={{
+                        borderRadius: 18,
+                        borderWidth: 1,
+                        borderColor: "#DDE7DF",
+                        backgroundColor: "#F8FBF6",
+                        padding: 14,
+                        gap: 4,
+                      }}
+                    >
+                      <Text style={{ fontSize: 15, fontWeight: "800", color: colors.ink }}>{document.label}</Text>
+                      <Text style={{ fontSize: 13, color: colors.slate }}>
+                        {formatProviderStatus(document.status)}
+                      </Text>
+                      {document.notes ? (
+                        <Text style={{ fontSize: 13, lineHeight: 20, color: colors.slate }}>{document.notes}</Text>
+                      ) : null}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            ) : null}
+            <PrimaryButton
+              label={applicationStatusState === "loading" ? "Refreshing status..." : "Refresh status"}
+              onPress={() => {
+                void handleRefreshApplicationStatus();
+              }}
+              disabled={applicationStatusState === "loading"}
+            />
+            {applicationStatus?.provider.status === "additional_documents_required" ? (
+              <MessageCard
+                tone="info"
+                title="Next step"
+                text="Admin has requested more documents. The review note above shows what needs attention. We can build the resubmission flow next."
+              />
+            ) : null}
           </>
         ) : null}
 
@@ -2093,7 +2254,11 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               eyebrow="APPLICATION STATUS"
               title="Verified account, services under review"
               subtitle="Phone and email are verified, and every enabled service package is waiting for admin approval."
-              status="Pending Review"
+              status={
+                applicationStatus?.provider.status
+                  ? formatProviderStatus(applicationStatus.provider.status)
+                  : "Pending Review"
+              }
             />
             <View style={{ flexDirection: "row", gap: 12 }}>
               <MetricCard label="Services" value={String(activeServices.length)} />

@@ -56,6 +56,41 @@ export type ProviderApplicationPayload = {
   services: ProviderApplicationServicePayload[];
 };
 
+export type ProviderApplicationStatusPayload = {
+  ok: true;
+  provider: {
+    id: string;
+    full_name: string | null;
+    first_name: string | null;
+    last_name: string | null;
+    status: string | null;
+    verification_email: string | null;
+    verification_phone: string | null;
+    created_at: string | null;
+  };
+  services: Array<{
+    service_id: string | null;
+    service_name: string | null;
+    hourly_price: number | null;
+    minimum_booking_hours: number | null;
+    availability_modes: string[] | null;
+  }>;
+  documents: Array<{
+    id: string;
+    document_type: string;
+    label: string;
+    status: string | null;
+    notes: string | null;
+    created_at: string | null;
+  }>;
+  latest_review: {
+    created_at: string | null;
+    action: string | null;
+    status: string | null;
+    note: string | null;
+  } | null;
+};
+
 function sanitizeSegment(value: string) {
   return value
     .toLowerCase()
@@ -178,6 +213,18 @@ export async function submitProviderApplication(payload: ProviderApplicationPayl
 
   if (!response.ok || !data.ok) {
     throw new Error(data.error ?? "Failed to submit provider application.");
+  }
+
+  return data;
+}
+
+export async function fetchProviderApplicationStatus(providerId: string) {
+  const response = await fetch(`${getApiBaseUrl()}/api/provider-applications/${providerId}/status`);
+
+  const data = (await response.json()) as ProviderApplicationStatusPayload | { ok?: boolean; error?: string };
+
+  if (!response.ok || data.ok !== true || !("provider" in data)) {
+    throw new Error(("error" in data && data.error) || "Failed to fetch provider application status.");
   }
 
   return data;
