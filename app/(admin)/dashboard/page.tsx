@@ -6,6 +6,7 @@ import { KpiCard } from "@/components/kpi-card";
 import { PlaceholderTable } from "@/components/placeholder-table";
 import { formatCount, pickValue } from "@/lib/supabase/format";
 import {
+  fetchAdminNotifications,
   fetchBookings,
   fetchCustomers,
   fetchProviders,
@@ -18,6 +19,7 @@ export default function DashboardPage() {
   const [providers, setProviders] = useState<SupabaseRow[]>([]);
   const [customers, setCustomers] = useState<SupabaseRow[]>([]);
   const [services, setServices] = useState<SupabaseRow[]>([]);
+  const [notifications, setNotifications] = useState<SupabaseRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -26,12 +28,13 @@ export default function DashboardPage() {
 
     async function loadDashboardData() {
       try {
-        const [bookingsData, providersData, customersData, servicesData] =
+        const [bookingsData, providersData, customersData, servicesData, notificationsData] =
           await Promise.all([
             fetchBookings(),
             fetchProviders(),
             fetchCustomers(),
             fetchServices(),
+            fetchAdminNotifications(),
           ]);
 
         if (!active) {
@@ -42,6 +45,7 @@ export default function DashboardPage() {
         setProviders(providersData);
         setCustomers(customersData);
         setServices(servicesData);
+        setNotifications(notificationsData);
         setErrorMessage(null);
       } catch (error) {
         if (!active) {
@@ -79,6 +83,14 @@ export default function DashboardPage() {
       detail: "provider records in Supabase",
     },
     {
+      label: "Pending registrations",
+      value: formatCount(
+        providers.filter((provider) => pickValue(provider, ["status"]) === "pending_review").length,
+      ),
+      delta: errorMessage ? "Sync issue" : "Queue",
+      detail: "provider applications awaiting admin review",
+    },
+    {
       label: "Bookings",
       value: formatCount(bookings.length),
       delta: errorMessage ? "Sync issue" : "Live",
@@ -98,6 +110,13 @@ export default function DashboardPage() {
     pickValue(booking, ["provider_name", "provider", "provider_id"]),
     pickValue(booking, ["status"]),
     pickValue(booking, ["booking_date", "scheduled_at", "date", "created_at"]),
+  ]);
+
+  const notificationRows = notifications.slice(0, 6).map((notification) => [
+    pickValue(notification, ["title"]),
+    pickValue(notification, ["status"]),
+    pickValue(notification, ["body"]),
+    pickValue(notification, ["created_at"]),
   ]);
 
   return (
@@ -123,13 +142,13 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {metrics.map((metric) => (
           <KpiCard key={metric.label} {...metric} />
         ))}
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
+      <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
         <PlaceholderTable
           title="Recent bookings"
           description="Latest booking activity from the Supabase bookings table."
@@ -140,23 +159,15 @@ export default function DashboardPage() {
           emptyMessage="No bookings were returned from Supabase."
         />
 
-        <div className="rounded-[28px] border border-white/70 bg-white/90 p-6 shadow-card">
-          <h2 className="text-lg font-semibold text-ink">Team notes</h2>
-          <div className="mt-5 space-y-4">
-            {[
-              "Supabase Auth now protects the admin workspace before route access.",
-              "Providers, services, customers, and bookings load from live tables.",
-              "Settings remains focused on configuration without extra product modules.",
-            ].map((note) => (
-              <div
-                key={note}
-                className="rounded-2xl border border-slate-200 bg-mist/60 p-4 text-sm leading-6 text-slate"
-              >
-                {note}
-              </div>
-            ))}
-          </div>
-        </div>
+        <PlaceholderTable
+          title="Admin notifications"
+          description="New provider registrations and other review items from the admin notification queue."
+          columns={["Title", "Status", "Message", "Created"]}
+          rows={notificationRows}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          emptyMessage="No admin notifications were returned from Supabase."
+        />
       </section>
     </div>
   );

@@ -28,6 +28,21 @@ export type CreateProviderInput = {
   services: ProviderServiceInput[];
 };
 
+export async function fetchAdminNotifications() {
+  const supabase = getSupabaseClient();
+  const { data, error } = await supabase
+    .from("admin_notifications")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as SupabaseRow[];
+}
+
 async function fetchTable(table: string) {
   const supabase = getSupabaseClient();
   const { data, error } = await supabase.from(table).select("*").limit(100);
