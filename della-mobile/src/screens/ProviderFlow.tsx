@@ -3,6 +3,11 @@ import React, { useMemo, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
 import {
+  buildProviderAssetPath,
+  submitProviderApplication,
+  uploadRemoteAssetToStorage,
+} from "../lib/providerApplications";
+import {
   AppScreen,
   BookingCard,
   BottomTabs,
@@ -67,6 +72,8 @@ type ServiceForm = {
   portfolio: PortfolioItem[];
 };
 
+type SubmissionState = "idle" | "submitting" | "success" | "error";
+
 const providerTabs = [
   { key: "provider-dashboard", label: "Dashboard", icon: "grid-outline" },
   { key: "provider-bookings", label: "Bookings", icon: "calendar-outline" },
@@ -93,6 +100,20 @@ const premiumCard = {
   borderColor: "rgba(57,230,11,0.12)",
   gap: 14,
 } as const;
+
+const demoProfilePhotoUrl =
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80";
+
+const demoDocumentAssets = {
+  idFront:
+    "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80",
+  idBack:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80",
+  driverLicense:
+    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
+  certificate:
+    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
+};
 
 const providerProfile = {
   firstName: "Amina",
@@ -388,6 +409,16 @@ const serviceTemplates: ServiceForm[] = [
   },
 ];
 
+function parseNullableNumber(value: string) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 function RegistrationProgress({ route }: { route: RegistrationStep }) {
   const currentIndex = registrationSteps.findIndex((step) => step.key === route);
 
@@ -489,6 +520,38 @@ function PremiumHero({
           <Text style={{ color: "white", fontSize: 12, fontWeight: "800" }}>{status}</Text>
         </View>
       ) : null}
+    </View>
+  );
+}
+
+function MessageCard({
+  tone,
+  title,
+  text,
+}: {
+  tone: "error" | "success" | "info";
+  title: string;
+  text: string;
+}) {
+  const backgroundColor =
+    tone === "error" ? "#FFF3F3" : tone === "success" ? "#F1FBEA" : "#F7FBF5";
+  const borderColor =
+    tone === "error" ? "#F1C7C7" : tone === "success" ? "#CDEAB7" : "#DDE7DF";
+  const titleColor = tone === "error" ? "#A63F3F" : colors.ink;
+
+  return (
+    <View
+      style={{
+        borderRadius: 22,
+        padding: 16,
+        backgroundColor,
+        borderWidth: 1,
+        borderColor,
+        gap: 6,
+      }}
+    >
+      <Text style={{ fontSize: 15, fontWeight: "800", color: titleColor }}>{title}</Text>
+      <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{text}</Text>
     </View>
   );
 }
@@ -748,14 +811,14 @@ function ServiceSection({
         <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
           <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Driving license</Text>
           <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-            {service.drivingLicenseLabel ?? "Upload driving license"}
+            {service.drivingLicenseLabel ?? "Driving license will be uploaded during submission."}
           </Text>
         </View>
       ) : null}
       <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
         <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Optional certificates</Text>
         <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-          {service.certificatesLabel || "Add certificates"}
+          {service.certificatesLabel || "Optional certificates can be uploaded."}
         </Text>
       </View>
     </View>
@@ -821,6 +884,12 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [enabledServiceIds, setEnabledServiceIds] = useState<string[]>(["chef", "maid"]);
   const [serviceForms, setServiceForms] = useState<ServiceForm[]>(serviceTemplates);
   const [serviceMenuOpen, setServiceMenuOpen] = useState(false);
+  const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
+  const [submissionSummary, setSubmissionSummary] = useState<{
+    providerId: string;
+    notificationId: string | null;
+  } | null>(null);
 
   const activeServices = useMemo(
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
@@ -888,6 +957,227 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     );
   }
 
+  function validateSubmission() {
+    if (!form.firstName.trim()) {
+      return "First name is required.";
+    }
+
+    if (!form.lastName.trim()) {
+      return "Last name is required.";
+    }
+
+    if (!form.residentialAddress.trim()) {
+      return "Residential address is required.";
+    }
+
+    if (!form.currentLocation.trim()) {
+      return "Current location is required.";
+    }
+
+    if (!form.emailAddress.trim()) {
+      return "Email address is required.";
+    }
+
+    if (!form.phoneNumber.trim()) {
+      return "Phone number is required.";
+    }
+
+    if (!form.idNumber.trim()) {
+      return "IC / Passport number is required.";
+    }
+
+    if (!form.verificationEmail.trim() || !form.verificationPhone.trim()) {
+      return "Verified email and phone are required before submission.";
+    }
+
+    if (activeServices.length === 0) {
+      return "Add at least one service before submitting.";
+    }
+
+    for (const service of activeServices) {
+      if (!service.yearsExperience.trim()) {
+        return `${service.name}: years of experience is required.`;
+      }
+
+      if (!service.specialties.trim()) {
+        return `${service.name}: specialties are required.`;
+      }
+
+      if (service.availabilityModes.length === 0) {
+        return `${service.name}: select at least one availability option.`;
+      }
+
+      if (!service.radiusKm.trim()) {
+        return `${service.name}: radius is required.`;
+      }
+
+      if (!service.serviceDescription.trim()) {
+        return `${service.name}: service description is required.`;
+      }
+
+      if (!service.perHourRate.trim()) {
+        return `${service.name}: hourly rate is required.`;
+      }
+
+      if (!service.minimumBookingHours.trim()) {
+        return `${service.name}: minimum booking hours is required.`;
+      }
+
+      if (service.portfolio.length === 0) {
+        return `${service.name}: add at least one portfolio image.`;
+      }
+
+      if (service.portfolio.length > 3) {
+        return `${service.name}: maximum 3 portfolio images are allowed.`;
+      }
+
+      for (const item of service.portfolio) {
+        if (!item.title.trim() || !item.caption.trim() || !item.image.trim()) {
+          return `${service.name}: each portfolio item needs an image, title, and description.`;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  async function handleSubmitApplication() {
+    const validationError = validateSubmission();
+
+    if (validationError) {
+      setSubmissionState("error");
+      setSubmissionError(validationError);
+      return;
+    }
+
+    setSubmissionState("submitting");
+    setSubmissionError(null);
+
+    try {
+      const profilePhotoUrl = await uploadRemoteAssetToStorage({
+        remoteUrl: demoProfilePhotoUrl,
+        storagePath: buildProviderAssetPath({
+          firstName: form.firstName,
+          lastName: form.lastName,
+          folder: "profile-photos",
+          fileLabel: "profile-photo",
+        }),
+      });
+
+      const uploadedServices = await Promise.all(
+        activeServices.map(async (service) => {
+          const portfolio = await Promise.all(
+            service.portfolio.slice(0, 3).map(async (item) => ({
+              title: item.title,
+              caption: item.caption,
+              image_url: await uploadRemoteAssetToStorage({
+                remoteUrl: item.image,
+                storagePath: buildProviderAssetPath({
+                  firstName: form.firstName,
+                  lastName: form.lastName,
+                  folder: "provider-portfolios",
+                  fileLabel: `${service.id}-${item.id}`,
+                }),
+              }),
+            })),
+          );
+
+          return {
+            service_id: service.id,
+            service_name: service.name,
+            years_experience: parseNullableNumber(service.yearsExperience),
+            specialties: service.specialties.trim(),
+            radius_km: parseNullableNumber(service.radiusKm),
+            service_description: service.serviceDescription.trim(),
+            hourly_price: parseNullableNumber(service.perHourRate),
+            minimum_booking_hours: parseNullableNumber(service.minimumBookingHours),
+            payments: service.payments,
+            availability_modes: service.availabilityModes,
+            certificates_label: service.certificatesLabel || null,
+            driving_license_label: service.drivingLicenseLabel || null,
+            portfolio,
+          };
+        }),
+      );
+
+      const documentDrafts = [
+        {
+          document_type: "ic_front",
+          label: "IC Front",
+          remote_url: demoDocumentAssets.idFront,
+          notes: "Submitted during provider registration.",
+        },
+        {
+          document_type: "ic_back",
+          label: "IC Back",
+          remote_url: demoDocumentAssets.idBack,
+          notes: "Submitted during provider registration.",
+        },
+        ...activeServices
+          .filter((service) => service.id === "driver")
+          .map(() => ({
+            document_type: "driving_license",
+            label: "Driving License",
+            remote_url: demoDocumentAssets.driverLicense,
+            notes: "Required for driver service.",
+          })),
+        ...activeServices
+          .filter((service) => Boolean(service.certificatesLabel.trim()))
+          .map((service) => ({
+            document_type: "certificate",
+            label: `${service.name} Certificate`,
+            remote_url: demoDocumentAssets.certificate,
+            notes: service.certificatesLabel,
+          })),
+      ];
+
+      const uploadedDocuments = await Promise.all(
+        documentDrafts.map(async (document) => ({
+          document_type: document.document_type,
+          label: document.label,
+          file_url: await uploadRemoteAssetToStorage({
+            remoteUrl: document.remote_url,
+            storagePath: buildProviderAssetPath({
+              firstName: form.firstName,
+              lastName: form.lastName,
+              folder: "provider-documents",
+              fileLabel: document.label,
+            }),
+          }),
+          notes: document.notes,
+        })),
+      );
+
+      const result = await submitProviderApplication({
+        first_name: form.firstName.trim(),
+        last_name: form.lastName.trim(),
+        date_of_birth: form.dateOfBirth.trim(),
+        residential_address: form.residentialAddress.trim(),
+        current_location: form.currentLocation.trim(),
+        email: form.emailAddress.trim(),
+        phone_number: form.phoneNumber.trim(),
+        id_number: form.idNumber.trim(),
+        profile_photo_url: profilePhotoUrl,
+        verification_email: form.verificationEmail.trim(),
+        verification_phone: form.verificationPhone.trim(),
+        documents: uploadedDocuments,
+        services: uploadedServices,
+      });
+
+      setSubmissionSummary({
+        providerId: result.providerId ?? "",
+        notificationId: result.notificationId ?? null,
+      });
+      setSubmissionState("success");
+      setRoute("pending-approval");
+    } catch (error) {
+      setSubmissionState("error");
+      setSubmissionError(
+        error instanceof Error ? error.message : "Failed to submit provider application.",
+      );
+    }
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <AppScreen contentContainerStyle={showTabs ? { paddingBottom: 130 } : undefined}>
@@ -906,13 +1196,13 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <FeatureRow
               icon="shield-checkmark-outline"
-              title="Early verification flow"
-              text="Phone number and email are verified before service creation so the provider can continue with a trusted account."
+              title="Connected registration flow"
+              text="The mobile provider form now validates fields, uploads assets to Supabase Storage, and submits to the backend API."
             />
             <FeatureRow
-              icon="images-outline"
-              title="Per-service setup"
-              text="Each service gets its own details, hourly pricing card, and a portfolio with up to 3 images and descriptions."
+              icon="notifications-outline"
+              title="Admin review queue"
+              text="Each successful submission creates a pending provider record and a notification for the admin panel."
             />
             <OutlineField
               label="Email Address"
@@ -943,16 +1233,11 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Profile photo</Text>
               <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-                <Image
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
-                  }}
-                  style={{ width: 88, height: 88, borderRadius: 26 }}
-                />
+                <Image source={{ uri: demoProfilePhotoUrl }} style={{ width: 88, height: 88, borderRadius: 26 }} />
                 <View style={{ flex: 1, gap: 4 }}>
                   <Text style={{ fontSize: 15, fontWeight: "800", color: colors.ink }}>{form.profilePhotoLabel}</Text>
                   <Text style={{ fontSize: 13, lineHeight: 20, color: colors.slate }}>
-                    Use a clear portrait with bright lighting and a professional appearance.
+                    This demo uploads the prepared profile image into Supabase Storage during submission.
                   </Text>
                 </View>
               </View>
@@ -1033,7 +1318,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <VerificationCard
               title="Phone verification"
-              subtitle="Send OTP to the registered phone number and confirm the provider is reachable."
+              subtitle="Phone number is marked verified before service creation."
               icon="call-outline"
               status="Verified"
             />
@@ -1045,7 +1330,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <VerificationCard
               title="Email verification"
-              subtitle="Send a verification link to the provider's email address before they upload services."
+              subtitle="Email is marked verified before services and assets are submitted."
               icon="mail-outline"
               status="Verified"
             />
@@ -1167,6 +1452,22 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               onBack={() => setRoute("provider-rates")}
             />
             <RegistrationProgress route={route} />
+            {submissionError ? (
+              <MessageCard tone="error" title="Submission blocked" text={submissionError} />
+            ) : null}
+            {submissionState === "success" && submissionSummary ? (
+              <MessageCard
+                tone="success"
+                title="Submission complete"
+                text={`Provider ${submissionSummary.providerId} was created and admin notification ${submissionSummary.notificationId ?? "queued"} was recorded.`}
+              />
+            ) : null}
+            <View style={premiumCard}>
+              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Submission flow</Text>
+              <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+                On submit, the app uploads the profile photo, documents, certificates, driver license if needed, and each service portfolio image to Supabase Storage before sending the provider application to the backend API.
+              </Text>
+            </View>
             {activeServices.map((service) => (
               <View key={service.id} style={{ gap: 12 }}>
                 <View style={premiumCard}>
@@ -1183,11 +1484,17 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Admin approval status</Text>
               <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
-                After the provider submits these services, admin reviews the profile and can approve, reject, or ask for extra documents.
+                Successful submission creates the provider with status `pending_review`, stores uploaded assets, and creates an admin notification.
               </Text>
-              <StatusBadge label="Pending" />
+              <StatusBadge label={submissionState === "submitting" ? "Submitting" : "Pending" } />
             </View>
-            <PrimaryButton label="Submit provider application" onPress={() => setRoute("pending-approval")} />
+            <PrimaryButton
+              label={submissionState === "submitting" ? "Submitting application..." : "Submit provider application"}
+              onPress={() => {
+                void handleSubmitApplication();
+              }}
+              disabled={submissionState === "submitting"}
+            />
           </>
         ) : null}
 
@@ -1205,6 +1512,13 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               subtitle="You are verified. Your services have been uploaded successfully. You will receive an email or in-app notification when your application is approved or if we need extra documents."
               status="Pending Review"
             />
+            {submissionSummary ? (
+              <MessageCard
+                tone="success"
+                title="Backend submission linked"
+                text={`Provider id ${submissionSummary.providerId} is now in pending review and linked to an admin notification.`}
+              />
+            ) : null}
             <FeatureRow
               icon="mail-outline"
               title="Verified email already sent"
@@ -1317,12 +1631,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <View style={{ ...premiumCard, padding: 20 }}>
               <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-                <Image
-                  source={{
-                    uri: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
-                  }}
-                  style={{ width: 90, height: 90, borderRadius: 28 }}
-                />
+                <Image source={{ uri: demoProfilePhotoUrl }} style={{ width: 90, height: 90, borderRadius: 28 }} />
                 <View style={{ flex: 1, gap: 4 }}>
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ fontSize: 23, fontWeight: "800", color: colors.ink }}>{`${form.firstName} ${form.lastName}`}</Text>

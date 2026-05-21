@@ -140,13 +140,23 @@ export function PrimaryButton({
   label,
   onPress,
   small = false,
+  disabled = false,
 }: {
   label: string;
   onPress?: () => void;
   small?: boolean;
+  disabled?: boolean;
 }) {
   return (
-    <Pressable onPress={onPress} style={[styles.primaryButton, small && styles.smallButton]}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={[
+        styles.primaryButton,
+        small && styles.smallButton,
+        disabled && { opacity: 0.55 },
+      ]}
+    >
       <Text style={styles.primaryButtonText}>{label}</Text>
     </Pressable>
   );
@@ -155,12 +165,18 @@ export function PrimaryButton({
 export function SecondaryButton({
   label,
   onPress,
+  disabled = false,
 }: {
   label: string;
   onPress?: () => void;
+  disabled?: boolean;
 }) {
   return (
-    <Pressable onPress={onPress} style={styles.secondaryButton}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={[styles.secondaryButton, disabled && { opacity: 0.55 }]}
+    >
       <Text style={styles.secondaryButtonText}>{label}</Text>
     </Pressable>
   );
