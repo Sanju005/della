@@ -39,6 +39,15 @@ type RegistrationStep =
   | "provider-rates"
   | "provider-portfolio";
 
+type PortfolioItem = {
+  id: string;
+  title: string;
+  caption: string;
+  image: string;
+};
+
+type AvailabilityMode = "Always available" | "9 to 5" | "Weekends only";
+
 type ServiceForm = {
   id: string;
   name: string;
@@ -47,15 +56,15 @@ type ServiceForm = {
   description: string;
   yearsExperience: string;
   specialties: string;
-  availability: string;
-  location: string;
   radiusKm: string;
   serviceDescription: string;
-  perDayRate: string;
   perHourRate: string;
   minimumBookingHours: string;
   payments: string[];
-  portfolio: { id: string; title: string; caption: string; image: string }[];
+  availabilityModes: AvailabilityMode[];
+  certificatesLabel: string;
+  drivingLicenseLabel?: string;
+  portfolio: PortfolioItem[];
 };
 
 const providerTabs = [
@@ -90,6 +99,7 @@ const providerProfile = {
   lastName: "Rahman",
   dateOfBirth: "14 Aug 1991",
   residentialAddress: "Mont Kiara, Kuala Lumpur",
+  currentLocation: "Mont Kiara, Kuala Lumpur",
   emailAddress: "amina.provider@della.app",
   phoneNumber: "+60 12-778 4921",
   idNumber: "A33445567",
@@ -107,15 +117,14 @@ const serviceTemplates: ServiceForm[] = [
     description: "Private dining, meal prep, event cooking, and home chefs.",
     yearsExperience: "5",
     specialties: "Arabic, Malay",
-    availability: "Any time, weekends, 8 AM - 5 PM",
-    location: "Mont Kiara, Kuala Lumpur",
     radiusKm: "12",
     serviceDescription:
       "Private chef service for family dining, intimate gatherings, and fresh weekly meal preparation.",
-    perDayRate: "100",
     perHourRate: "40",
     minimumBookingHours: "3",
     payments: ["Cash", "QR", "Transfer"],
+    availabilityModes: ["Always available", "9 to 5", "Weekends only"],
+    certificatesLabel: "Food handling certificate",
     portfolio: [
       {
         id: "chef-1",
@@ -148,15 +157,14 @@ const serviceTemplates: ServiceForm[] = [
     description: "Routine cleaning, deep cleaning, laundry, and home support.",
     yearsExperience: "4",
     specialties: "Deep cleaning, laundry, kitchen reset",
-    availability: "Weekdays, 9 AM - 6 PM",
-    location: "Sri Hartamas, Kuala Lumpur",
     radiusKm: "10",
     serviceDescription:
       "Reliable home support for recurring cleaning, laundry care, guest-ready setup, and kitchen organization.",
-    perDayRate: "120",
     perHourRate: "35",
     minimumBookingHours: "4",
     payments: ["Cash", "Transfer"],
+    availabilityModes: ["9 to 5"],
+    certificatesLabel: "Housekeeping certificate",
     portfolio: [
       {
         id: "maid-1",
@@ -189,15 +197,14 @@ const serviceTemplates: ServiceForm[] = [
     description: "Home tuition, exam coaching, language, and skills classes.",
     yearsExperience: "3",
     specialties: "Maths, English, homework coaching",
-    availability: "Weekdays, 3 PM - 8 PM",
-    location: "Damansara Heights, Kuala Lumpur",
     radiusKm: "8",
     serviceDescription:
       "Personalized home tuition and guided learning sessions for primary and secondary students.",
-    perDayRate: "180",
     perHourRate: "60",
     minimumBookingHours: "2",
     payments: ["Transfer", "QR"],
+    availabilityModes: ["9 to 5", "Weekends only"],
+    certificatesLabel: "Teaching certificate",
     portfolio: [
       {
         id: "tutor-1",
@@ -219,6 +226,163 @@ const serviceTemplates: ServiceForm[] = [
         caption: "Calm guided language coaching for comprehension, grammar, and speaking practice.",
         image:
           "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
+  },
+  {
+    id: "plumber",
+    name: "Plumber",
+    icon: "water-outline",
+    shortLabel: "plumber",
+    description: "Leaks, fittings, installations, and urgent repair support.",
+    yearsExperience: "6",
+    specialties: "Pipe repair, fittings, water heater support",
+    radiusKm: "14",
+    serviceDescription: "Responsive plumbing support for urgent repairs, installations, and maintenance jobs.",
+    perHourRate: "55",
+    minimumBookingHours: "2",
+    payments: ["Cash", "Transfer"],
+    availabilityModes: ["Always available", "9 to 5"],
+    certificatesLabel: "Trade certificate",
+    portfolio: [
+      {
+        id: "plumber-1",
+        title: "Kitchen sink repair",
+        caption: "Leak inspection and under-sink fitting replacement service.",
+        image:
+          "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "plumber-2",
+        title: "Bathroom fixture install",
+        caption: "Clean installation of shower and tap fittings for condo units.",
+        image:
+          "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "plumber-3",
+        title: "Water heater servicing",
+        caption: "Preventive servicing and troubleshooting for home water heaters.",
+        image:
+          "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
+  },
+  {
+    id: "electrician",
+    name: "Electrician",
+    icon: "flash-outline",
+    shortLabel: "electrician",
+    description: "Wiring, lighting, sockets, appliances, and troubleshooting.",
+    yearsExperience: "7",
+    specialties: "Lighting, switches, rewiring",
+    radiusKm: "16",
+    serviceDescription: "Certified electrical support for residential troubleshooting and installation work.",
+    perHourRate: "65",
+    minimumBookingHours: "2",
+    payments: ["Cash", "Transfer", "QR"],
+    availabilityModes: ["Always available", "9 to 5"],
+    certificatesLabel: "Electrical certificate",
+    portfolio: [
+      {
+        id: "electrician-1",
+        title: "Lighting installation",
+        caption: "Ceiling light replacement and fixture alignment for modern interiors.",
+        image:
+          "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "electrician-2",
+        title: "Switch panel repair",
+        caption: "Safe troubleshooting and replacement for damaged wall switch panels.",
+        image:
+          "https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "electrician-3",
+        title: "Appliance power check",
+        caption: "Electrical testing and socket inspection for home appliance issues.",
+        image:
+          "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
+  },
+  {
+    id: "driver",
+    name: "Driver",
+    icon: "car-sport-outline",
+    shortLabel: "driver",
+    description: "On-demand rides, private drivers, and errand transport.",
+    yearsExperience: "8",
+    specialties: "Private rides, family transport, airport transfer",
+    radiusKm: "20",
+    serviceDescription: "Professional driving support for school runs, airport transfers, and private bookings.",
+    perHourRate: "45",
+    minimumBookingHours: "2",
+    payments: ["Cash", "Transfer", "QR"],
+    availabilityModes: ["Always available", "Weekends only"],
+    certificatesLabel: "PSV or transport certificate",
+    drivingLicenseLabel: "Class D driving license uploaded",
+    portfolio: [
+      {
+        id: "driver-1",
+        title: "Airport transfer service",
+        caption: "Comfortable point-to-point airport support with luggage assistance.",
+        image:
+          "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "driver-2",
+        title: "Private family transport",
+        caption: "Safe and punctual transport for family errands and appointments.",
+        image:
+          "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "driver-3",
+        title: "Weekend booking route",
+        caption: "Flexible hourly bookings for weekend transport and waiting service.",
+        image:
+          "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
+  },
+  {
+    id: "babysitter",
+    name: "Baby Sitter",
+    icon: "happy-outline",
+    shortLabel: "babysitter",
+    description: "Trusted childcare, after-school support, and family care.",
+    yearsExperience: "5",
+    specialties: "After-school care, toddler support, bedtime routine",
+    radiusKm: "9",
+    serviceDescription: "Warm and reliable childcare support for families needing trusted in-home help.",
+    perHourRate: "38",
+    minimumBookingHours: "3",
+    payments: ["Cash", "Transfer"],
+    availabilityModes: ["9 to 5", "Weekends only"],
+    certificatesLabel: "Childcare certificate",
+    portfolio: [
+      {
+        id: "babysitter-1",
+        title: "Creative play session",
+        caption: "Structured play and learning support for preschool children.",
+        image:
+          "https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "babysitter-2",
+        title: "Reading and homework time",
+        caption: "After-school routine with reading and basic homework guidance.",
+        image:
+          "https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "babysitter-3",
+        title: "Evening care routine",
+        caption: "Calm support for meals, bath time, and bedtime preparation.",
+        image:
+          "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1200&q=80",
       },
     ],
   },
@@ -308,7 +472,7 @@ function PremiumHero({
         }}
       />
       <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 1.2, color: "#B7FF9F" }}>{eyebrow}</Text>
-      <Text style={{ fontSize: 30, lineHeight: 36, fontWeight: "900", color: "white", maxWidth: 300 }}>
+      <Text style={{ fontSize: 30, lineHeight: 36, fontWeight: "900", color: "white", maxWidth: 310 }}>
         {title}
       </Text>
       <Text style={{ fontSize: 15, lineHeight: 23, color: "#D2E2D5", maxWidth: 320 }}>{subtitle}</Text>
@@ -398,13 +562,7 @@ function VerificationCard({
   );
 }
 
-function ServiceAddButton({
-  onPress,
-  open,
-}: {
-  onPress: () => void;
-  open: boolean;
-}) {
+function ServiceAddButton({ onPress, open }: { onPress: () => void; open: boolean }) {
   return (
     <Pressable
       onPress={onPress}
@@ -450,23 +608,33 @@ function PaymentToggle({
   );
 }
 
-function PortfolioCard({
-  title,
-  caption,
-  image,
+function AvailabilityOption({
+  label,
+  active,
+  onPress,
 }: {
-  title: string;
-  caption: string;
-  image: string;
+  label: AvailabilityMode;
+  active: boolean;
+  onPress: () => void;
 }) {
   return (
-    <View style={{ ...premiumCard, padding: 14 }}>
-      <Image source={{ uri: image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
-      <View style={{ gap: 4 }}>
-        <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{title}</Text>
-        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{caption}</Text>
+    <Pressable onPress={onPress} style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <View
+        style={{
+          width: 22,
+          height: 22,
+          borderRadius: 7,
+          borderWidth: 1.5,
+          borderColor: active ? colors.brandDark : "#BCC9BE",
+          backgroundColor: active ? colors.brandSoft : colors.surface,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {active ? <Ionicons name="checkmark" size={14} color={colors.brandDark} /> : null}
       </View>
-    </View>
+      <Text style={{ fontSize: 14, fontWeight: "700", color: colors.ink }}>{label}</Text>
+    </Pressable>
   );
 }
 
@@ -495,16 +663,39 @@ function SelectedServiceCard({ service }: { service: ServiceForm }) {
 
 function ServiceSection({
   service,
+  providerLocation,
   onChange,
+  onToggleAvailability,
+  onRemove,
 }: {
   service: ServiceForm;
+  providerLocation: string;
   onChange: (field: keyof ServiceForm, value: string) => void;
+  onToggleAvailability: (label: AvailabilityMode) => void;
+  onRemove: () => void;
 }) {
   return (
     <View style={premiumCard}>
-      <View style={{ gap: 4 }}>
-        <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name}</Text>
-        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{service.description}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+        <View style={{ flex: 1, gap: 4 }}>
+          <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name}</Text>
+          <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{service.description}</Text>
+        </View>
+        <Pressable
+          onPress={onRemove}
+          style={{
+            width: 42,
+            height: 42,
+            borderRadius: 16,
+            backgroundColor: "#FFF6F6",
+            borderWidth: 1,
+            borderColor: "#F1D5D5",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Ionicons name="trash-outline" size={18} color="#B44747" />
+        </Pressable>
       </View>
       <OutlineField
         label={`${service.name} Years of Experience`}
@@ -514,22 +705,32 @@ function ServiceSection({
       />
       <OutlineField
         label={`${service.name} Specialties`}
-        placeholder={service.id === "chef" ? "Arabic, Malay" : "Deep cleaning, laundry"}
+        placeholder={service.id === "chef" ? "Arabic, Malay" : "Describe this service specialty"}
         value={service.specialties}
         onChangeText={(value) => onChange("specialties", value)}
       />
-      <OutlineField
-        label={`${service.name} Availability`}
-        placeholder="Availability"
-        value={service.availability}
-        onChangeText={(value) => onChange("availability", value)}
-      />
-      <OutlineField
-        label={`${service.name} Location`}
-        placeholder="Location"
-        value={service.location}
-        onChangeText={(value) => onChange("location", value)}
-      />
+      <View style={{ gap: 10 }}>
+        <Text style={{ fontSize: 13, fontWeight: "700", color: colors.ink }}>{service.name} Availability</Text>
+        <AvailabilityOption
+          label="Always available"
+          active={service.availabilityModes.includes("Always available")}
+          onPress={() => onToggleAvailability("Always available")}
+        />
+        <AvailabilityOption
+          label="9 to 5"
+          active={service.availabilityModes.includes("9 to 5")}
+          onPress={() => onToggleAvailability("9 to 5")}
+        />
+        <AvailabilityOption
+          label="Weekends only"
+          active={service.availabilityModes.includes("Weekends only")}
+          onPress={() => onToggleAvailability("Weekends only")}
+        />
+      </View>
+      <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
+        <Text style={{ fontSize: 13, fontWeight: "700", color: colors.ink }}>Current provider location</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{providerLocation}</Text>
+      </View>
       <OutlineField
         label={`${service.name} Service Radius (km)`}
         placeholder="Radius"
@@ -543,6 +744,20 @@ function ServiceSection({
         onChangeText={(value) => onChange("serviceDescription", value)}
         multiline
       />
+      {service.id === "driver" ? (
+        <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
+          <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Driving license</Text>
+          <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+            {service.drivingLicenseLabel ?? "Upload driving license"}
+          </Text>
+        </View>
+      ) : null}
+      <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
+        <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Optional certificates</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+          {service.certificatesLabel || "Add certificates"}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -559,24 +774,12 @@ function RatesSection({
   return (
     <View style={premiumCard}>
       <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name} pricing</Text>
-      <View style={{ flexDirection: "row", gap: 12 }}>
-        <View style={{ flex: 1 }}>
-          <OutlineField
-            label="Per Day Start From (RM)"
-            placeholder="100"
-            value={service.perDayRate}
-            onChangeText={(value) => onChange("perDayRate", value)}
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <OutlineField
-            label="Per Hour Start From (RM)"
-            placeholder="40"
-            value={service.perHourRate}
-            onChangeText={(value) => onChange("perHourRate", value)}
-          />
-        </View>
-      </View>
+      <OutlineField
+        label="Per Hour Start From (RM)"
+        placeholder="40"
+        value={service.perHourRate}
+        onChangeText={(value) => onChange("perHourRate", value)}
+      />
       <OutlineField
         label="Minimum Booking Hours"
         placeholder="3"
@@ -600,6 +803,18 @@ function RatesSection({
   );
 }
 
+function PortfolioCard({ item }: { item: PortfolioItem }) {
+  return (
+    <View style={{ ...premiumCard, padding: 14 }}>
+      <Image source={{ uri: item.image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
+      <View style={{ gap: 4 }}>
+        <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{item.title}</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{item.caption}</Text>
+      </View>
+    </View>
+  );
+}
+
 export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [route, setRoute] = useState<ProviderRoute>("provider-login");
   const [form, setForm] = useState(providerProfile);
@@ -611,6 +826,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
     [enabledServiceIds, serviceForms],
   );
+
   const availableServices = useMemo(
     () => serviceForms.filter((service) => !enabledServiceIds.includes(service.id)),
     [enabledServiceIds, serviceForms],
@@ -627,15 +843,13 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     setForm((current) => ({ ...current, [field]: value }));
   }
 
-  function toggleService(serviceId: string) {
-    setEnabledServiceIds((current) =>
-      current.includes(serviceId) ? current.filter((value) => value !== serviceId) : [...current, serviceId],
-    );
-  }
-
   function addService(serviceId: string) {
     setEnabledServiceIds((current) => (current.includes(serviceId) ? current : [...current, serviceId]));
     setServiceMenuOpen(false);
+  }
+
+  function removeService(serviceId: string) {
+    setEnabledServiceIds((current) => current.filter((value) => value !== serviceId));
   }
 
   function updateService(serviceId: string, field: keyof ServiceForm, value: string) {
@@ -659,6 +873,21 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     );
   }
 
+  function toggleAvailability(serviceId: string, mode: AvailabilityMode) {
+    setServiceForms((current) =>
+      current.map((service) =>
+        service.id === serviceId
+          ? {
+              ...service,
+              availabilityModes: service.availabilityModes.includes(mode)
+                ? service.availabilityModes.filter((item) => item !== mode)
+                : [...service.availabilityModes, mode],
+            }
+          : service,
+      ),
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <AppScreen contentContainerStyle={showTabs ? { paddingBottom: 130 } : undefined}>
@@ -673,7 +902,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <PremiumHero
               eyebrow="DELLA PROVIDER"
               title="Verify first, then upload services with confidence."
-              subtitle="Providers complete identity and contact setup first, receive a verified message, then continue building chef, maid, and other service profiles."
+              subtitle="Providers complete identity and contact setup first, receive a verified message, then continue building chef, maid, driver, tutor, and other service profiles."
             />
             <FeatureRow
               icon="shield-checkmark-outline"
@@ -683,7 +912,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <FeatureRow
               icon="images-outline"
               title="Per-service setup"
-              text="Each service gets its own details, pricing card, and 3-image portfolio with captions."
+              text="Each service gets its own details, hourly pricing card, and a portfolio with up to 3 images and descriptions."
             />
             <OutlineField
               label="Email Address"
@@ -709,7 +938,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <PremiumHero
               eyebrow="STEP 1"
               title="Set up the person behind the services"
-              subtitle="Start with profile photo, contact information, residential address, and IC or passport number."
+              subtitle="Start with profile photo, contact information, residential address, current location, and IC or passport number."
             />
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Profile photo</Text>
@@ -758,6 +987,12 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               value={form.residentialAddress}
               onChangeText={(value) => updateField("residentialAddress", value)}
               multiline
+            />
+            <OutlineField
+              label="Current Location"
+              placeholder="Current provider location"
+              value={form.currentLocation}
+              onChangeText={(value) => updateField("currentLocation", value)}
             />
             <OutlineField
               label="Email Address"
@@ -836,16 +1071,16 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Provider registration"
               title="Create services"
-              subtitle="No service browse card here. Just enable the services this provider offers, then fill the full details for each one."
+              subtitle="Add from the dropdown, remove any selected service, and keep the provider location shared across all services."
               onBack={() => setRoute("provider-verify")}
             />
             <RegistrationProgress route={route} />
             <View style={premiumCard}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 14 }}>
                 <View style={{ flex: 1, gap: 4 }}>
                   <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Create services</Text>
                   <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                    Tap `+` to add another service from the dropdown menu.
+                    Tap `+` to add another service from the dropdown menu. Selected services can be removed inside each service section.
                   </Text>
                 </View>
                 <ServiceAddButton onPress={() => setServiceMenuOpen((current) => !current)} open={serviceMenuOpen} />
@@ -888,18 +1123,14 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                 <SelectedServiceCard key={service.id} service={service} />
               ))}
             </View>
-            <View style={premiumCard}>
-              <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                Chef and maid are already added in this demo, so when you continue to pricing you will see:
-              </Text>
-              <Text style={{ fontSize: 14, fontWeight: "800", color: colors.ink }}>1. One price card for chef</Text>
-              <Text style={{ fontSize: 14, fontWeight: "800", color: colors.ink }}>2. One price card for maid</Text>
-            </View>
             {activeServices.map((service) => (
               <ServiceSection
                 key={service.id}
                 service={service}
+                providerLocation={form.currentLocation}
                 onChange={(field, value) => updateService(service.id, field, value)}
+                onToggleAvailability={(mode) => toggleAvailability(service.id, mode)}
+                onRemove={() => removeService(service.id)}
               />
             ))}
             <PrimaryButton label="Continue to pricing" onPress={() => setRoute("provider-rates")} />
@@ -911,7 +1142,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Provider registration"
               title="Per-service pricing"
-              subtitle="Chef gets one pricing card, maid gets another, and each service keeps its own accepted payment methods."
+              subtitle="Each selected service gets its own individual hourly pricing card."
               onBack={() => setRoute("provider-service-details")}
             />
             <RegistrationProgress route={route} />
@@ -931,8 +1162,8 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
           <>
             <ScreenHeader
               eyebrow="Provider registration"
-              title="Per-service images and descriptions"
-              subtitle="Each service now gets 3 images with captions. Chef has three, maid has three, and more services can follow the same pattern."
+              title="Per-service portfolio"
+              subtitle="Each service provider uploads up to 3 images and descriptions for each service."
               onBack={() => setRoute("provider-rates")}
             />
             <RegistrationProgress route={route} />
@@ -941,11 +1172,11 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                 <View style={premiumCard}>
                   <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name} portfolio</Text>
                   <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                    {service.name} has three image slots with a title and description for each example.
+                    Maximum 3 images with description for this service.
                   </Text>
                 </View>
-                {service.portfolio.map((item) => (
-                  <PortfolioCard key={item.id} title={item.title} caption={item.caption} image={item.image} />
+                {service.portfolio.slice(0, 3).map((item) => (
+                  <PortfolioCard key={item.id} item={item} />
                 ))}
               </View>
             ))}
@@ -980,9 +1211,9 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               text={`A verification email was sent to ${form.verificationEmail} with the message that the provider can now upload services.`}
             />
             <FeatureRow
-              icon="restaurant-outline"
+              icon="briefcase-outline"
               title="Service packages uploaded"
-              text={`${activeServices.map((service) => service.name).join(" and ")} now each include service details, dedicated pricing, and three image examples with captions.`}
+              text={`${activeServices.map((service) => service.name).join(", ")} now each include service details, hourly pricing, and up to 3 image examples with descriptions.`}
             />
             <FeatureRow
               icon="notifications-outline"
@@ -1019,7 +1250,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             {activeServices.map((service) => (
               <FeatureRow
                 key={service.id}
-                icon={service.id === "chef" ? "restaurant-outline" : "sparkles-outline"}
+                icon={service.icon}
                 title={`${service.name} package ready`}
                 text={`${service.yearsExperience} years experience, RM ${service.perHourRate}/hour, minimum ${service.minimumBookingHours} hours, accepting ${service.payments.join(", ")}.`}
               />
@@ -1067,9 +1298,9 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               <View key={service.id} style={premiumCard}>
                 <Text style={{ fontSize: 18, fontWeight: "800", color: colors.ink }}>{service.name}</Text>
                 <View style={{ flexDirection: "row", gap: 12 }}>
-                  <MetricCard label="Per day" value={`RM ${service.perDayRate}`} />
                   <MetricCard label="Per hour" value={`RM ${service.perHourRate}`} />
                   <MetricCard label="Minimum" value={`${service.minimumBookingHours} hrs`} />
+                  <MetricCard label="Radius" value={`${service.radiusKm} km`} />
                 </View>
               </View>
             ))}
@@ -1098,7 +1329,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                     <StatusBadge label="Pending" />
                   </View>
                   <Text style={{ fontSize: 14, fontWeight: "700", color: colors.brandDark }}>Phone and email verified</Text>
-                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{form.residentialAddress}</Text>
+                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{form.currentLocation}</Text>
                 </View>
               </View>
             </View>
