@@ -1,8 +1,15 @@
+import * as FileSystem from "expo-file-system/legacy";
 import { Platform } from "react-native";
 
 import { mobileSupabase } from "./supabase";
 
 const PROVIDER_ASSETS_BUCKET = "provider-assets";
+
+export type LocalUploadAsset = {
+  uri: string;
+  name: string;
+  mimeType: string | null;
+};
 
 export type ProviderApplicationPortfolioItemPayload = {
   title: string;
@@ -71,7 +78,7 @@ function getApiBaseUrl() {
   return "http://localhost:3000";
 }
 
-function getFileExtension(url: string, contentType: string | null) {
+function getFileExtension(source: string, contentType: string | null, fileName?: string) {
   if (contentType?.includes("png")) {
     return "png";
   }
@@ -84,31 +91,61 @@ function getFileExtension(url: string, contentType: string | null) {
     return "jpg";
   }
 
-  const urlMatch = url.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
+  const nameMatch = fileName?.match(/\.([a-zA-Z0-9]+)$/);
+
+  if (nameMatch?.[1]) {
+    return nameMatch[1].toLowerCase();
+  }
+
+  const urlMatch = source.match(/\.([a-zA-Z0-9]+)(?:\?|$)/);
   return urlMatch?.[1]?.toLowerCase() ?? "jpg";
 }
 
-export async function uploadRemoteAssetToStorage({
-  remoteUrl,
-  storagePath,
-}: {
-  remoteUrl: string;
-  storagePath: string;
-}) {
-  const response = await fetch(remoteUrl);
+function decodeBase64(base64: string) {
+  const normalized = base64.replace(/\s/g, "");
+  const binary = atob(normalized);
+  const bytes = new Uint8Array(binary.length);
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch upload asset: ${remoteUrl}`);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
   }
 
-  const blob = await response.blob();
-  const extension = getFileExtension(remoteUrl, blob.type || response.headers.get("content-type"));
+  return bytes;
+}
+
+async function readAssetBody(asset: LocalUploadAsset) {
+  if (Platform.OS === "web") {
+    const response = await fetch(asset.uri);
+
+    if (!response.ok) {
+      throw new Error(`Failed to read selected file: ${asset.name}`);
+    }
+
+    return response.blob();
+  }
+
+  const base64 = await FileSystem.readAsStringAsync(asset.uri, {
+    encoding: FileSystem.EncodingType.Base64,
+  });
+
+  return decodeBase64(base64);
+}
+
+export async function uploadLocalAssetToStorage({
+  asset,
+  storagePath,
+}: {
+  asset: LocalUploadAsset;
+  storagePath: string;
+}) {
+  const body = await readAssetBody(asset);
+  const extension = getFileExtension(asset.uri, asset.mimeType, asset.name);
   const finalPath = `${storagePath}.${extension}`;
 
   const { error: uploadError } = await mobileSupabase.storage
     .from(PROVIDER_ASSETS_BUCKET)
-    .upload(finalPath, blob, {
-      contentType: blob.type || response.headers.get("content-type") || "image/jpeg",
+    .upload(finalPath, body, {
+      contentType: asset.mimeType || "application/octet-stream",
       upsert: true,
     });
 

@@ -1,3 +1,5 @@
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useMemo, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -5,10 +7,11 @@ import { Image, Pressable, Text, View } from "react-native";
 import {
   buildProviderAssetPath,
   getEmailVerificationStatus,
+  type LocalUploadAsset,
   sendEmailVerification,
   sendPhoneOtp,
   submitProviderApplication,
-  uploadRemoteAssetToStorage,
+  uploadLocalAssetToStorage,
   verifyPhoneOtp,
 } from "../lib/providerApplications";
 import {
@@ -53,6 +56,7 @@ type PortfolioItem = {
   title: string;
   caption: string;
   image: string;
+  imageAsset?: LocalUploadAsset | null;
 };
 
 type AvailabilityMode = "Always available" | "9 to 5" | "Weekends only";
@@ -72,7 +76,9 @@ type ServiceForm = {
   payments: string[];
   availabilityModes: AvailabilityMode[];
   certificatesLabel: string;
+  certificateAsset?: LocalUploadAsset | null;
   drivingLicenseLabel?: string;
+  drivingLicenseAsset?: LocalUploadAsset | null;
   portfolio: PortfolioItem[];
 };
 
@@ -110,16 +116,15 @@ const premiumCard = {
 const demoProfilePhotoUrl =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80";
 
-const demoDocumentAssets = {
-  idFront:
-    "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80",
-  idBack:
-    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80",
-  driverLicense:
-    "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=900&q=80",
-  certificate:
-    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
-};
+function createPortfolioSlots(serviceId: string): PortfolioItem[] {
+  return Array.from({ length: 3 }, (_, index) => ({
+    id: `${serviceId}-portfolio-${index + 1}`,
+    title: "",
+    caption: "",
+    image: "",
+    imageAsset: null,
+  }));
+}
 
 const providerProfile = {
   firstName: "Amina",
@@ -130,7 +135,7 @@ const providerProfile = {
   emailAddress: "amina.provider@della.app",
   phoneNumber: "+60 12-778 4921",
   idNumber: "A33445567",
-  profilePhotoLabel: "Provider portrait selected",
+  profilePhotoLabel: "No profile photo selected yet",
   verificationEmail: "amina.provider@della.app",
   verificationPhone: "+60 12-778 4921",
 };
@@ -730,18 +735,49 @@ function SelectedServiceCard({ service }: { service: ServiceForm }) {
   );
 }
 
+function UploadPickerCard({
+  title,
+  subtitle,
+  selectedLabel,
+  actionLabel,
+  onPress,
+}: {
+  title: string;
+  subtitle: string;
+  selectedLabel?: string | null;
+  actionLabel: string;
+  onPress: () => void;
+}) {
+  return (
+    <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
+      <View style={{ gap: 4 }}>
+        <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>{title}</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{subtitle}</Text>
+      </View>
+      <Text style={{ fontSize: 13, fontWeight: "700", color: colors.brandDark }}>
+        {selectedLabel || "No file selected yet"}
+      </Text>
+      <PrimaryButton label={actionLabel} onPress={onPress} small />
+    </View>
+  );
+}
+
 function ServiceSection({
   service,
   providerLocation,
   onChange,
   onToggleAvailability,
   onRemove,
+  onPickCertificate,
+  onPickDrivingLicense,
 }: {
   service: ServiceForm;
   providerLocation: string;
   onChange: (field: keyof ServiceForm, value: string) => void;
   onToggleAvailability: (label: AvailabilityMode) => void;
   onRemove: () => void;
+  onPickCertificate: () => void;
+  onPickDrivingLicense: () => void;
 }) {
   return (
     <View style={premiumCard}>
@@ -814,19 +850,27 @@ function ServiceSection({
         multiline
       />
       {service.id === "driver" ? (
-        <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
-          <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Driving license</Text>
-          <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-            {service.drivingLicenseLabel ?? "Driving license will be uploaded during submission."}
-          </Text>
-        </View>
+        <UploadPickerCard
+          title="Driving license"
+          subtitle="Required for driver service."
+          selectedLabel={service.drivingLicenseAsset?.name ?? service.drivingLicenseLabel ?? null}
+          actionLabel={service.drivingLicenseAsset ? "Replace driving license" : "Upload driving license"}
+          onPress={onPickDrivingLicense}
+        />
       ) : null}
-      <View style={{ ...premiumCard, padding: 14, backgroundColor: "#F8FBF6" }}>
-        <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Optional certificates</Text>
-        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-          {service.certificatesLabel || "Optional certificates can be uploaded."}
-        </Text>
-      </View>
+      <OutlineField
+        label={`${service.name} Certificate Note (Optional)`}
+        placeholder="Food handling certificate, childcare course, trade cert..."
+        value={service.certificatesLabel}
+        onChangeText={(value) => onChange("certificatesLabel", value)}
+      />
+      <UploadPickerCard
+        title="Optional certificates"
+        subtitle="Upload a supporting certificate only if you want to show one for this service."
+        selectedLabel={service.certificateAsset?.name ?? null}
+        actionLabel={service.certificateAsset ? "Replace certificate" : "Upload certificate"}
+        onPress={onPickCertificate}
+      />
     </View>
   );
 }
@@ -872,14 +916,61 @@ function RatesSection({
   );
 }
 
-function PortfolioCard({ item }: { item: PortfolioItem }) {
+function PortfolioCard({
+  item,
+  serviceName,
+  index,
+  onChange,
+  onPickImage,
+}: {
+  item: PortfolioItem;
+  serviceName: string;
+  index: number;
+  onChange: (field: "title" | "caption", value: string) => void;
+  onPickImage: () => void;
+}) {
   return (
     <View style={{ ...premiumCard, padding: 14 }}>
-      <Image source={{ uri: item.image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
-      <View style={{ gap: 4 }}>
-        <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{item.title}</Text>
-        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{item.caption}</Text>
-      </View>
+      <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>
+        {serviceName} image {index + 1}
+      </Text>
+      {item.image ? (
+        <Image source={{ uri: item.image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
+      ) : (
+        <View
+          style={{
+            height: 190,
+            borderRadius: 22,
+            borderWidth: 1,
+            borderColor: "#DDE7DF",
+            backgroundColor: "#F8FBF6",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+          }}
+        >
+          <Ionicons name="image-outline" size={30} color={colors.brandDark} />
+          <Text style={{ fontSize: 14, color: colors.slate }}>No image selected yet</Text>
+        </View>
+      )}
+      <PrimaryButton
+        label={item.imageAsset ? "Replace image" : "Choose image"}
+        onPress={onPickImage}
+        small
+      />
+      <OutlineField
+        label="Title"
+        placeholder="Arabic dish, deep clean result, airport transfer..."
+        value={item.title}
+        onChangeText={(value) => onChange("title", value)}
+      />
+      <OutlineField
+        label="Description"
+        placeholder="Describe what this image shows"
+        value={item.caption}
+        onChangeText={(value) => onChange("caption", value)}
+        multiline
+      />
     </View>
   );
 }
@@ -888,7 +979,24 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [route, setRoute] = useState<ProviderRoute>("provider-login");
   const [form, setForm] = useState(providerProfile);
   const [enabledServiceIds, setEnabledServiceIds] = useState<string[]>(["chef", "maid"]);
-  const [serviceForms, setServiceForms] = useState<ServiceForm[]>(serviceTemplates);
+  const [profilePhotoAsset, setProfilePhotoAsset] = useState<LocalUploadAsset | null>(null);
+  const [identityDocuments, setIdentityDocuments] = useState<{
+    icFront: LocalUploadAsset | null;
+    icBack: LocalUploadAsset | null;
+  }>({
+    icFront: null,
+    icBack: null,
+  });
+  const [serviceForms, setServiceForms] = useState<ServiceForm[]>(
+    serviceTemplates.map((service) => ({
+      ...service,
+      certificatesLabel: "",
+      drivingLicenseLabel: "",
+      certificateAsset: null,
+      drivingLicenseAsset: null,
+      portfolio: createPortfolioSlots(service.id),
+    })),
+  );
   const [serviceMenuOpen, setServiceMenuOpen] = useState(false);
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [submissionError, setSubmissionError] = useState<string | null>(null);
@@ -940,6 +1048,57 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     );
   }
 
+  function updatePortfolioItem(
+    serviceId: string,
+    itemId: string,
+    field: keyof Pick<PortfolioItem, "title" | "caption">,
+    value: string,
+  ) {
+    setServiceForms((current) =>
+      current.map((service) =>
+        service.id === serviceId
+          ? {
+              ...service,
+              portfolio: service.portfolio.map((item) =>
+                item.id === itemId ? { ...item, [field]: value } : item,
+              ),
+            }
+          : service,
+      ),
+    );
+  }
+
+  function updateServiceAsset(
+    serviceId: string,
+    field: "certificateAsset" | "drivingLicenseAsset",
+    asset: LocalUploadAsset | null,
+  ) {
+    setServiceForms((current) =>
+      current.map((service) => (service.id === serviceId ? { ...service, [field]: asset } : service)),
+    );
+  }
+
+  function updatePortfolioImage(serviceId: string, itemId: string, asset: LocalUploadAsset | null) {
+    setServiceForms((current) =>
+      current.map((service) =>
+        service.id === serviceId
+          ? {
+              ...service,
+              portfolio: service.portfolio.map((item) =>
+                item.id === itemId
+                  ? {
+                      ...item,
+                      image: asset?.uri ?? "",
+                      imageAsset: asset,
+                    }
+                  : item,
+              ),
+            }
+          : service,
+      ),
+    );
+  }
+
   function toggleServicePayment(serviceId: string, payment: string) {
     setServiceForms((current) =>
       current.map((service) =>
@@ -970,6 +1129,114 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     );
   }
 
+  async function pickImageAsset() {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permission.granted) {
+      throw new Error("Media library permission is required to select images.");
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.9,
+    });
+
+    if (result.canceled || !result.assets[0]) {
+      return null;
+    }
+
+    const asset = result.assets[0];
+    return {
+      uri: asset.uri,
+      name: asset.fileName ?? `image-${Date.now()}.jpg`,
+      mimeType: asset.mimeType ?? "image/jpeg",
+    } satisfies LocalUploadAsset;
+  }
+
+  async function pickDocumentAsset() {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: ["image/*", "application/pdf"],
+      copyToCacheDirectory: true,
+      multiple: false,
+    });
+
+    if (result.canceled || !result.assets[0]) {
+      return null;
+    }
+
+    const asset = result.assets[0];
+    return {
+      uri: asset.uri,
+      name: asset.name,
+      mimeType: asset.mimeType ?? "application/octet-stream",
+    } satisfies LocalUploadAsset;
+  }
+
+  async function handlePickProfilePhoto() {
+    try {
+      const asset = await pickImageAsset();
+
+      if (!asset) {
+        return;
+      }
+
+      setProfilePhotoAsset(asset);
+      updateField("profilePhotoLabel", asset.name);
+    } catch (error) {
+      setSubmissionState("error");
+      setSubmissionError(error instanceof Error ? error.message : "Failed to select profile photo.");
+    }
+  }
+
+  async function handlePickIdentityDocument(type: "icFront" | "icBack") {
+    try {
+      const asset = await pickDocumentAsset();
+
+      if (!asset) {
+        return;
+      }
+
+      setIdentityDocuments((current) => ({ ...current, [type]: asset }));
+    } catch (error) {
+      setSubmissionState("error");
+      setSubmissionError(error instanceof Error ? error.message : "Failed to select document.");
+    }
+  }
+
+  async function handlePickServiceDocument(
+    serviceId: string,
+    field: "certificateAsset" | "drivingLicenseAsset",
+  ) {
+    try {
+      const asset = await pickDocumentAsset();
+
+      if (!asset) {
+        return;
+      }
+
+      updateServiceAsset(serviceId, field, asset);
+    } catch (error) {
+      setSubmissionState("error");
+      setSubmissionError(error instanceof Error ? error.message : "Failed to select service document.");
+    }
+  }
+
+  async function handlePickPortfolioImage(serviceId: string, itemId: string) {
+    try {
+      const asset = await pickImageAsset();
+
+      if (!asset) {
+        return;
+      }
+
+      updatePortfolioImage(serviceId, itemId, asset);
+    } catch (error) {
+      setSubmissionState("error");
+      setSubmissionError(error instanceof Error ? error.message : "Failed to select portfolio image.");
+    }
+  }
+
   function validateSubmission() {
     if (!form.firstName.trim()) {
       return "First name is required.";
@@ -997,6 +1264,18 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
 
     if (!form.idNumber.trim()) {
       return "IC / Passport number is required.";
+    }
+
+    if (!profilePhotoAsset) {
+      return "Profile photo is required.";
+    }
+
+    if (!identityDocuments.icFront) {
+      return "IC front document is required.";
+    }
+
+    if (!identityDocuments.icBack) {
+      return "IC back document is required.";
     }
 
     if (!form.verificationEmail.trim() || !form.verificationPhone.trim()) {
@@ -1044,16 +1323,28 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
         return `${service.name}: minimum booking hours is required.`;
       }
 
-      if (service.portfolio.length === 0) {
+      if (service.id === "driver" && !service.drivingLicenseAsset) {
+        return "Driver service requires a driving license upload.";
+      }
+
+      if (service.certificatesLabel.trim() && !service.certificateAsset) {
+        return `${service.name}: upload the certificate file or clear the certificate note.`;
+      }
+
+      const completedPortfolioItems = service.portfolio.filter(
+        (item) => item.title.trim() || item.caption.trim() || item.imageAsset,
+      );
+
+      if (completedPortfolioItems.length === 0) {
         return `${service.name}: add at least one portfolio image.`;
       }
 
-      if (service.portfolio.length > 3) {
+      if (completedPortfolioItems.length > 3) {
         return `${service.name}: maximum 3 portfolio images are allowed.`;
       }
 
-      for (const item of service.portfolio) {
-        if (!item.title.trim() || !item.caption.trim() || !item.image.trim()) {
+      for (const item of completedPortfolioItems) {
+        if (!item.title.trim() || !item.caption.trim() || !item.imageAsset) {
           return `${service.name}: each portfolio item needs an image, title, and description.`;
         }
       }
@@ -1177,8 +1468,8 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
     setSubmissionError(null);
 
     try {
-      const profilePhotoUrl = await uploadRemoteAssetToStorage({
-        remoteUrl: demoProfilePhotoUrl,
+      const profilePhotoUrl = await uploadLocalAssetToStorage({
+        asset: profilePhotoAsset!,
         storagePath: buildProviderAssetPath({
           firstName: form.firstName,
           lastName: form.lastName,
@@ -1189,12 +1480,16 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
 
       const uploadedServices = await Promise.all(
         activeServices.map(async (service) => {
+          const completedPortfolioItems = service.portfolio.filter(
+            (item) => item.title.trim() || item.caption.trim() || item.imageAsset,
+          );
+
           const portfolio = await Promise.all(
-            service.portfolio.slice(0, 3).map(async (item) => ({
+            completedPortfolioItems.slice(0, 3).map(async (item) => ({
               title: item.title,
               caption: item.caption,
-              image_url: await uploadRemoteAssetToStorage({
-                remoteUrl: item.image,
+              image_url: await uploadLocalAssetToStorage({
+                asset: item.imageAsset!,
                 storagePath: buildProviderAssetPath({
                   firstName: form.firstName,
                   lastName: form.lastName,
@@ -1216,8 +1511,8 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             minimum_booking_hours: parseNullableNumber(service.minimumBookingHours),
             payments: service.payments,
             availability_modes: service.availabilityModes,
-            certificates_label: service.certificatesLabel || null,
-            driving_license_label: service.drivingLicenseLabel || null,
+            certificates_label: service.certificateAsset ? service.certificatesLabel || `${service.name} certificate` : null,
+            driving_license_label: service.drivingLicenseAsset ? service.drivingLicenseLabel || "Driving license" : null,
             portfolio,
           };
         }),
@@ -1227,30 +1522,30 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
         {
           document_type: "ic_front",
           label: "IC Front",
-          remote_url: demoDocumentAssets.idFront,
+          asset: identityDocuments.icFront!,
           notes: "Submitted during provider registration.",
         },
         {
           document_type: "ic_back",
           label: "IC Back",
-          remote_url: demoDocumentAssets.idBack,
+          asset: identityDocuments.icBack!,
           notes: "Submitted during provider registration.",
         },
         ...activeServices
-          .filter((service) => service.id === "driver")
-          .map(() => ({
+          .filter((service) => service.id === "driver" && service.drivingLicenseAsset)
+          .map((service) => ({
             document_type: "driving_license",
-            label: "Driving License",
-            remote_url: demoDocumentAssets.driverLicense,
-            notes: "Required for driver service.",
+            label: `${service.name} Driving License`,
+            asset: service.drivingLicenseAsset!,
+            notes: service.drivingLicenseLabel || "Required for driver service.",
           })),
         ...activeServices
-          .filter((service) => Boolean(service.certificatesLabel.trim()))
+          .filter((service) => service.certificateAsset)
           .map((service) => ({
             document_type: "certificate",
             label: `${service.name} Certificate`,
-            remote_url: demoDocumentAssets.certificate,
-            notes: service.certificatesLabel,
+            asset: service.certificateAsset!,
+            notes: service.certificatesLabel || `${service.name} optional certificate`,
           })),
       ];
 
@@ -1258,8 +1553,8 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
         documentDrafts.map(async (document) => ({
           document_type: document.document_type,
           label: document.label,
-          file_url: await uploadRemoteAssetToStorage({
-            remoteUrl: document.remote_url,
+          file_url: await uploadLocalAssetToStorage({
+            asset: document.asset,
             storagePath: buildProviderAssetPath({
               firstName: form.firstName,
               lastName: form.lastName,
@@ -1356,15 +1651,43 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Profile photo</Text>
               <View style={{ flexDirection: "row", alignItems: "center", gap: 14 }}>
-                <Image source={{ uri: demoProfilePhotoUrl }} style={{ width: 88, height: 88, borderRadius: 26 }} />
+                <Image
+                  source={{ uri: profilePhotoAsset?.uri ?? demoProfilePhotoUrl }}
+                  style={{ width: 88, height: 88, borderRadius: 26 }}
+                />
                 <View style={{ flex: 1, gap: 4 }}>
                   <Text style={{ fontSize: 15, fontWeight: "800", color: colors.ink }}>{form.profilePhotoLabel}</Text>
                   <Text style={{ fontSize: 13, lineHeight: 20, color: colors.slate }}>
-                    This demo uploads the prepared profile image into Supabase Storage during submission.
+                    Choose a real profile image from the phone gallery before submitting.
                   </Text>
                 </View>
               </View>
+              <PrimaryButton
+                label={profilePhotoAsset ? "Replace profile photo" : "Choose profile photo"}
+                onPress={() => {
+                  void handlePickProfilePhoto();
+                }}
+                small
+              />
             </View>
+            <UploadPickerCard
+              title="IC Front"
+              subtitle="Upload the front of the IC or passport document."
+              selectedLabel={identityDocuments.icFront?.name ?? null}
+              actionLabel={identityDocuments.icFront ? "Replace IC front" : "Upload IC front"}
+              onPress={() => {
+                void handlePickIdentityDocument("icFront");
+              }}
+            />
+            <UploadPickerCard
+              title="IC Back"
+              subtitle="Upload the back of the IC. If using passport only, you can still attach the same document here for now."
+              selectedLabel={identityDocuments.icBack?.name ?? null}
+              actionLabel={identityDocuments.icBack ? "Replace IC back" : "Upload IC back"}
+              onPress={() => {
+                void handlePickIdentityDocument("icBack");
+              }}
+            />
             <View style={{ flexDirection: "row", gap: 12 }}>
               <View style={{ flex: 1 }}>
                 <OutlineField
@@ -1618,6 +1941,12 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                 onChange={(field, value) => updateService(service.id, field, value)}
                 onToggleAvailability={(mode) => toggleAvailability(service.id, mode)}
                 onRemove={() => removeService(service.id)}
+                onPickCertificate={() => {
+                  void handlePickServiceDocument(service.id, "certificateAsset");
+                }}
+                onPickDrivingLicense={() => {
+                  void handlePickServiceDocument(service.id, "drivingLicenseAsset");
+                }}
               />
             ))}
             <PrimaryButton label="Continue to pricing" onPress={() => setRoute("provider-rates")} />
@@ -1667,7 +1996,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Submission flow</Text>
               <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                On submit, the app uploads the profile photo, documents, certificates, driver license if needed, and each service portfolio image to Supabase Storage before sending the provider application to the backend API.
+                On submit, the app uploads your chosen profile photo, identity documents, certificates, driver license if needed, and each service portfolio image to Supabase Storage before sending the provider application to the backend API.
               </Text>
             </View>
             {activeServices.map((service) => (
@@ -1678,8 +2007,17 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                     Maximum 3 images with description for this service.
                   </Text>
                 </View>
-                {service.portfolio.slice(0, 3).map((item) => (
-                  <PortfolioCard key={item.id} item={item} />
+                {service.portfolio.slice(0, 3).map((item, index) => (
+                  <PortfolioCard
+                    key={item.id}
+                    item={item}
+                    serviceName={service.name}
+                    index={index}
+                    onPickImage={() => {
+                      void handlePickPortfolioImage(service.id, item.id);
+                    }}
+                    onChange={(field, value) => updatePortfolioItem(service.id, item.id, field, value)}
+                  />
                 ))}
               </View>
             ))}
@@ -1833,7 +2171,10 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             />
             <View style={{ ...premiumCard, padding: 20 }}>
               <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-                <Image source={{ uri: demoProfilePhotoUrl }} style={{ width: 90, height: 90, borderRadius: 28 }} />
+                <Image
+                  source={{ uri: profilePhotoAsset?.uri ?? demoProfilePhotoUrl }}
+                  style={{ width: 90, height: 90, borderRadius: 28 }}
+                />
                 <View style={{ flex: 1, gap: 4 }}>
                   <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <Text style={{ fontSize: 23, fontWeight: "800", color: colors.ink }}>{`${form.firstName} ${form.lastName}`}</Text>
