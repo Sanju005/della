@@ -32,6 +32,8 @@ export function ProviderStatusBadge({
           "border-emerald-200 bg-emerald-50 text-emerald-700",
         normalizedStatus === "pending_review" &&
           "border-amber-200 bg-amber-50 text-amber-700",
+        normalizedStatus === "additional_documents_required" &&
+          "border-orange-200 bg-orange-50 text-orange-700",
         normalizedStatus === "rejected" &&
           "border-rose-200 bg-rose-50 text-rose-700",
         normalizedStatus === "suspended" &&

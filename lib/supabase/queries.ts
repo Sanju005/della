@@ -4,6 +4,7 @@ export type SupabaseRow = Record<string, unknown>;
 
 export const PROVIDER_STATUSES = [
   "pending_review",
+  "additional_documents_required",
   "approved",
   "rejected",
   "suspended",
@@ -113,6 +114,26 @@ export async function fetchProviderImages(providerId?: string) {
     .from("provider_images")
     .select("*")
     .limit(providerId ? 50 : 300);
+
+  if (providerId) {
+    query = query.eq("provider_id", providerId);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    throw error;
+  }
+
+  return (data ?? []) as SupabaseRow[];
+}
+
+export async function fetchProviderDocuments(providerId?: string) {
+  const supabase = getSupabaseClient();
+  let query = supabase
+    .from("provider_documents")
+    .select("*")
+    .limit(providerId ? 100 : 300);
 
   if (providerId) {
     query = query.eq("provider_id", providerId);
