@@ -13,19 +13,18 @@ import {
   ScreenHeader,
   SecondaryButton,
   SectionTitle,
-  ServiceCard,
   StatusBadge,
 } from "../components/ui";
-import { providerBookings, providerChats, services } from "../data/mockData";
+import { providerBookings, providerChats } from "../data/mockData";
 import { colors } from "../theme";
 
 type ProviderRoute =
   | "provider-login"
   | "provider-register"
+  | "provider-verify"
   | "provider-service-details"
   | "provider-rates"
   | "provider-portfolio"
-  | "provider-verification"
   | "pending-approval"
   | "provider-dashboard"
   | "provider-bookings"
@@ -35,16 +34,27 @@ type ProviderRoute =
 
 type RegistrationStep =
   | "provider-register"
+  | "provider-verify"
   | "provider-service-details"
   | "provider-rates"
-  | "provider-portfolio"
-  | "provider-verification";
+  | "provider-portfolio";
 
-type PortfolioItem = {
+type ServiceForm = {
   id: string;
-  title: string;
-  caption: string;
-  image: string;
+  name: string;
+  shortLabel: string;
+  description: string;
+  yearsExperience: string;
+  specialties: string;
+  availability: string;
+  location: string;
+  radiusKm: string;
+  serviceDescription: string;
+  perDayRate: string;
+  perHourRate: string;
+  minimumBookingHours: string;
+  payments: string[];
+  portfolio: { id: string; title: string; caption: string; image: string }[];
 };
 
 const providerTabs = [
@@ -57,13 +67,13 @@ const providerTabs = [
 
 const registrationSteps: { key: RegistrationStep; title: string }[] = [
   { key: "provider-register", title: "Personal" },
+  { key: "provider-verify", title: "Verify" },
   { key: "provider-service-details", title: "Service" },
   { key: "provider-rates", title: "Rates" },
   { key: "provider-portfolio", title: "Portfolio" },
-  { key: "provider-verification", title: "Verify" },
 ];
 
-const paymentOptions = ["Cash", "QR", "Transfer"] as const;
+const allPaymentOptions = ["Cash", "QR", "Transfer"] as const;
 
 const premiumCard = {
   backgroundColor: colors.surface,
@@ -79,38 +89,94 @@ const providerProfile = {
   lastName: "Rahman",
   dateOfBirth: "14 Aug 1991",
   residentialAddress: "Mont Kiara, Kuala Lumpur",
-  emailAddress: "amina.chef@della.app",
+  emailAddress: "amina.provider@della.app",
   phoneNumber: "+60 12-778 4921",
   idNumber: "A33445567",
-  profilePhotoLabel: "Chef profile portrait selected",
-  serviceCategory: "Chef",
-  yearsExperience: "5",
-  specialties: "Arabic, Malay",
-  availability: "Any time, weekends, 8 AM - 5 PM",
-  location: "Mont Kiara, Kuala Lumpur",
-  radiusKm: "12",
-  serviceDescription:
-    "Private home chef for family dining, healthy weekly meal prep, and intimate gatherings with Arabic and Malay menus.",
-  perDayRate: "100",
-  perHourRate: "40",
-  minimumBookingHours: "3",
-  verificationEmail: "amina.chef@della.app",
+  profilePhotoLabel: "Provider portrait selected",
+  verificationEmail: "amina.provider@della.app",
+  verificationPhone: "+60 12-778 4921",
 };
 
-const initialPortfolio: PortfolioItem[] = [
+const initialServices: ServiceForm[] = [
   {
-    id: "arabic-platter",
-    title: "Arabic set menu",
-    caption: "Mixed grill, saffron rice, and mezze platter for family dinners.",
-    image:
-      "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80",
+    id: "chef",
+    name: "Chef",
+    shortLabel: "chef",
+    description: "Private dining, meal prep, event cooking, and home chefs.",
+    yearsExperience: "5",
+    specialties: "Arabic, Malay",
+    availability: "Any time, weekends, 8 AM - 5 PM",
+    location: "Mont Kiara, Kuala Lumpur",
+    radiusKm: "12",
+    serviceDescription:
+      "Private chef service for family dining, intimate gatherings, and fresh weekly meal preparation.",
+    perDayRate: "100",
+    perHourRate: "40",
+    minimumBookingHours: "3",
+    payments: ["Cash", "QR", "Transfer"],
+    portfolio: [
+      {
+        id: "chef-1",
+        title: "Arabic set menu",
+        caption: "Mixed grill, saffron rice, and mezze platter for family dinners.",
+        image:
+          "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "chef-2",
+        title: "Malay comfort menu",
+        caption: "Nasi lemak, ayam rendang, and sambal sides prepared fresh on site.",
+        image:
+          "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "chef-3",
+        title: "Weekend family buffet",
+        caption: "Chef-curated buffet line for birthdays and weekend home events.",
+        image:
+          "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
   },
   {
-    id: "malay-dish",
-    title: "Malay comfort table",
-    caption: "Nasi lemak, ayam rendang, and sambal sides prepared fresh on site.",
-    image:
-      "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=1200&q=80",
+    id: "maid",
+    name: "Maid",
+    shortLabel: "maid",
+    description: "Routine cleaning, deep cleaning, laundry, and home support.",
+    yearsExperience: "4",
+    specialties: "Deep cleaning, laundry, kitchen reset",
+    availability: "Weekdays, 9 AM - 6 PM",
+    location: "Sri Hartamas, Kuala Lumpur",
+    radiusKm: "10",
+    serviceDescription:
+      "Reliable home support for recurring cleaning, laundry care, guest-ready setup, and kitchen organization.",
+    perDayRate: "120",
+    perHourRate: "35",
+    minimumBookingHours: "4",
+    payments: ["Cash", "Transfer"],
+    portfolio: [
+      {
+        id: "maid-1",
+        title: "Living room refresh",
+        caption: "Deep-cleaned living room setup with polished surfaces and organized styling.",
+        image:
+          "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "maid-2",
+        title: "Bedroom reset",
+        caption: "Fresh linen change, wardrobe reset, and tidy bedroom finishing.",
+        image:
+          "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+      },
+      {
+        id: "maid-3",
+        title: "Kitchen detailing",
+        caption: "Countertop sanitation, sink treatment, and appliance wipe-down service.",
+        image:
+          "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
+      },
+    ],
   },
 ];
 
@@ -128,20 +194,17 @@ function RegistrationProgress({ route }: { route: RegistrationStep }) {
         </Text>
       </View>
       <View style={{ flexDirection: "row", gap: 8 }}>
-        {registrationSteps.map((step, index) => {
-          const active = index <= currentIndex;
-          return (
-            <View
-              key={step.key}
-              style={{
-                flex: 1,
-                height: 8,
-                borderRadius: 999,
-                backgroundColor: active ? colors.brand : "#E4EDE6",
-              }}
-            />
-          );
-        })}
+        {registrationSteps.map((step, index) => (
+          <View
+            key={step.key}
+            style={{
+              flex: 1,
+              height: 8,
+              borderRadius: 999,
+              backgroundColor: index <= currentIndex ? colors.brand : "#E4EDE6",
+            }}
+          />
+        ))}
       </View>
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 8 }}>
         {registrationSteps.map((step) => (
@@ -201,10 +264,10 @@ function PremiumHero({
         }}
       />
       <Text style={{ fontSize: 12, fontWeight: "800", letterSpacing: 1.2, color: "#B7FF9F" }}>{eyebrow}</Text>
-      <Text style={{ fontSize: 30, lineHeight: 36, fontWeight: "900", color: "white", maxWidth: 280 }}>
+      <Text style={{ fontSize: 30, lineHeight: 36, fontWeight: "900", color: "white", maxWidth: 300 }}>
         {title}
       </Text>
-      <Text style={{ fontSize: 15, lineHeight: 23, color: "#D2E2D5", maxWidth: 310 }}>{subtitle}</Text>
+      <Text style={{ fontSize: 15, lineHeight: 23, color: "#D2E2D5", maxWidth: 320 }}>{subtitle}</Text>
       {status ? (
         <View
           style={{
@@ -253,7 +316,7 @@ function FeatureRow({
   );
 }
 
-function UploadCard({
+function VerificationCard({
   title,
   subtitle,
   icon,
@@ -291,6 +354,32 @@ function UploadCard({
   );
 }
 
+function ServiceChip({
+  label,
+  active,
+  onPress,
+}: {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        paddingHorizontal: 14,
+        paddingVertical: 10,
+        borderRadius: 999,
+        backgroundColor: active ? colors.brand : colors.surface,
+        borderWidth: 1,
+        borderColor: active ? colors.brand : "#DDE7DF",
+      }}
+    >
+      <Text style={{ color: active ? colors.ink : colors.slate, fontSize: 13, fontWeight: "800" }}>{label}</Text>
+    </Pressable>
+  );
+}
+
 function PaymentToggle({
   label,
   active,
@@ -317,13 +406,128 @@ function PaymentToggle({
   );
 }
 
-function PortfolioCard({ item }: { item: PortfolioItem }) {
+function PortfolioCard({
+  title,
+  caption,
+  image,
+}: {
+  title: string;
+  caption: string;
+  image: string;
+}) {
   return (
     <View style={{ ...premiumCard, padding: 14 }}>
-      <Image source={{ uri: item.image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
+      <Image source={{ uri: image }} style={{ width: "100%", height: 190, borderRadius: 22 }} />
       <View style={{ gap: 4 }}>
-        <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{item.title}</Text>
-        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{item.caption}</Text>
+        <Text style={{ fontSize: 17, fontWeight: "800", color: colors.ink }}>{title}</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{caption}</Text>
+      </View>
+    </View>
+  );
+}
+
+function ServiceSection({
+  service,
+  onChange,
+}: {
+  service: ServiceForm;
+  onChange: (field: keyof ServiceForm, value: string) => void;
+}) {
+  return (
+    <View style={premiumCard}>
+      <View style={{ gap: 4 }}>
+        <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name}</Text>
+        <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{service.description}</Text>
+      </View>
+      <OutlineField
+        label={`${service.name} Years of Experience`}
+        placeholder="Years of Experience"
+        value={service.yearsExperience}
+        onChangeText={(value) => onChange("yearsExperience", value)}
+      />
+      <OutlineField
+        label={`${service.name} Specialties`}
+        placeholder={service.id === "chef" ? "Arabic, Malay" : "Deep cleaning, laundry"}
+        value={service.specialties}
+        onChangeText={(value) => onChange("specialties", value)}
+      />
+      <OutlineField
+        label={`${service.name} Availability`}
+        placeholder="Availability"
+        value={service.availability}
+        onChangeText={(value) => onChange("availability", value)}
+      />
+      <OutlineField
+        label={`${service.name} Location`}
+        placeholder="Location"
+        value={service.location}
+        onChangeText={(value) => onChange("location", value)}
+      />
+      <OutlineField
+        label={`${service.name} Service Radius (km)`}
+        placeholder="Radius"
+        value={service.radiusKm}
+        onChangeText={(value) => onChange("radiusKm", value)}
+      />
+      <OutlineField
+        label={`${service.name} Service Description`}
+        placeholder="Describe the service"
+        value={service.serviceDescription}
+        onChangeText={(value) => onChange("serviceDescription", value)}
+        multiline
+      />
+    </View>
+  );
+}
+
+function RatesSection({
+  service,
+  onChange,
+  onTogglePayment,
+}: {
+  service: ServiceForm;
+  onChange: (field: keyof ServiceForm, value: string) => void;
+  onTogglePayment: (payment: string) => void;
+}) {
+  return (
+    <View style={premiumCard}>
+      <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name} pricing</Text>
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <View style={{ flex: 1 }}>
+          <OutlineField
+            label="Per Day Start From (RM)"
+            placeholder="100"
+            value={service.perDayRate}
+            onChangeText={(value) => onChange("perDayRate", value)}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <OutlineField
+            label="Per Hour Start From (RM)"
+            placeholder="40"
+            value={service.perHourRate}
+            onChangeText={(value) => onChange("perHourRate", value)}
+          />
+        </View>
+      </View>
+      <OutlineField
+        label="Minimum Booking Hours"
+        placeholder="3"
+        value={service.minimumBookingHours}
+        onChangeText={(value) => onChange("minimumBookingHours", value)}
+      />
+      <View style={{ gap: 10 }}>
+        <Text style={{ fontSize: 13, fontWeight: "700", color: colors.ink }}>Accepted payment methods</Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+          {allPaymentOptions.map((option) => (
+            <PaymentToggle
+              key={`${service.id}-${option}`}
+              label={option}
+              active={service.payments.includes(option)}
+              onPress={() => onTogglePayment(option)}
+            />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -331,14 +535,13 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
 
 export function ProviderFlow({ onExit }: { onExit: () => void }) {
   const [route, setRoute] = useState<ProviderRoute>("provider-login");
-  const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>(["chef"]);
-  const [selectedPayments, setSelectedPayments] = useState<string[]>([...paymentOptions]);
   const [form, setForm] = useState(providerProfile);
-  const [portfolioItems] = useState<PortfolioItem[]>(initialPortfolio);
+  const [enabledServiceIds, setEnabledServiceIds] = useState<string[]>(["chef", "maid"]);
+  const [serviceForms, setServiceForms] = useState<ServiceForm[]>(initialServices);
 
-  const selectedServices = useMemo(
-    () => services.filter((service) => selectedServiceIds.includes(service.id)),
-    [selectedServiceIds],
+  const activeServices = useMemo(
+    () => serviceForms.filter((service) => enabledServiceIds.includes(service.id)),
+    [enabledServiceIds, serviceForms],
   );
 
   const showTabs =
@@ -353,14 +556,29 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
   }
 
   function toggleService(serviceId: string) {
-    setSelectedServiceIds((current) =>
+    setEnabledServiceIds((current) =>
       current.includes(serviceId) ? current.filter((value) => value !== serviceId) : [...current, serviceId],
     );
   }
 
-  function togglePayment(label: string) {
-    setSelectedPayments((current) =>
-      current.includes(label) ? current.filter((value) => value !== label) : [...current, label],
+  function updateService(serviceId: string, field: keyof ServiceForm, value: string) {
+    setServiceForms((current) =>
+      current.map((service) => (service.id === serviceId ? { ...service, [field]: value } : service)),
+    );
+  }
+
+  function toggleServicePayment(serviceId: string, payment: string) {
+    setServiceForms((current) =>
+      current.map((service) =>
+        service.id === serviceId
+          ? {
+              ...service,
+              payments: service.payments.includes(payment)
+                ? service.payments.filter((item) => item !== payment)
+                : [...service.payments, payment],
+            }
+          : service,
+      ),
     );
   }
 
@@ -372,23 +590,23 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Provider app"
               title="Build a premium provider profile"
-              subtitle="Create a polished DELLA application with identity, service details, pricing, portfolio, and verification."
+              subtitle="Register first, verify phone and email, then upload each service with its own details, pricing, and images."
               onBack={onExit}
             />
             <PremiumHero
               eyebrow="DELLA PROVIDER"
-              title="Apply once. Get reviewed fast. Grow with trust."
-              subtitle="From chef profiles to home services, DELLA helps providers present their work beautifully and get approved with clarity."
+              title="Verify first, then upload services with confidence."
+              subtitle="Providers complete identity and contact setup first, receive a verified message, then continue building chef, maid, and other service profiles."
             />
             <FeatureRow
-              icon="sparkles-outline"
-              title="Premium presentation"
-              text="A structured application with profile photo, specialties, pricing, and image-backed service showcases."
+              icon="shield-checkmark-outline"
+              title="Early verification flow"
+              text="Phone number and email are verified before service creation so the provider can continue with a trusted account."
             />
             <FeatureRow
-              icon="mail-open-outline"
-              title="Clear application updates"
-              text="Providers receive a submission email first, then email or in-app notifications for approval or extra documents."
+              icon="images-outline"
+              title="Per-service setup"
+              text="Each service gets its own details, pricing card, and 3-image portfolio with captions."
             />
             <OutlineField
               label="Email Address"
@@ -407,14 +625,14 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Provider registration"
               title="Personal information"
-              subtitle="Set up the provider identity exactly as it will be reviewed by admin."
+              subtitle="Set up the provider identity before moving into phone and email verification."
               onBack={() => setRoute("provider-login")}
             />
             <RegistrationProgress route={route} />
             <PremiumHero
               eyebrow="STEP 1"
-              title="Professional first impression"
-              subtitle="Collect legal identity, contact details, and the profile photo that will appear in the provider app."
+              title="Set up the person behind the services"
+              subtitle="Start with profile photo, contact information, residential address, and IC or passport number."
             />
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Profile photo</Text>
@@ -428,7 +646,7 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                 <View style={{ flex: 1, gap: 4 }}>
                   <Text style={{ fontSize: 15, fontWeight: "800", color: colors.ink }}>{form.profilePhotoLabel}</Text>
                   <Text style={{ fontSize: 13, lineHeight: 20, color: colors.slate }}>
-                    Use a clear portrait with bright lighting and a friendly expression.
+                    Use a clear portrait with bright lighting and a professional appearance.
                   </Text>
                 </View>
               </View>
@@ -482,7 +700,57 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
               value={form.idNumber}
               onChangeText={(value) => updateField("idNumber", value)}
             />
-            <PrimaryButton label="Continue to service details" onPress={() => setRoute("provider-service-details")} />
+            <PrimaryButton label="Continue to verification" onPress={() => setRoute("provider-verify")} />
+          </>
+        ) : null}
+
+        {route === "provider-verify" ? (
+          <>
+            <ScreenHeader
+              eyebrow="Provider registration"
+              title="Verify phone and email"
+              subtitle="The provider must verify contact details first, then receives an email confirming they can start uploading services."
+              onBack={() => setRoute("provider-register")}
+            />
+            <RegistrationProgress route={route} />
+            <PremiumHero
+              eyebrow="STEP 2"
+              title="Now verify before creating services"
+              subtitle="Once phone and email are confirmed, the provider receives a message saying they are verified and can upload services."
+              status="Ready to verify"
+            />
+            <VerificationCard
+              title="Phone verification"
+              subtitle="Send OTP to the registered phone number and confirm the provider is reachable."
+              icon="call-outline"
+              status="Verified"
+            />
+            <OutlineField
+              label="Verified Phone Number"
+              placeholder="+60"
+              value={form.verificationPhone}
+              onChangeText={(value) => updateField("verificationPhone", value)}
+            />
+            <VerificationCard
+              title="Email verification"
+              subtitle="Send a verification link to the provider's email address before they upload services."
+              icon="mail-outline"
+              status="Verified"
+            />
+            <OutlineField
+              label="Verified Email"
+              placeholder="Email address"
+              value={form.verificationEmail}
+              onChangeText={(value) => updateField("verificationEmail", value)}
+            />
+            <View style={premiumCard}>
+              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Verification result email</Text>
+              <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
+                Email message: "Now you are verified, you can upload your services."
+              </Text>
+              <StatusBadge label="Verified" />
+            </View>
+            <PrimaryButton label="Continue to create services" onPress={() => setRoute("provider-service-details")} />
           </>
         ) : null}
 
@@ -490,76 +758,35 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
           <>
             <ScreenHeader
               eyebrow="Provider registration"
-              title="Service details"
-              subtitle="Show what this provider offers, how experienced they are, and where customers can discover them nearby."
-              onBack={() => setRoute("provider-register")}
+              title="Create services"
+              subtitle="No service browse card here. Just enable the services this provider offers, then fill the full details for each one."
+              onBack={() => setRoute("provider-verify")}
             />
             <RegistrationProgress route={route} />
             <View style={premiumCard}>
-              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Create service</Text>
+              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Create services</Text>
               <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
-                A provider can launch with one service first and add more later.
+                Start with chef, then add another service like maid. Each service must have its own full details.
               </Text>
-              <View style={{ gap: 12 }}>
-                {services.map((service) => (
-                  <ServiceCard
+              <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+                {initialServices.map((service) => (
+                  <ServiceChip
                     key={service.id}
-                    service={service}
-                    selected={selectedServiceIds.includes(service.id)}
+                    label={service.name}
+                    active={enabledServiceIds.includes(service.id)}
                     onPress={() => toggleService(service.id)}
                   />
                 ))}
               </View>
             </View>
-            <OutlineField
-              label="Service Category"
-              placeholder="Chef"
-              value={form.serviceCategory}
-              onChangeText={(value) => updateField("serviceCategory", value)}
-            />
-            <OutlineField
-              label="Years of Experience"
-              placeholder="5"
-              value={form.yearsExperience}
-              onChangeText={(value) => updateField("yearsExperience", value)}
-            />
-            <OutlineField
-              label="Service Description"
-              placeholder="Describe this provider's service"
-              value={form.serviceDescription}
-              onChangeText={(value) => updateField("serviceDescription", value)}
-              multiline
-            />
-            <OutlineField
-              label="What Dishes Can Make / Specialties"
-              placeholder="Arabic, Malay"
-              value={form.specialties}
-              onChangeText={(value) => updateField("specialties", value)}
-            />
-            <OutlineField
-              label="Availability"
-              placeholder="Any time, weekends, 8 AM - 5 PM"
-              value={form.availability}
-              onChangeText={(value) => updateField("availability", value)}
-            />
-            <OutlineField
-              label="Service Location"
-              placeholder="Service base location"
-              value={form.location}
-              onChangeText={(value) => updateField("location", value)}
-            />
-            <OutlineField
-              label="Service Radius (km)"
-              placeholder="12"
-              value={form.radiusKm}
-              onChangeText={(value) => updateField("radiusKm", value)}
-            />
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <MetricCard label="Selected services" value={String(selectedServiceIds.length)} />
-              <MetricCard label="Nearby radius" value={`${form.radiusKm} km`} />
-              <MetricCard label="Experience" value={`${form.yearsExperience} yrs`} />
-            </View>
-            <PrimaryButton label="Continue to rates" onPress={() => setRoute("provider-rates")} />
+            {activeServices.map((service) => (
+              <ServiceSection
+                key={service.id}
+                service={service}
+                onChange={(field, value) => updateService(service.id, field, value)}
+              />
+            ))}
+            <PrimaryButton label="Continue to pricing" onPress={() => setRoute("provider-rates")} />
           </>
         ) : null}
 
@@ -567,60 +794,19 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
           <>
             <ScreenHeader
               eyebrow="Provider registration"
-              title="Rates and payments"
-              subtitle="Keep the pricing simple, transparent, and easy for customers to understand before they book."
+              title="Per-service pricing"
+              subtitle="Chef gets one pricing card, maid gets another, and each service keeps its own accepted payment methods."
               onBack={() => setRoute("provider-service-details")}
             />
             <RegistrationProgress route={route} />
-            <PremiumHero
-              eyebrow="STEP 3"
-              title="Pricing that feels clear and premium"
-              subtitle="Set your starting rates, minimum booking duration, and accepted payment methods."
-            />
-            <View style={{ ...premiumCard, gap: 16 }}>
-              <View style={{ flexDirection: "row", gap: 12 }}>
-                <View style={{ flex: 1 }}>
-                  <OutlineField
-                    label="Per Day Start From (RM)"
-                    placeholder="100"
-                    value={form.perDayRate}
-                    onChangeText={(value) => updateField("perDayRate", value)}
-                  />
-                </View>
-                <View style={{ flex: 1 }}>
-                  <OutlineField
-                    label="Per Hour Start From (RM)"
-                    placeholder="40"
-                    value={form.perHourRate}
-                    onChangeText={(value) => updateField("perHourRate", value)}
-                  />
-                </View>
-              </View>
-              <OutlineField
-                label="Minimum Booking Hours"
-                placeholder="3"
-                value={form.minimumBookingHours}
-                onChangeText={(value) => updateField("minimumBookingHours", value)}
+            {activeServices.map((service) => (
+              <RatesSection
+                key={service.id}
+                service={service}
+                onChange={(field, value) => updateService(service.id, field, value)}
+                onTogglePayment={(payment) => toggleServicePayment(service.id, payment)}
               />
-              <View style={{ gap: 10 }}>
-                <Text style={{ fontSize: 13, fontWeight: "700", color: colors.ink }}>Accepted payment methods</Text>
-                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
-                  {paymentOptions.map((option) => (
-                    <PaymentToggle
-                      key={option}
-                      label={option}
-                      active={selectedPayments.includes(option)}
-                      onPress={() => togglePayment(option)}
-                    />
-                  ))}
-                </View>
-              </View>
-            </View>
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <MetricCard label="Per day" value={`RM ${form.perDayRate}`} />
-              <MetricCard label="Per hour" value={`RM ${form.perHourRate}`} />
-              <MetricCard label="Minimum" value={`${form.minimumBookingHours} hrs`} />
-            </View>
+            ))}
             <PrimaryButton label="Continue to portfolio" onPress={() => setRoute("provider-portfolio")} />
           </>
         ) : null}
@@ -629,86 +815,32 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
           <>
             <ScreenHeader
               eyebrow="Provider registration"
-              title="Portfolio and service images"
-              subtitle="Let customers see the provider's work with image cards and captions for each food style or service result."
+              title="Per-service images and descriptions"
+              subtitle="Each service now gets 3 images with captions. Chef has three, maid has three, and more services can follow the same pattern."
               onBack={() => setRoute("provider-rates")}
             />
             <RegistrationProgress route={route} />
-            <FeatureRow
-              icon="images-outline"
-              title="Image with caption works well"
-              text="For example, an Arabic dish can have one photo and caption, while a Malay dish can have another photo and caption."
-            />
-            {portfolioItems.map((item) => (
-              <PortfolioCard key={item.id} item={item} />
-            ))}
-            <View style={premiumCard}>
-              <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Portfolio notes</Text>
-              <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
-                In production this section would support adding more service images, editing captions, and reordering the portfolio.
-              </Text>
-            </View>
-            <PrimaryButton label="Continue to verification" onPress={() => setRoute("provider-verification")} />
-          </>
-        ) : null}
-
-        {route === "provider-verification" ? (
-          <>
-            <ScreenHeader
-              eyebrow="Provider registration"
-              title="Verification and submission"
-              subtitle="Finish the application with identity uploads, email verification, and admin review status."
-              onBack={() => setRoute("provider-portfolio")}
-            />
-            <RegistrationProgress route={route} />
-            <UploadCard
-              title="Upload IC Front"
-              subtitle="Front side of the identity card for review."
-              icon="card-outline"
-              status="Pending"
-            />
-            <UploadCard
-              title="Upload IC Back"
-              subtitle="Back side of the identity card for review."
-              icon="card-outline"
-              status="Pending"
-            />
-            <UploadCard
-              title="Or Upload Passport"
-              subtitle="Passport can be used instead of IC documents."
-              icon="document-text-outline"
-              status="Pending"
-            />
-            <View style={premiumCard}>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
-                <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Email verification</Text>
-                  <Text style={{ fontSize: 13, lineHeight: 20, color: colors.slate }}>
-                    A verification link will be sent to the provider before admin review completes.
+            {activeServices.map((service) => (
+              <View key={service.id} style={{ gap: 12 }}>
+                <View style={premiumCard}>
+                  <Text style={{ fontSize: 21, fontWeight: "900", color: colors.ink }}>{service.name} portfolio</Text>
+                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>
+                    {service.name} has three image slots with a title and description for each example.
                   </Text>
                 </View>
-                <StatusBadge label="Pending" />
+                {service.portfolio.map((item) => (
+                  <PortfolioCard key={item.id} title={item.title} caption={item.caption} image={item.image} />
+                ))}
               </View>
-              <OutlineField
-                label="Verification Email"
-                placeholder="Email address"
-                value={form.verificationEmail}
-                onChangeText={(value) => updateField("verificationEmail", value)}
-              />
-            </View>
+            ))}
             <View style={premiumCard}>
               <Text style={{ fontSize: 16, fontWeight: "800", color: colors.ink }}>Admin approval status</Text>
-              <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate, flex: 1 }}>
-                  This is managed by admin after submission, not by the provider.
-                </Text>
-                <StatusBadge label="Pending" />
-              </View>
               <Text style={{ fontSize: 14, lineHeight: 22, color: colors.slate }}>
-                Once submitted, the provider receives an email confirming the application was received. Later they receive an email or in-app notification if approved or if extra documents are needed.
+                After the provider submits these services, admin reviews the profile and can approve, reject, or ask for extra documents.
               </Text>
+              <StatusBadge label="Pending" />
             </View>
-            <PrimaryButton label="Submit application" onPress={() => setRoute("pending-approval")} />
+            <PrimaryButton label="Submit provider application" onPress={() => setRoute("pending-approval")} />
           </>
         ) : null}
 
@@ -717,29 +849,29 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Application submitted"
               title="Submitted for admin review"
-              subtitle="The provider now waits for DELLA review and receives status updates by email or in-app notification."
-              onBack={() => setRoute("provider-verification")}
+              subtitle="The provider already verified phone and email, then uploaded services, pricing, and images. Now the application waits for admin approval."
+              onBack={() => setRoute("provider-portfolio")}
             />
             <PremiumHero
               eyebrow="STATUS"
-              title="Your application has been submitted successfully."
-              subtitle="Our team is now reviewing your profile and documents. You will receive an email or in-app notification when your application is approved or if we need additional documents from you."
+              title="Your provider application has been submitted."
+              subtitle="You are verified. Your services have been uploaded successfully. You will receive an email or in-app notification when your application is approved or if we need extra documents."
               status="Pending Review"
             />
             <FeatureRow
               icon="mail-outline"
-              title="Submission email sent"
-              text={`A confirmation email goes to ${form.verificationEmail} right after registration is submitted.`}
+              title="Verified email already sent"
+              text={`A verification email was sent to ${form.verificationEmail} with the message that the provider can now upload services.`}
+            />
+            <FeatureRow
+              icon="restaurant-outline"
+              title="Service packages uploaded"
+              text={`${activeServices.map((service) => service.name).join(" and ")} now each include service details, dedicated pricing, and three image examples with captions.`}
             />
             <FeatureRow
               icon="notifications-outline"
-              title="Approval or extra documents"
-              text="Any approval update, rejection, or request for more documents is sent through email or in-app notification."
-            />
-            <FeatureRow
-              icon="shield-checkmark-outline"
-              title="Admin approval status"
-              text="The application stays in Pending Review until DELLA admin approves the service provider account."
+              title="Approval updates come next"
+              text="Admin can approve the application or request extra documents through email and in-app notifications."
             />
             <PrimaryButton label="Open provider dashboard preview" onPress={() => setRoute("provider-dashboard")} />
             <SecondaryButton label="Back to provider login" onPress={() => setRoute("provider-login")} />
@@ -751,38 +883,31 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Provider dashboard"
               title={`Welcome back, ${form.firstName}`}
-              subtitle="Preview how the provider experience looks after the application has been submitted."
+              subtitle="Preview of the provider account after verification and service submission."
               onBack={onExit}
               actionLabel="Switch flow"
               onActionPress={onExit}
             />
             <PremiumHero
               eyebrow="APPLICATION STATUS"
-              title="Pending review, profile ready"
-              subtitle="The provider profile, service pricing, verification package, and portfolio are now prepared for admin review."
+              title="Verified account, services under review"
+              subtitle="Phone and email are verified, and every enabled service package is waiting for admin approval."
               status="Pending Review"
             />
             <View style={{ flexDirection: "row", gap: 12 }}>
-              <MetricCard label="Primary service" value={form.serviceCategory} />
-              <MetricCard label="Per hour" value={`RM ${form.perHourRate}`} />
-              <MetricCard label="Radius" value={`${form.radiusKm} km`} />
+              <MetricCard label="Services" value={String(activeServices.length)} />
+              <MetricCard label="Email" value="Verified" />
+              <MetricCard label="Phone" value="Verified" />
             </View>
-            <SectionTitle title="Application highlights" subtitle="What will be reviewed by DELLA admin." />
-            <FeatureRow
-              icon="person-circle-outline"
-              title="Verified profile setup"
-              text={`${form.firstName} ${form.lastName}, ${form.phoneNumber}, and profile photo are ready for admin checks.`}
-            />
-            <FeatureRow
-              icon="restaurant-outline"
-              title="Chef service created"
-              text={`${form.yearsExperience} years experience, specialties in ${form.specialties}, and availability set as ${form.availability}.`}
-            />
-            <FeatureRow
-              icon="wallet-outline"
-              title="Rates and payment methods"
-              text={`Starting from RM ${form.perDayRate} per day, RM ${form.perHourRate} per hour, minimum ${form.minimumBookingHours} hours, accepting ${selectedPayments.join(", ")}.`}
-            />
+            <SectionTitle title="Service review summary" subtitle="Each service is reviewed as part of the provider application." />
+            {activeServices.map((service) => (
+              <FeatureRow
+                key={service.id}
+                icon={service.id === "chef" ? "restaurant-outline" : "sparkles-outline"}
+                title={`${service.name} package ready`}
+                text={`${service.yearsExperience} years experience, RM ${service.perHourRate}/hour, minimum ${service.minimumBookingHours} hours, accepting ${service.payments.join(", ")}.`}
+              />
+            ))}
           </>
         ) : null}
 
@@ -819,25 +944,19 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
             <ScreenHeader
               eyebrow="Earnings"
               title="Projected earnings"
-              subtitle="Preview how the chef pricing could appear once the profile is approved and live."
+              subtitle="Preview how separate service pricing could perform once the profile is approved and live."
               onBack={onExit}
             />
-            <View style={{ flexDirection: "row", gap: 12 }}>
-              <MetricCard label="Per day" value={`RM ${form.perDayRate}`} />
-              <MetricCard label="Per hour" value={`RM ${form.perHourRate}`} />
-              <MetricCard label="Minimum booking" value={`${form.minimumBookingHours} hrs`} />
-            </View>
-            <View style={premiumCard}>
-              {[
-                `Private dinner service • RM ${Number(form.perDayRate) * 3}`,
-                `Weekend meal prep • RM ${Number(form.perHourRate) * 6}`,
-                `Family event support • RM ${Number(form.perDayRate) * 2}`,
-              ].map((line) => (
-                <Text key={line} style={{ fontSize: 15, fontWeight: "700", color: colors.ink }}>
-                  {line}
-                </Text>
-              ))}
-            </View>
+            {activeServices.map((service) => (
+              <View key={service.id} style={premiumCard}>
+                <Text style={{ fontSize: 18, fontWeight: "800", color: colors.ink }}>{service.name}</Text>
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <MetricCard label="Per day" value={`RM ${service.perDayRate}`} />
+                  <MetricCard label="Per hour" value={`RM ${service.perHourRate}`} />
+                  <MetricCard label="Minimum" value={`${service.minimumBookingHours} hrs`} />
+                </View>
+              </View>
+            ))}
           </>
         ) : null}
 
@@ -862,25 +981,22 @@ export function ProviderFlow({ onExit }: { onExit: () => void }) {
                     <Text style={{ fontSize: 23, fontWeight: "800", color: colors.ink }}>{`${form.firstName} ${form.lastName}`}</Text>
                     <StatusBadge label="Pending" />
                   </View>
-                  <Text style={{ fontSize: 14, fontWeight: "700", color: colors.brandDark }}>{form.serviceCategory}</Text>
-                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{form.serviceDescription}</Text>
+                  <Text style={{ fontSize: 14, fontWeight: "700", color: colors.brandDark }}>Phone and email verified</Text>
+                  <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{form.residentialAddress}</Text>
                 </View>
               </View>
-              <View style={{ flexDirection: "row", gap: 12 }}>
-                <MetricCard label="Experience" value={`${form.yearsExperience} yrs`} />
-                <MetricCard label="Nearby radius" value={`${form.radiusKm} km`} />
-                <MetricCard label="Minimum booking" value={`${form.minimumBookingHours} hrs`} />
-              </View>
             </View>
-            <SectionTitle title="Specialties" subtitle="What the provider can make and when they are available." />
-            <FeatureRow
-              icon="restaurant-outline"
-              title={`Cuisine styles: ${form.specialties}`}
-              text={`Availability: ${form.availability}. Service location: ${form.location}.`}
-            />
-            <SectionTitle title="Portfolio" subtitle="Service images with captions for each featured style." />
-            {portfolioItems.map((item) => (
-              <PortfolioCard key={item.id} item={item} />
+            <SectionTitle title="Active service packages" subtitle="Each service keeps its own details, pricing, and image examples." />
+            {activeServices.map((service) => (
+              <View key={service.id} style={premiumCard}>
+                <Text style={{ fontSize: 20, fontWeight: "900", color: colors.ink }}>{service.name}</Text>
+                <Text style={{ fontSize: 14, lineHeight: 21, color: colors.slate }}>{service.serviceDescription}</Text>
+                <View style={{ flexDirection: "row", gap: 12 }}>
+                  <MetricCard label="Experience" value={`${service.yearsExperience} yrs`} />
+                  <MetricCard label="Radius" value={`${service.radiusKm} km`} />
+                  <MetricCard label="Per hour" value={`RM ${service.perHourRate}`} />
+                </View>
+              </View>
             ))}
           </>
         ) : null}
