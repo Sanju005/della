@@ -1,8 +1,8 @@
 export const colors = {
-  brand: "#0BCB4E",
-  brandDark: "#0A6B2A",
-  brandDeep: "#063D1B",
-  brandSoft: "#E8FFF0",
+  brand: "#39E60B",
+  brandDark: "#2C9C14",
+  brandDeep: "#0F3410",
+  brandSoft: "#EAF9E4",
   ink: "#0D1B12",
   slate: "#5A6A61",
   border: "#DDE7DF",

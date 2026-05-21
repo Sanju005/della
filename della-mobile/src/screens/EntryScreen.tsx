@@ -2,11 +2,23 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useMemo, useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
-import { AppScreen, PrimaryButton, SecondaryButton } from "../components/ui";
+import { AppScreen, PrimaryButton } from "../components/ui";
 import { services } from "../data/mockData";
 import { colors } from "../theme";
 
 type EntrySlide = 0 | 1 | 2;
+
+const entryPalette = {
+  background: "#F3FBEF",
+  panel: "#FFFFFF",
+  panelSoft: "#EAF9E4",
+  accent: "#39E60B",
+  accentSoft: "rgba(57, 230, 11, 0.12)",
+  accentGlow: "rgba(57, 230, 11, 0.2)",
+  text: "#12210F",
+  muted: "#49634A",
+  border: "rgba(57, 230, 11, 0.18)",
+};
 
 export function EntryScreen({
   onLoginPress,
@@ -27,8 +39,10 @@ export function EntryScreen({
         style={{
           minHeight: 700,
           borderRadius: 32,
-          backgroundColor: colors.brandDeep,
+          backgroundColor: entryPalette.background,
           overflow: "hidden",
+          borderWidth: 1,
+          borderColor: entryPalette.border,
         }}
       >
         <View
@@ -39,7 +53,7 @@ export function EntryScreen({
             width: 220,
             height: 220,
             borderRadius: 110,
-            backgroundColor: "rgba(11, 203, 78, 0.18)",
+            backgroundColor: entryPalette.accentSoft,
           }}
         />
         <View
@@ -50,7 +64,7 @@ export function EntryScreen({
             width: 180,
             height: 180,
             borderRadius: 90,
-            backgroundColor: "rgba(11, 203, 78, 0.14)",
+            backgroundColor: entryPalette.accentSoft,
           }}
         />
 
@@ -69,12 +83,12 @@ export function EntryScreen({
                   fontWeight: "700",
                   letterSpacing: 2,
                   textTransform: "uppercase",
-                  color: "#9BFFB9",
+                  color: colors.brandDark,
                 }}
               >
                 DELLA
               </Text>
-              <Text style={{ color: "#D6E5DB", fontSize: 13, marginTop: 4 }}>
+              <Text style={{ color: entryPalette.muted, fontSize: 13, marginTop: 4 }}>
                 Home and lifestyle marketplace
               </Text>
             </View>
@@ -88,7 +102,7 @@ export function EntryScreen({
                     height: 8,
                     borderRadius: 99,
                     backgroundColor:
-                      dot === slide ? colors.brand : "rgba(255,255,255,0.25)",
+                      dot === slide ? colors.brand : "rgba(18,33,15,0.14)",
                   }}
                 />
               ))}
@@ -103,7 +117,7 @@ export function EntryScreen({
                     fontSize: 42,
                     lineHeight: 48,
                     fontWeight: "900",
-                    color: "white",
+                    color: entryPalette.text,
                   }}
                 >
                   All your services in one DELLA app
@@ -112,7 +126,7 @@ export function EntryScreen({
                   style={{
                     fontSize: 16,
                     lineHeight: 26,
-                    color: "#D6E5DB",
+                    color: entryPalette.muted,
                     maxWidth: 300,
                   }}
                 >
@@ -123,10 +137,12 @@ export function EntryScreen({
 
               <View
                 style={{
-                  backgroundColor: "rgba(255,255,255,0.06)",
+                  backgroundColor: entryPalette.panel,
                   borderRadius: 28,
                   padding: 16,
                   gap: 14,
+                  borderWidth: 1,
+                  borderColor: entryPalette.border,
                 }}
               >
                 <Image
@@ -152,13 +168,13 @@ export function EntryScreen({
                       style={{
                         paddingHorizontal: 12,
                         paddingVertical: 9,
-                        backgroundColor: "rgba(255,255,255,0.1)",
+                        backgroundColor: entryPalette.panelSoft,
                         borderRadius: 999,
                       }}
                     >
                       <Text
                         style={{
-                          color: "white",
+                          color: entryPalette.text,
                           fontSize: 13,
                           fontWeight: "700",
                         }}
@@ -180,7 +196,7 @@ export function EntryScreen({
                     fontSize: 42,
                     lineHeight: 48,
                     fontWeight: "900",
-                    color: "white",
+                    color: entryPalette.text,
                   }}
                 >
                   Why DELLA
@@ -189,7 +205,7 @@ export function EntryScreen({
                   style={{
                     fontSize: 16,
                     lineHeight: 26,
-                    color: "#D6E5DB",
+                    color: entryPalette.muted,
                     maxWidth: 320,
                   }}
                 >
@@ -219,11 +235,13 @@ export function EntryScreen({
                   <View
                     key={item.title}
                     style={{
-                      backgroundColor: "rgba(255,255,255,0.08)",
+                      backgroundColor: entryPalette.panel,
                       borderRadius: 24,
                       padding: 18,
                       flexDirection: "row",
                       gap: 14,
+                      borderWidth: 1,
+                      borderColor: entryPalette.border,
                     }}
                   >
                     <View
@@ -231,7 +249,7 @@ export function EntryScreen({
                         width: 52,
                         height: 52,
                         borderRadius: 18,
-                        backgroundColor: "rgba(11,203,78,0.18)",
+                        backgroundColor: entryPalette.accentGlow,
                         alignItems: "center",
                         justifyContent: "center",
                       }}
@@ -247,14 +265,14 @@ export function EntryScreen({
                         style={{
                           fontSize: 18,
                           fontWeight: "800",
-                          color: "white",
+                          color: entryPalette.text,
                         }}
                       >
                         {item.title}
                       </Text>
                       <Text
                         style={{
-                          color: "#D6E5DB",
+                          color: entryPalette.muted,
                           fontSize: 14,
                           lineHeight: 22,
                         }}
@@ -276,7 +294,7 @@ export function EntryScreen({
                     fontSize: 42,
                     lineHeight: 48,
                     fontWeight: "900",
-                    color: "white",
+                    color: entryPalette.text,
                   }}
                 >
                   Start with DELLA
@@ -285,7 +303,7 @@ export function EntryScreen({
                   style={{
                     fontSize: 16,
                     lineHeight: 26,
-                    color: "#D6E5DB",
+                    color: entryPalette.muted,
                     maxWidth: 320,
                   }}
                 >
@@ -296,10 +314,12 @@ export function EntryScreen({
 
               <View
                 style={{
-                  backgroundColor: "rgba(255,255,255,0.08)",
+                  backgroundColor: entryPalette.panel,
                   borderRadius: 28,
                   padding: 18,
                   gap: 14,
+                  borderWidth: 1,
+                  borderColor: entryPalette.border,
                 }}
               >
                 <PrimaryButton label="Log in" onPress={onLoginPress} />
@@ -307,15 +327,17 @@ export function EntryScreen({
                   <Pressable
                     onPress={onSignupPress}
                     style={{
-                      backgroundColor: "white",
+                      backgroundColor: entryPalette.panelSoft,
                       borderRadius: 18,
                       paddingVertical: 15,
                       alignItems: "center",
+                      borderWidth: 1,
+                      borderColor: entryPalette.border,
                     }}
                   >
                     <Text
                       style={{
-                        color: colors.brandDeep,
+                        color: entryPalette.text,
                         fontSize: 15,
                         fontWeight: "800",
                       }}
@@ -324,10 +346,23 @@ export function EntryScreen({
                     </Text>
                   </Pressable>
                 </View>
-                <SecondaryButton
-                  label="Register as service provider"
+                <Pressable
                   onPress={onProviderPress}
-                />
+                  style={{
+                    borderRadius: 18,
+                    paddingHorizontal: 18,
+                    paddingVertical: 15,
+                    borderWidth: 1,
+                    borderColor: colors.brandDark,
+                    minWidth: 140,
+                    alignItems: "center",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <Text style={{ color: colors.brandDark, fontSize: 15, fontWeight: "700" }}>
+                    Register as service provider
+                  </Text>
+                </Pressable>
               </View>
             </View>
           ) : null}
@@ -349,7 +384,7 @@ export function EntryScreen({
                 paddingHorizontal: 4,
               }}
             >
-              <Text style={{ color: "#D6E5DB", fontSize: 14, fontWeight: "700" }}>
+              <Text style={{ color: entryPalette.muted, fontSize: 14, fontWeight: "700" }}>
                 Back
               </Text>
             </Pressable>
